@@ -7,10 +7,10 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 <style>
 body { margin:0; font-family:Inter,sans-serif; background:#000; color:#e6eef8; }
-.header { display:flex; flex-wrap:wrap; align-items:center; gap:10px; padding:10px; background:#111; border-bottom:1px solid #222; }
+.header { display:flex; align-items:center; gap:10px; padding:10px; background:#111; border-bottom:1px solid #222; }
 .header h1 { margin:0; flex:1; font-size:1.8rem; }
 .controls { display:flex; gap:6px; flex-wrap:wrap; }
-.controls select, .controls input, .controls button { padding:6px 10px; border-radius:6px; border:none; outline:none; background:#222; color:#fff; font-size:0.95rem; cursor:pointer; }
+.controls input, .controls button { padding:6px 10px; border-radius:6px; border:none; outline:none; background:#222; color:#fff; font-size:0.95rem; cursor:pointer; }
 .controls button { display:flex; align-items:center; justify-content:center; }
 .controls button i { margin-right:4px; }
 .container { display:grid; gap:12px; padding:10px; }
@@ -30,35 +30,35 @@ body { margin:0; font-family:Inter,sans-serif; background:#000; color:#e6eef8; }
 .preview-content { width:90%; max-width:800px; height:75%; background:#111; border-radius:12px; box-shadow:0 0 25px rgba(0,0,0,0.5); overflow:hidden; position:relative; display:flex; flex-direction:column; }
 .preview-header { display:flex; justify-content:flex-end; gap:6px; background:#000; padding:6px 10px; }
 .preview-iframe { flex:1; width:100%; border:none; }
-.minimized { height:50px !important; }
 .highlight { border:2px solid #4d90fe; }
 .source-text { position:fixed; bottom:10px; left:50%; transform:translateX(-50%); background:rgba(255,255,255,0.1); color:#fff; padding:6px 12px; border-radius:6px; font-size:0.9rem; opacity:0; transition:.3s; }
 @media(max-width:800px){ .grid-view .group-container { grid-template-columns:1fr !important; } }
 </style>
 </head>
 <body>
+
 <div class="header">
   <h1 id="header-title">Pusat Link Favorit</h1>
   <div class="controls">
-    <select id="filter-group"><option value="">Semua Grup</option></select>
     <input type="text" id="search-box" placeholder="Cari link...">
     <button id="btn-grid"><i class="fa-solid fa-table-cells"></i> Grid</button>
     <button id="btn-list"><i class="fa-solid fa-list"></i> List</button>
     <button id="btn-lang">🇮🇩</button>
   </div>
 </div>
+
 <div class="container" id="link-container"></div>
+
 <div class="preview-popup" id="preview-popup">
   <div class="preview-content" id="preview-content">
     <div class="preview-header">
-      <button class="btn-icon" id="btn-minimize" title="Minimize"><i class="fa-solid fa-minus"></i></button>
-      <button class="btn-icon" id="btn-maximize" title="Maximize"><i class="fa-solid fa-expand"></i></button>
       <button class="btn-icon" id="btn-go" title="Buka Link"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
       <button class="btn-icon" id="btn-close" title="Tutup"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <iframe id="preview-frame" class="preview-iframe" title="Pratinjau"></iframe>
   </div>
 </div>
+
 <div class="source-text" id="source-text"></div>
 
 <script>
@@ -70,10 +70,7 @@ const popup=document.getElementById("preview-popup");
 const frame=document.getElementById("preview-frame");
 const content=document.getElementById("preview-content");
 const btnClose=document.getElementById("btn-close");
-const btnMin=document.getElementById("btn-minimize");
-const btnMax=document.getElementById("btn-maximize");
 const btnGo=document.getElementById("btn-go");
-const filterGroup=document.getElementById("filter-group");
 const searchBox=document.getElementById("search-box");
 const btnGrid=document.getElementById("btn-grid");
 const btnList=document.getElementById("btn-list");
@@ -85,7 +82,7 @@ let viewMode = localStorage.getItem("viewMode") || "list";
 let favoriteLinks = JSON.parse(localStorage.getItem("favoriteLinks") || "[]");
 
 // Render links
-function renderLinks(links, highlightGroup=null, searchVal=""){
+function renderLinks(links, searchVal=""){
   container.innerHTML="";
   let groups={};
 
@@ -101,7 +98,6 @@ function renderLinks(links, highlightGroup=null, searchVal=""){
     groups[key].links.push(link);
   });
 
-  // Tambahkan favorit tetap
   if(favoriteLinks.length>0){
     groups["FAVORIT"] = {links: favoriteLinks, name:{id:"Favorit",en:"Favorite"}, type:"favorite"};
   }
@@ -116,14 +112,14 @@ function renderLinks(links, highlightGroup=null, searchVal=""){
   groupOrder.forEach(groupKey=>{
     const group = groups[groupKey];
     if(!group) return;
-    if(highlightGroup && groupKey!==highlightGroup) return;
 
     const groupContainer=document.createElement("div");
     groupContainer.className="group-container";
     const h=document.createElement("h2");
     h.className="group-title";
+
     let groupName = currentLang==="id"?group.name.id:group.name.en;
-    if(group.type==="global" && groupKey!=="FAVORIT") groupName += " (global)";
+    groupName += group.type==="local"?" (Lokal)":group.type==="global"?" (Global)":"";
     h.textContent = groupName;
     groupContainer.appendChild(h);
 
@@ -177,7 +173,7 @@ function renderLinks(links, highlightGroup=null, searchVal=""){
           favBtn.classList.add("favorite");
         }
         localStorage.setItem("favoriteLinks",JSON.stringify(favoriteLinks));
-        renderLinks(linksData, filterGroup.value, searchBox.value.toLowerCase());
+        renderLinks(linksData, searchBox.value.toLowerCase());
       });
       buttons.appendChild(favBtn);
 
@@ -186,19 +182,17 @@ function renderLinks(links, highlightGroup=null, searchVal=""){
       groupContainer.appendChild(item);
       item.addEventListener("click", ()=> window.open(link.url,"_blank"));
 
-      // Highlight search lintas bahasa
       const titleID = link.title_id.toLowerCase();
       const titleEN = link.title_en.toLowerCase();
       const grupID = (link.grup_id || "").toLowerCase();
       const grupEN = (link.grup_en || "").toLowerCase();
 
-      if ((highlightGroup && groupKey===highlightGroup) || 
-          (searchLower && (
+      if(searchLower && (
              titleID.includes(searchLower) ||
              titleEN.includes(searchLower) ||
              grupID.includes(searchLower) ||
              grupEN.includes(searchLower)
-          ))) {
+          )) {
         item.classList.add("highlight");
       }
     });
@@ -211,32 +205,26 @@ function renderLinks(links, highlightGroup=null, searchVal=""){
 function openPopup(url){
   frame.src=url;
   popup.style.display="flex";
-  content.classList.remove("minimized");
   btnGo.onclick=()=> window.open(url,"_blank");
-  btnMax.onclick=()=> content.style.height="75%";
-  btnMin.onclick=()=> content.classList.add("minimized");
 }
 btnClose.onclick=()=> { popup.style.display="none"; frame.src=""; }
 
 // Events
-filterGroup.addEventListener("change",()=>{ renderLinks(linksData,filterGroup.value,searchBox.value.toLowerCase()); });
-searchBox.addEventListener("input",()=>{ renderLinks(linksData,filterGroup.value,searchBox.value.toLowerCase()); });
-btnGrid.addEventListener("click",()=>{ viewMode="grid"; localStorage.setItem("viewMode","grid"); renderLinks(linksData,filterGroup.value,searchBox.value.toLowerCase()); });
-btnList.addEventListener("click",()=>{ viewMode="list"; localStorage.setItem("viewMode","list"); renderLinks(linksData,filterGroup.value,searchBox.value.toLowerCase()); });
+searchBox.addEventListener("input",()=>{ renderLinks(linksData, searchBox.value.toLowerCase()); });
+btnGrid.addEventListener("click",()=>{ viewMode="grid"; localStorage.setItem("viewMode","grid"); renderLinks(linksData, searchBox.value.toLowerCase()); });
+btnList.addEventListener("click",()=>{ viewMode="list"; localStorage.setItem("viewMode","list"); renderLinks(linksData, searchBox.value.toLowerCase()); });
 btnLang.addEventListener("click",()=>{
   currentLang = currentLang==="id"?"en":"id";
   btnLang.textContent = currentLang==="id"?"🇮🇩":"🇬🇧";
   localStorage.setItem("lang", currentLang);
-  renderLinks(linksData, filterGroup.value, searchBox.value.toLowerCase());
+  renderLinks(linksData, searchBox.value.toLowerCase());
   updateUI();
 });
 
-// Update UI static texts
+// Update UI
 function updateUI(){
   headerTitle.textContent = currentLang==="id"?"Pusat Link Favorit":"Favorite Links Hub";
   searchBox.placeholder = currentLang==="id"?"Cari link...":"Search link...";
-  btnGrid.title = currentLang==="id"?"Grid View":"Grid View";
-  btnList.title = currentLang==="id"?"List View":"List View";
 }
 
 // Load local + global
@@ -246,18 +234,24 @@ async function loadLinks(){
     let resLocal = await fetch("links.json");
     let localLinks = await resLocal.json();
     if(localLinks.links) allLinks.push(...localLinks.links.map(l=>({...l,type:"local"})));
-  } catch{}
+  } catch{ notify("Error loading local data","error"); }
 
   try{
     let resGlobal = await fetch("https://raw.githubusercontent.com/KuningMinum/Kumin/refs/heads/main/link_global.json");
     let globalLinks = await resGlobal.json();
     if(globalLinks.links) allLinks.push(...globalLinks.links.map(l=>({...l,type:"global"})));
-  } catch{}
+  } catch{ notify("Error loading global data","error"); }
 
-  sourceText.textContent="Sumber: Lokal + Global";
-  sourceText.style.opacity=1;
-  setTimeout(()=>{ sourceText.style.opacity=0; },3000);
+  notify(currentLang==="id"?"Data berhasil dimuat":"Data loaded successfully","success");
   return allLinks;
+}
+
+// Notifikasi
+function notify(message,type="info"){
+  sourceText.textContent = message;
+  sourceText.style.background = type==="error"?"#ff4d4d":"#4dff88";
+  sourceText.style.opacity = 1;
+  setTimeout(()=>{ sourceText.style.opacity = 0; },3000);
 }
 
 // Init
@@ -265,15 +259,7 @@ loadLinks().then(d=>{
   linksData=d;
   renderLinks(linksData);
   updateUI();
-
-  let groupSet = new Set();
-  linksData.forEach(l=>{
-    groupSet.add(l.grup_id);
-    groupSet.add(l.grup_en);
-  });
-  filterGroup.innerHTML='<option value="">'+(currentLang==="id"?"Semua Grup":"All Groups")+'</option>'+
-    [...groupSet].map(g=>`<option value="${g}">${g}</option>`).join('');
-}).catch(()=>{ container.innerHTML="<p style='color:#fff'>Gagal memuat data</p>"; });
+}).catch(()=>{ container.innerHTML="<p style='color:#fff'>"+(currentLang==="id"?"Gagal memuat data":"Failed to load data")+"</p>"; notify(currentLang==="id"?"Gagal memuat data":"Failed to load data","error"); });
 </script>
 </body>
 </html>
