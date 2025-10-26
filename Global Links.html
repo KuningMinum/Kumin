@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pusat Link Favorit</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<style>
+body {
+  margin:0; font-family:Inter,sans-serif; background:#000; color:#e6eef8;
+}
+.header { display:flex; flex-wrap:wrap; align-items:center; gap:10px; padding:10px; background:#111; border-bottom:1px solid #222; }
+.header h1 { margin:0; flex:1; font-size:1.8rem; }
+.controls { display:flex; gap:6px; flex-wrap:wrap; }
+.controls select, .controls input, .controls button { padding:6px 10px; border-radius:6px; border:none; outline:none; background:#222; color:#fff; font-size:0.95rem; cursor:pointer; }
+.controls button { display:flex; align-items:center; justify-content:center; }
+.controls button i { margin-right:4px; }
+.container { display:grid; gap:12px; padding:10px; }
+.grid-view .group-container { display:grid; gap:12px; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+.list-view .group-container { display:flex; flex-direction:column; gap:6px; }
+.group-title { font-size:1.5rem; font-weight:700; margin:20px 0 5px; border-bottom:1px solid #3a3f5a; padding-bottom:4px; }
+.link-btn { display:flex; justify-content:space-between; align-items:center; padding:12px; border-radius:12px; background:rgba(255,255,255,0.06); color:#e6eef8; box-shadow:0 6px 18px rgba(2,6,23,0.45); transition:.12s; cursor:pointer;}
+.link-btn:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(2,6,23,0.55);}
+.link-info { display:flex; gap:12px; align-items:center; }
+.link-icon { width:12%; min-width:40px; aspect-ratio:1/1; display:grid; place-items:center; font-size:1.3rem; color:#b7c1d6; background:rgba(255,255,255,0.02); border-radius:10px; object-fit:cover; }
+.link-title { margin:0; font-weight:600; word-break:break-word; flex:1; }
+.link-buttons { display:flex; gap:6px; }
+.btn-icon { background:none; border:none; color:#b7c1d6; cursor:pointer; font-size:1.2rem; transition:.15s; }
+.btn-icon:hover { color:#fff; transform:scale(1.2); }
+.favorite { color:#ffd700 !important; }
+.preview-popup { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); backdrop-filter:blur(4px); justify-content:center; align-items:center; z-index:999; }
+.preview-content { width:90%; max-width:800px; height:75%; background:#111; border-radius:12px; box-shadow:0 0 25px rgba(0,0,0,0.5); overflow:hidden; position:relative; display:flex; flex-direction:column; }
+.preview-header { display:flex; justify-content:flex-end; gap:6px; background:#000; padding:6px 10px; }
+.preview-iframe { flex:1; width:100%; border:none; }
+.minimized { height:50px !important; }
+.highlight { border:2px solid #4d90fe; }
+.source-text { position:fixed; bottom:10px; left:50%; transform:translateX(-50%); background:rgba(255,255,255,0.1); color:#fff; padding:6px 12px; border-radius:6px; font-size:0.9rem; opacity:0; transition:.3s; }
+@media(max-width:800px){ .grid-view .group-container { grid-template-columns:1fr !important; } }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Pusat Link Favorit</h1>
+  <div class="controls">
+    <select id="filter-group"><option value="">Semua Grup</option></select>
+    <input type="text" id="search-box" placeholder="Cari link...">
+    <button id="btn-grid"><i class="fa-solid fa-table-cells"></i> Grid</button>
+    <button id="btn-list"><i class="fa-solid fa-list"></i> List</button>
+  </div>
+</div>
+<div class="container" id="link-container"></div>
+<div class="preview-popup" id="preview-popup">
+  <div class="preview-content" id="preview-content">
+    <div class="preview-header">
+      <button class="btn-icon" id="btn-minimize" title="Minimize"><i class="fa-solid fa-minus"></i></button>
+      <button class="btn-icon" id="btn-maximize" title="Maximize"><i class="fa-solid fa-expand"></i></button>
+      <button class="btn-icon" id="btn-go" title="Buka Link"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
+      <button class="btn-icon" id="btn-close" title="Tutup"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <iframe id="preview-frame" class="preview-iframe" title="Pratinjau"></iframe>
+  </div>
+</div>
+<div class="source-text" id="source-text"></div>
+<script>
+let linksData=[];
+const container=document.getElementById("link-container");
+const popup=document.getElementById("preview-popup");
+const frame=document.getElementById("preview-frame");
+const content=document.getElementById("preview-content");
+const btnClose=document.getElementById("btn-close");
+const btnMin=document.getElementById("btn-minimize");
+const btnMax=document.getElementById("btn-maximize");
+const btnGo=document.getElementById("btn-go");
+const filterGroup=document.getElementById("filter-group");
+const searchBox=document.getElementById("search-box");
+const btnGrid=document.getElementById("btn-grid");
+const btnList=document.getElementById("btn-list");
+const sourceText=document.getElementById("source-text");
+let viewMode = localStorage.getItem("viewMode") || "list";
+let favoriteLinks = JSON.parse(localStorage.getItem("favoriteLinks") || "[]");
+function renderLinks(links, highlightGroup=null, searchVal=""){
+  container.innerHTML="";
+  let groups={};
+  links.forEach(link=>{
+    const g=link.grup?.trim()||"Tanpa Grup";
+    if(!groups[g]) groups[g]=[];
+    groups[g].push(link);
+  });
+  if(favoriteLinks.length>0) groups["Favorit"]=favoriteLinks.map(f=>f);
+  const groupOrder=["Favorit", ...Object.keys(groups).filter(g=>g!=="Favorit")];
+  const isGrid=viewMode==="grid";
+  container.classList.toggle("grid-view", isGrid);
+  container.classList.toggle("list-view", !isGrid);
+  groupOrder.forEach(group=>{
+    if(highlightGroup && group!==highlightGroup) return;
+    const groupContainer=document.createElement("div");
+    groupContainer.className="group-container";
+    const h=document.createElement("h2");
+    h.className="group-title";
+    h.textContent=group;
+    groupContainer.appendChild(h);
+    (groups[group]||[]).forEach(link=>{
+      const item=document.createElement("div");
+      item.className="link-btn";
+      const info=document.createElement("div");
+      info.className="link-info";
+      if(link.img){
+        info.innerHTML=`<div class="link-icon"><img src="${link.img}" alt="icon"></div>
+        <p class="link-title">${link.title}</p>`;
+      } else {
+        info.innerHTML=`<div class="link-icon"><i class="${link.icon}"></i></div>
+        <p class="link-title">${link.title}</p>`;
+      }
+      const buttons=document.createElement("div");
+      buttons.className="link-buttons";
+      const eyeBtn=document.createElement("button");
+      eyeBtn.className="btn-icon";
+      eyeBtn.innerHTML='<i class="fa-solid fa-eye"></i>';
+      eyeBtn.title="Pratinjau";
+      eyeBtn.addEventListener("click", e=>{ e.stopPropagation(); openPopup(link.url); });
+      buttons.appendChild(eyeBtn);
+      const openBtn=document.createElement("button");
+      openBtn.className="btn-icon";
+      openBtn.innerHTML='<i class="fa-solid fa-arrow-up-right-from-square"></i>';
+      openBtn.title="Buka Link";
+      openBtn.addEventListener("click", e=>{ e.stopPropagation(); window.open(link.url,"_blank"); });
+      buttons.appendChild(openBtn);
+      const favBtn=document.createElement("button");
+      favBtn.className="btn-icon";
+      favBtn.innerHTML='<i class="fa-solid fa-star"></i>';
+      favBtn.title="Favorit";
+      if(favoriteLinks.some(f=>f.url===link.url)) favBtn.classList.add("favorite");
+      favBtn.addEventListener("click", e=>{
+        e.stopPropagation();
+        const exists=favoriteLinks.find(f=>f.url===link.url);
+        if(exists){
+          if(confirm("Hapus dari favorit?")){
+            favoriteLinks=favoriteLinks.filter(f=>f.url!==link.url);
+            favBtn.classList.remove("favorite");
+          }
+        } else {
+          favoriteLinks.push({...link});
+          favBtn.classList.add("favorite");
+        }
+        localStorage.setItem("favoriteLinks",JSON.stringify(favoriteLinks));
+        renderLinks(linksData, filterGroup.value, searchBox.value.toLowerCase());
+      });
+      buttons.appendChild(favBtn);
+      item.appendChild(info);
+      item.appendChild(buttons);
+      groupContainer.appendChild(item);
+      item.addEventListener("click", ()=> window.open(link.url,"_blank"));
+      if((highlightGroup && (link.grup||"Tanpa Grup")===highlightGroup) || (searchVal && link.title.toLowerCase().includes(searchVal.toLowerCase()))){
+        item.classList.add("highlight");
+      }
+    });
+    container.appendChild(groupContainer);
+  });
+}
+function openPopup(url){
+  frame.src=url;
+  popup.style.display="flex";
+  content.classList.remove("minimized");
+  btnGo.onclick=()=> window.open(url,"_blank");
+  btnMax.onclick=()=> content.style.height="75%";
+  btnMin.onclick=()=> content.classList.add("minimized");
+}
+btnClose.onclick=()=> { popup.style.display="none"; frame.src=""; }
+filterGroup.addEventListener("change",()=>{ renderLinks(linksData,filterGroup.value,searchBox.value.toLowerCase()); });
+searchBox.addEventListener("input",()=>{ renderLinks(linksData,filterGroup.value,searchBox.value.toLowerCase()); });
+btnGrid.addEventListener("click",()=>{ viewMode="grid"; localStorage.setItem("viewMode","grid"); renderLinks(linksData,filterGroup.value,searchBox.value.toLowerCase()); });
+btnList.addEventListener("click",()=>{ viewMode="list"; localStorage.setItem("viewMode","list"); renderLinks(linksData,filterGroup.value,searchBox.value.toLowerCase()); });
+async function loadLinks(){
+  try{
+    let res=await fetch("links.json");
+    if(!res.ok) throw new Error("local gagal");
+    let d=await res.json();
+    sourceText.textContent="Sumber: Lokal";
+    sourceText.style.opacity=1;
+    setTimeout(()=>{ sourceText.style.opacity=0; },3000);
+    return d;
+  } catch{
+    let res=await fetch("https://raw.githubusercontent.com/Ahmadrijani/ALL_LINK/refs/heads/main/links.json");
+    let d=await res.json();
+    sourceText.textContent="Sumber: GitHub";
+    sourceText.style.opacity=1;
+    setTimeout(()=>{ sourceText.style.opacity=0; },3000);
+    return d;
+  }
+}
+loadLinks().then(d=>{
+  linksData=d.links;
+  renderLinks(linksData);
+  let groups=[...new Set(linksData.map(l=>l.grup?.trim()||"Tanpa Grup"))];
+  filterGroup.innerHTML='<option value="">Semua Grup</option>'+groups.map(g=>`<option value="${g}">${g}</option>`).join('');
+}).catch(()=>{ container.innerHTML="<p style='color:#fff'>Gagal memuat data</p>"; });
+</script>
+</body>
+</html>
