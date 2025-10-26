@@ -1,3 +1,20 @@
-<a href="https://kuningminum.github.io/Kumin/Global%20Links.html" target="_blank" rel="noopener noreferrer">
-  Buka Global Links
-</a>
+<button id="btn-global">Buka Global Links</button>
+
+<script>
+  const linkURL = "https://kuningminum.github.io/Kumin/Global%20Links.html";
+
+  // Buka otomatis saat load
+  window.addEventListener("load", () => {
+    try {
+      window.open(linkURL, "_blank");
+    } catch(e) {
+      console.warn("Popup otomatis diblokir, gunakan tombol untuk membuka link");
+    }
+  });
+
+  // Tombol untuk buka manual
+  const btn = document.getElementById("btn-global");
+  btn.addEventListener("click", () => {
+    window.open(linkURL, "_blank");
+  });
+</script>
