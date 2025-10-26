@@ -5,43 +5,54 @@
       "title_en": "Saweria (Donation)",
       "url": "https://saweria.co/KuningMinum",
       "icon": "fas fa-hand-holding-heart",
-      "grup": "Link Lainnya"
+      "grup_id": "Link Lainnya",
+      "grup_en": "Other Links",
+      "type": "local"
     },
     {
       "title_id": "GitHub Kuning Minum",
-      "title_en": "Kuning Minum GitHub",
+      "title_en": "GitHub Kuning Minum",
       "url": "https://kuningminum.github.io/kuningminum/",
       "icon": "fab fa-github",
-      "grup": "Link Lainnya"
+      "grup_id": "Link Lainnya",
+      "grup_en": "Other Links",
+      "type": "local"
     },
     {
       "title_id": "YouTube KuningMinumOfficial",
-      "title_en": "KuningMinumOfficial YouTube",
+      "title_en": "YouTube KuningMinumOfficial",
       "url": "https://www.youtube.com/@KuningMinumOfficial",
       "icon": "fab fa-youtube",
-      "grup": "YouTube"
+      "grup_id": "YouTube",
+      "grup_en": "YouTube",
+      "type": "local"
     },
     {
       "title_id": "YouTube JasonGameDev",
-      "title_en": "JasonGameDev YouTube",
+      "title_en": "YouTube JasonGameDev",
       "url": "https://www.youtube.com/@JasonGameDev",
       "icon": "fab fa-youtube",
-      "grup": "YouTube"
+      "grup_id": "YouTube",
+      "grup_en": "YouTube",
+      "type": "global"
     },
     {
       "title_id": "YouTube Ero4Studio",
-      "title_en": "Ero4Studio YouTube",
+      "title_en": "YouTube Ero4Studio",
       "url": "https://www.youtube.com/@Ero4.Studio",
       "icon": "fab fa-youtube",
-      "grup": "YouTube"
+      "grup_id": "YouTube",
+      "grup_en": "YouTube",
+      "type": "global"
     },
     {
       "title_id": "YouTube Ero4Entertainment",
-      "title_en": "Ero4Entertainment YouTube",
+      "title_en": "YouTube Ero4Entertainment",
       "url": "https://www.youtube.com/@Ero4Entertainment",
       "icon": "fab fa-youtube",
-      "grup": "YouTube"
+      "grup_id": "YouTube",
+      "grup_en": "YouTube",
+      "type": "global"
     }
   ]
 }
-
