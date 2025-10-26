@@ -6,9 +6,7 @@
 <title>Pusat Link Favorit</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 <style>
-body {
-  margin:0; font-family:Inter,sans-serif; background:#000; color:#e6eef8;
-}
+body { margin:0; font-family:Inter,sans-serif; background:#000; color:#e6eef8; }
 .header { display:flex; flex-wrap:wrap; align-items:center; gap:10px; padding:10px; background:#111; border-bottom:1px solid #222; }
 .header h1 { margin:0; flex:1; font-size:1.8rem; }
 .controls { display:flex; gap:6px; flex-wrap:wrap; }
@@ -40,12 +38,12 @@ body {
 </head>
 <body>
 <div class="header">
-  <h1>Pusat Link Favorit</h1>
+  <h1 id="header-title">Pusat Link Favorit</h1>
   <div class="controls">
-    <select id="filter-group"><option value="">Semua Grup</option></select>
     <input type="text" id="search-box" placeholder="Cari link...">
     <button id="btn-grid"><i class="fa-solid fa-table-cells"></i> Grid</button>
     <button id="btn-list"><i class="fa-solid fa-list"></i> List</button>
+    <button id="btn-lang">🇮🇩</button>
   </div>
 </div>
 <div class="container" id="link-container"></div>
@@ -61,8 +59,11 @@ body {
   </div>
 </div>
 <div class="source-text" id="source-text"></div>
+
 <script>
 let linksData=[];
+let currentLang = localStorage.getItem("lang") || "id";
+
 const container=document.getElementById("link-container");
 const popup=document.getElementById("preview-popup");
 const frame=document.getElementById("preview-frame");
@@ -75,66 +76,98 @@ const filterGroup=document.getElementById("filter-group");
 const searchBox=document.getElementById("search-box");
 const btnGrid=document.getElementById("btn-grid");
 const btnList=document.getElementById("btn-list");
+const btnLang=document.getElementById("btn-lang");
+const headerTitle=document.getElementById("header-title");
 const sourceText=document.getElementById("source-text");
+
 let viewMode = localStorage.getItem("viewMode") || "list";
 let favoriteLinks = JSON.parse(localStorage.getItem("favoriteLinks") || "[]");
+
+// Render links
 function renderLinks(links, highlightGroup=null, searchVal=""){
   container.innerHTML="";
   let groups={};
+
   links.forEach(link=>{
-    const g=link.grup?.trim()||"Tanpa Grup";
-    if(!groups[g]) groups[g]=[];
-    groups[g].push(link);
+    const type = link.type || "local";
+    const g = { 
+      id: link.grup_id || link.grup || "Tanpa Grup", 
+      en: link.grup_en || link.grup || "No Group", 
+      type 
+    };
+    const key = `${type}_${g.id}_${g.en}`;
+    if(!groups[key]) groups[key]={links:[], name:g, type:type};
+    groups[key].links.push(link);
   });
-  if(favoriteLinks.length>0) groups["Favorit"]=favoriteLinks.map(f=>f);
-  const groupOrder=["Favorit", ...Object.keys(groups).filter(g=>g!=="Favorit")];
+
+  // Tambahkan favorit tetap
+  if(favoriteLinks.length>0){
+    groups["FAVORIT"] = {links: favoriteLinks, name:{id:"Favorit",en:"Favorite"}, type:"favorite"};
+  }
+
+  const groupOrder=["FAVORIT", ...Object.keys(groups).filter(k=>k!=="FAVORIT")];
   const isGrid=viewMode==="grid";
   container.classList.toggle("grid-view", isGrid);
   container.classList.toggle("list-view", !isGrid);
-  groupOrder.forEach(group=>{
-    if(highlightGroup && group!==highlightGroup) return;
+
+  const searchLower = searchVal.toLowerCase();
+
+  groupOrder.forEach(groupKey=>{
+    const group = groups[groupKey];
+    if(!group) return;
+    if(highlightGroup && groupKey!==highlightGroup) return;
+
     const groupContainer=document.createElement("div");
     groupContainer.className="group-container";
     const h=document.createElement("h2");
     h.className="group-title";
-    h.textContent=group;
+    let groupName = currentLang==="id"?group.name.id:group.name.en;
+    if(group.type==="global" && groupKey!=="FAVORIT") groupName += " (global)";
+    h.textContent = groupName;
     groupContainer.appendChild(h);
-    (groups[group]||[]).forEach(link=>{
+
+    group.links.forEach(link=>{
       const item=document.createElement("div");
       item.className="link-btn";
+
       const info=document.createElement("div");
       info.className="link-info";
+      const titleText = currentLang==="id"?link.title_id:link.title_en;
       if(link.img){
         info.innerHTML=`<div class="link-icon"><img src="${link.img}" alt="icon"></div>
-        <p class="link-title">${link.title}</p>`;
+        <p class="link-title">${titleText}</p>`;
       } else {
         info.innerHTML=`<div class="link-icon"><i class="${link.icon}"></i></div>
-        <p class="link-title">${link.title}</p>`;
+        <p class="link-title">${titleText}</p>`;
       }
+
       const buttons=document.createElement("div");
       buttons.className="link-buttons";
+
       const eyeBtn=document.createElement("button");
       eyeBtn.className="btn-icon";
       eyeBtn.innerHTML='<i class="fa-solid fa-eye"></i>';
-      eyeBtn.title="Pratinjau";
+      eyeBtn.title=currentLang==="id"?"Pratinjau":"Preview";
       eyeBtn.addEventListener("click", e=>{ e.stopPropagation(); openPopup(link.url); });
       buttons.appendChild(eyeBtn);
+
       const openBtn=document.createElement("button");
       openBtn.className="btn-icon";
       openBtn.innerHTML='<i class="fa-solid fa-arrow-up-right-from-square"></i>';
-      openBtn.title="Buka Link";
+      openBtn.title=currentLang==="id"?"Buka Link":"Open Link";
       openBtn.addEventListener("click", e=>{ e.stopPropagation(); window.open(link.url,"_blank"); });
       buttons.appendChild(openBtn);
+
       const favBtn=document.createElement("button");
       favBtn.className="btn-icon";
       favBtn.innerHTML='<i class="fa-solid fa-star"></i>';
-      favBtn.title="Favorit";
+      favBtn.title=currentLang==="id"?"Favorit":"Favorite";
       if(favoriteLinks.some(f=>f.url===link.url)) favBtn.classList.add("favorite");
       favBtn.addEventListener("click", e=>{
         e.stopPropagation();
         const exists=favoriteLinks.find(f=>f.url===link.url);
         if(exists){
-          if(confirm("Hapus dari favorit?")){
+          if(confirm(currentLang==="id"?"Hapus dari favorit?":"Remove from favorite?")){
             favoriteLinks=favoriteLinks.filter(f=>f.url!==link.url);
             favBtn.classList.remove("favorite");
           }
@@ -146,17 +179,34 @@ function renderLinks(links, highlightGroup=null, searchVal=""){
         renderLinks(linksData, filterGroup.value, searchBox.value.toLowerCase());
       });
       buttons.appendChild(favBtn);
+
       item.appendChild(info);
       item.appendChild(buttons);
       groupContainer.appendChild(item);
       item.addEventListener("click", ()=> window.open(link.url,"_blank"));
-      if((highlightGroup && (link.grup||"Tanpa Grup")===highlightGroup) || (searchVal && link.title.toLowerCase().includes(searchVal.toLowerCase()))){
+
+      // Highlight search lintas bahasa
+      const titleID = link.title_id.toLowerCase();
+      const titleEN = link.title_en.toLowerCase();
+      const grupID = (link.grup_id || "").toLowerCase();
+      const grupEN = (link.grup_en || "").toLowerCase();
+
+      if ((highlightGroup && groupKey===highlightGroup) || 
+          (searchLower && (
+             titleID.includes(searchLower) ||
+             titleEN.includes(searchLower) ||
+             grupID.includes(searchLower) ||
+             grupEN.includes(searchLower)
+          ))) {
         item.classList.add("highlight");
       }
     });
+
     container.appendChild(groupContainer);
   });
 }
+
+// Popup
 function openPopup(url){
   frame.src=url;
   popup.style.display="flex";
@@ -166,33 +216,62 @@ function openPopup(url){
   btnMin.onclick=()=> content.classList.add("minimized");
 }
 btnClose.onclick=()=> { popup.style.display="none"; frame.src=""; }
+
+// Events
 filterGroup.addEventListener("change",()=>{ renderLinks(linksData,filterGroup.value,searchBox.value.toLowerCase()); });
 searchBox.addEventListener("input",()=>{ renderLinks(linksData,filterGroup.value,searchBox.value.toLowerCase()); });
 btnGrid.addEventListener("click",()=>{ viewMode="grid"; localStorage.setItem("viewMode","grid"); renderLinks(linksData,filterGroup.value,searchBox.value.toLowerCase()); });
 btnList.addEventListener("click",()=>{ viewMode="list"; localStorage.setItem("viewMode","list"); renderLinks(linksData,filterGroup.value,searchBox.value.toLowerCase()); });
-async function loadLinks(){
-  try{
-    let res=await fetch("links.json");
-    if(!res.ok) throw new Error("local gagal");
-    let d=await res.json();
-    sourceText.textContent="Sumber: Lokal";
-    sourceText.style.opacity=1;
-    setTimeout(()=>{ sourceText.style.opacity=0; },3000);
-    return d;
-  } catch{
-    let res=await fetch("https://raw.githubusercontent.com/Ahmadrijani/ALL_LINK/refs/heads/main/links.json");
-    let d=await res.json();
-    sourceText.textContent="Sumber: GitHub";
-    sourceText.style.opacity=1;
-    setTimeout(()=>{ sourceText.style.opacity=0; },3000);
-    return d;
-  }
+btnLang.addEventListener("click",()=>{
+  currentLang = currentLang==="id"?"en":"id";
+  btnLang.textContent = currentLang==="id"?"🇮🇩":"🇬🇧";
+  localStorage.setItem("lang", currentLang);
+  renderLinks(linksData, filterGroup.value, searchBox.value.toLowerCase());
+  updateUI();
+});
+
+// Update UI static texts
+function updateUI(){
+  headerTitle.textContent = currentLang==="id"?"Pusat Link Favorit":"Favorite Links Hub";
+  searchBox.placeholder = currentLang==="id"?"Cari link...":"Search link...";
+  btnGrid.title = currentLang==="id"?"Grid View":"Grid View";
+  btnList.title = currentLang==="id"?"List View":"List View";
 }
+
+// Load local + global
+async function loadLinks(){
+  let allLinks=[];
+  try{
+    let resLocal = await fetch("links.json");
+    let localLinks = await resLocal.json();
+    if(localLinks.links) allLinks.push(...localLinks.links.map(l=>({...l,type:"local"})));
+  } catch{}
+
+  try{
+    let resGlobal = await fetch("https://raw.githubusercontent.com/KuningMinum/Kumin/refs/heads/main/link_global.json");
+    let globalLinks = await resGlobal.json();
+    if(globalLinks.links) allLinks.push(...globalLinks.links.map(l=>({...l,type:"global"})));
+  } catch{}
+
+  sourceText.textContent="Sumber: Lokal + Global";
+  sourceText.style.opacity=1;
+  setTimeout(()=>{ sourceText.style.opacity=0; },3000);
+  return allLinks;
+}
+
+// Init
 loadLinks().then(d=>{
-  linksData=d.links;
+  linksData=d;
   renderLinks(linksData);
-  let groups=[...new Set(linksData.map(l=>l.grup?.trim()||"Tanpa Grup"))];
-  filterGroup.innerHTML='<option value="">Semua Grup</option>'+groups.map(g=>`<option value="${g}">${g}</option>`).join('');
+  updateUI();
+
+  let groupSet = new Set();
+  linksData.forEach(l=>{
+    groupSet.add(l.grup_id);
+    groupSet.add(l.grup_en);
+  });
+  filterGroup.innerHTML='<option value="">'+(currentLang==="id"?"Semua Grup":"All Groups")+'</option>'+
+    [...groupSet].map(g=>`<option value="${g}">${g}</option>`).join('');
 }).catch(()=>{ container.innerHTML="<p style='color:#fff'>Gagal memuat data</p>"; });
 </script>
 </body>
