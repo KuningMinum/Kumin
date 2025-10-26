@@ -32,6 +32,10 @@ body { margin:0; font-family:Inter,sans-serif; background:#000; color:#e6eef8; }
 .preview-iframe { flex:1; width:100%; border:none; }
 .highlight { border:2px solid #4d90fe; }
 .source-text { position:fixed; bottom:10px; left:50%; transform:translateX(-50%); background:rgba(255,255,255,0.1); color:#fff; padding:6px 12px; border-radius:6px; font-size:0.9rem; opacity:0; transition:.3s; }
+.reset-popup { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(4px); justify-content:center; align-items:center; z-index:1000; }
+.reset-content { background:#111; padding:20px; border-radius:12px; text-align:center; width:90%; max-width:400px; }
+.reset-content input { width:100%; padding:8px; margin:10px 0; border-radius:6px; border:none; outline:none; font-size:1rem; background:#222; color:#fff; text-transform:uppercase; text-align:center; }
+.reset-content button { padding:8px 12px; border-radius:6px; border:none; background:#4d90fe; color:#fff; cursor:pointer; font-size:1rem; }
 @media(max-width:800px){ .grid-view .group-container { grid-template-columns:1fr !important; } }
 </style>
 </head>
@@ -44,11 +48,13 @@ body { margin:0; font-family:Inter,sans-serif; background:#000; color:#e6eef8; }
     <button id="btn-grid"><i class="fa-solid fa-table-cells"></i> Grid</button>
     <button id="btn-list"><i class="fa-solid fa-list"></i> List</button>
     <button id="btn-lang">🇮🇩</button>
+    <button id="btn-reset"><i class="fa-solid fa-rotate-left"></i> Reset</button>
   </div>
 </div>
 
 <div class="container" id="link-container"></div>
 
+<!-- Popup Preview -->
 <div class="preview-popup" id="preview-popup">
   <div class="preview-content" id="preview-content">
     <div class="preview-header">
@@ -56,6 +62,15 @@ body { margin:0; font-family:Inter,sans-serif; background:#000; color:#e6eef8; }
       <button class="btn-icon" id="btn-close" title="Tutup"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <iframe id="preview-frame" class="preview-iframe" title="Pratinjau"></iframe>
+  </div>
+</div>
+
+<!-- Popup Reset -->
+<div class="reset-popup" id="reset-popup">
+  <div class="reset-content">
+    <p id="reset-text">Ketik "RESET" untuk menghapus semua data</p>
+    <input type="text" id="reset-input" placeholder="RESET">
+    <button id="confirm-reset">Reset Data</button>
   </div>
 </div>
 
@@ -68,20 +83,23 @@ let currentLang = localStorage.getItem("lang") || "id";
 const container=document.getElementById("link-container");
 const popup=document.getElementById("preview-popup");
 const frame=document.getElementById("preview-frame");
-const content=document.getElementById("preview-content");
 const btnClose=document.getElementById("btn-close");
 const btnGo=document.getElementById("btn-go");
 const searchBox=document.getElementById("search-box");
 const btnGrid=document.getElementById("btn-grid");
 const btnList=document.getElementById("btn-list");
 const btnLang=document.getElementById("btn-lang");
+const btnReset=document.getElementById("btn-reset");
+const resetPopup=document.getElementById("reset-popup");
+const resetInput=document.getElementById("reset-input");
+const confirmReset=document.getElementById("confirm-reset");
 const headerTitle=document.getElementById("header-title");
 const sourceText=document.getElementById("source-text");
 
 let viewMode = localStorage.getItem("viewMode") || "list";
 let favoriteLinks = JSON.parse(localStorage.getItem("favoriteLinks") || "[]");
 
-// Render links
+// ---------------- Render Links ----------------
 function renderLinks(links, searchVal=""){
   container.innerHTML="";
   let groups={};
@@ -201,7 +219,7 @@ function renderLinks(links, searchVal=""){
   });
 }
 
-// Popup
+// ---------------- Popup Preview ----------------
 function openPopup(url){
   frame.src=url;
   popup.style.display="flex";
@@ -209,7 +227,7 @@ function openPopup(url){
 }
 btnClose.onclick=()=> { popup.style.display="none"; frame.src=""; }
 
-// Events
+// ---------------- Events ----------------
 searchBox.addEventListener("input",()=>{ renderLinks(linksData, searchBox.value.toLowerCase()); });
 btnGrid.addEventListener("click",()=>{ viewMode="grid"; localStorage.setItem("viewMode","grid"); renderLinks(linksData, searchBox.value.toLowerCase()); });
 btnList.addEventListener("click",()=>{ viewMode="list"; localStorage.setItem("viewMode","list"); renderLinks(linksData, searchBox.value.toLowerCase()); });
@@ -221,45 +239,65 @@ btnLang.addEventListener("click",()=>{
   updateUI();
 });
 
-// Update UI
+// ---------------- Reset ----------------
+btnReset.addEventListener("click", ()=>{ 
+  resetPopup.style.display="flex"; 
+  resetInput.value=""; 
+});
+confirmReset.addEventListener("click", ()=>{
+  if(resetInput.value.trim().toUpperCase()==="RESET"){
+    localStorage.clear();
+    location.reload();
+  } else {
+    notify(currentLang==="id"?"Ketik RESET untuk menghapus data":"Type RESET to clear data","error");
+  }
+});
+resetPopup.addEventListener("click",(e)=>{ if(e.target===resetPopup) resetPopup.style.display="none"; });
+
+// ---------------- Update UI ----------------
 function updateUI(){
   headerTitle.textContent = currentLang==="id"?"Pusat Link Favorit":"Favorite Links Hub";
   searchBox.placeholder = currentLang==="id"?"Cari link...":"Search link...";
 }
 
-// Load local + global
+// ---------------- Load Links ----------------
 async function loadLinks(){
   let allLinks=[];
+  let errorCount = 0;
   try{
-    let resLocal = await fetch("links.json");
+    let resLocal = await fetch("links.json?_="+Date.now());
     let localLinks = await resLocal.json();
     if(localLinks.links) allLinks.push(...localLinks.links.map(l=>({...l,type:"local"})));
-  } catch{ notify("Error loading local data","error"); }
+  } catch(e){ errorCount++; console.warn("Gagal load lokal:",e); }
 
   try{
     let resGlobal = await fetch("https://raw.githubusercontent.com/KuningMinum/Kumin/refs/heads/main/link_global.json");
     let globalLinks = await resGlobal.json();
     if(globalLinks.links) allLinks.push(...globalLinks.links.map(l=>({...l,type:"global"})));
-  } catch{ notify("Error loading global data","error"); }
+  } catch(e){ errorCount++; console.warn("Gagal load global:",e); }
 
-  notify(currentLang==="id"?"Data berhasil dimuat":"Data loaded successfully","success");
+  if(allLinks.length===0 && favoriteLinks.length>0) allLinks=favoriteLinks;
+
+  if(errorCount>0) notify(currentLang==="id"?"Beberapa data gagal dimuat":"Some data failed to load","error");
+  if(allLinks.length===0) notify(currentLang==="id"?"Gagal memuat semua data":"Failed to load any data","error");
+
   return allLinks;
 }
 
-// Notifikasi
-function notify(message,type="info"){
-  sourceText.textContent = message;
-  sourceText.style.background = type==="error"?"#ff4d4d":"#4dff88";
-  sourceText.style.opacity = 1;
-  setTimeout(()=>{ sourceText.style.opacity = 0; },3000);
+// ---------------- Notification ----------------
+function notify(text,type="info"){
+  sourceText.textContent=text;
+  sourceText.style.opacity=1;
+  setTimeout(()=>{ sourceText.style.opacity=0; },3000);
 }
 
-// Init
+// ---------------- Init ----------------
 loadLinks().then(d=>{
   linksData=d;
   renderLinks(linksData);
   updateUI();
-}).catch(()=>{ container.innerHTML="<p style='color:#fff'>"+(currentLang==="id"?"Gagal memuat data":"Failed to load data")+"</p>"; notify(currentLang==="id"?"Gagal memuat data":"Failed to load data","error"); });
+}).catch(()=>{ notify(currentLang==="id"?"Gagal memuat data":"Failed to load data","error"); });
 </script>
+
 </body>
 </html>
