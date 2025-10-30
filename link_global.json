@@ -28,6 +28,15 @@
       "type": "global"
     },
     {
+      "title_id": "YouTube KuningMinumGaming",
+      "title_en": "KuningMinumGaming YouTube",
+      "url": "https://www.youtube.com/@KuningMinumGaming",
+      "icon": "fab fa-youtube",
+      "grup_id": "YouTube",
+      "grup_en": "YouTube",
+      "type": "global"
+    },
+    {
       "title_id": "GitHub Kuning Minum",
       "title_en": "Kuning Minum GitHub",
       "url": "https://kuningminum.github.io/kuningminum/",
