@@ -257,13 +257,13 @@ function renderLinks(list, search=""){
       const eye = document.createElement("button"); eye.className="btn-icon"; eye.innerHTML='<i class="fa-solid fa-eye"></i>'; eye.title=t("preview_open");
       eye.addEventListener("click",(e)=>{ e.stopPropagation(); openPreview(link.url); });
       const open = document.createElement("button"); open.className="btn-icon"; open.innerHTML='<i class="fa-solid fa-arrow-up-right-from-square"></i>'; open.title=(currentLang==="id"?"Buka Link":"Open Link");
-      open.addEventListener("click",(e)=>{ e.stopPropagation(); window.open(link.url,"_blank");});
+      open.addEventListener("click",(e)=>{ e.stopPropagation(); window.location.href = link.url;});
       const favBtn = document.createElement("button"); favBtn.className="btn-icon"; favBtn.innerHTML = '<i class="fa-solid fa-star"></i>';
       if(favoriteLinks.some(f=>f.url===link.url)) favBtn.classList.add("favorite");
       favBtn.addEventListener("click",(e)=>{ e.stopPropagation(); const found = favoriteLinks.find(f=>f.url===link.url); if(found){ favoriteLinks = favoriteLinks.filter(f=>f.url!==link.url); favBtn.classList.remove("favorite"); } else { favoriteLinks.push({...link}); favBtn.classList.add("favorite"); } localStorage.setItem("favoriteLinks", JSON.stringify(favoriteLinks)); renderLinks(linksData, searchBox.value); });
       acts.appendChild(eye); acts.appendChild(open); acts.appendChild(favBtn);
       card.appendChild(info); card.appendChild(acts);
-      card.addEventListener("click", ()=> window.open(link.url,"_blank"));
+      card.addEventListener("click", ()=> window.location.href = link.url );
       items.appendChild(card);
     });
     gc.appendChild(items);
@@ -272,7 +272,7 @@ function renderLinks(list, search=""){
 }
 
 /* ======== Preview popup ======== */
-function openPreview(url){ previewFrame.src = url; previewPopup.style.display = "flex"; btnGo.onclick = ()=> window.open(url,"_blank"); }
+function openPreview(url){ previewFrame.src = url; previewPopup.style.display = "flex"; btnGo.onclick = ()=> window.location.href = url; }
 btnClose.addEventListener("click", ()=>{ previewPopup.style.display = "none"; previewFrame.src = ""; });
 
 /* ======== Settings interactions ======== */
