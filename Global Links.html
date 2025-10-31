@@ -7,23 +7,52 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
 <style>
   :root{
-    --bg:#000; --panel:#111; --muted:#b7c1d6; --card-bg: rgba(255,255,255,0.04);
+    --bg:#05060a; --panel:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    --muted:#b7c1d6; --card-bg: rgba(255,255,255,0.03);
     --accent:#4d90fe; --highlight:#ffd94d;
+    --glass: rgba(255,255,255,0.03);
+    --group-dark: rgba(255,255,255,0.01);
+    --group-light: rgba(255,255,255,0.02);
+    --settings-bg: rgba(0,0,0,0.92);
   }
   html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;color:#e6eef8;background:var(--bg);display:flex;flex-direction:column;}
-  .header{display:flex;align-items:center;gap:8px;padding:10px;background:var(--panel);border-bottom:1px solid #222;flex-wrap:wrap;position:relative}
+  .header{display:flex;align-items:center;gap:8px;padding:10px;background:var(--panel);border-bottom:1px solid rgba(255,255,255,0.03);flex-wrap:wrap;position:relative;backdrop-filter: blur(6px)}
   .header h1{margin:0;flex:1;font-size:1.4rem}
   .controls{display:flex;gap:6px;align-items:center}
-  .controls input,.controls button,.controls select{padding:7px 10px;border-radius:8px;border:none;background:#222;color:#fff;font-size:0.95rem;cursor:pointer;outline:none}
+  .controls input,.controls button,.controls select{padding:7px 10px;border-radius:10px;border:none;background:rgba(0,0,0,0.45);color:#fff;font-size:0.95rem;cursor:pointer;outline:none}
+  .controls input{min-width:180px}
   .controls button i{margin-right:6px}
-  .container{padding:12px;display:grid;gap:8px;flex:1;overflow:auto}
-  .group-container{margin-bottom:6px;padding-bottom:6px}
-  .group-title{font-size:1.12rem;font-weight:700;margin:6px 0 6px;border-bottom:1px solid #2b2f44;padding-bottom:6px}
-  .grid-view .group-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
-  .card-view .group-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+  .container{padding:12px;display:grid;gap:12px;flex:1;overflow:auto}
+  .group-container{margin-bottom:12px;padding:10px;border-radius:10px}
+  .group-title{font-size:1.12rem;font-weight:700;margin:0 0 8px;color:var(--highlight);padding-bottom:4px}
+  /* alternating background for groups (subtle, keep dark theme) */
+  .container > .group-container:nth-child(odd){ background: var(--group-dark) }
+  .container > .group-container:nth-child(even){ background: var(--group-light) }
+
+  /* GRID view: consistent tile aspect */
+  .grid-view .group-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+  .grid-view .link-card{background:var(--card-bg);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;box-shadow:0 8px 22px rgba(2,6,23,0.6);transition:transform .12s;cursor:pointer;aspect-ratio:4/3;overflow:hidden}
+  .grid-view .link-icon{width:100%;height:55%;border-radius:8px;display:grid;place-items:center;font-size:1.6rem;color:var(--muted);background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));object-fit:cover}
+  .grid-view .link-title{font-weight:700;margin:0;font-size:1rem}
+  .grid-view .link-info{display:block}
+
+  /* CARD view: group becomes slider with arrows */
+  .card-view .group-wrap{position:relative}
+  .card-view .group-items{display:flex;gap:12px;overflow-x:auto;padding:6px 40px;scroll-snap-type:x mandatory;scroll-behavior:smooth}
+  .card-view .link-card{flex:0 0 220px;height:320px;min-width:220px;border-radius:14px;padding:14px;display:flex;flex-direction:column;align-items:center;text-align:center;box-shadow:0 10px 30px rgba(2,6,23,0.6);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));scroll-snap-align:center;transition:transform .12s}
+  .card-view .link-card:hover{transform:translateY(-6px)}
+  .card-view .link-icon{width:120px;height:120px;border-radius:16px;display:grid;place-items:center;font-size:2.2rem;color:var(--muted);background:var(--glass);margin-bottom:10px;object-fit:cover}
+  .card-view .link-title{font-weight:700;margin:6px 0 0;font-size:1rem}
+  .card-view .link-actions{margin-top:auto;display:flex;gap:8px}
+
+  /* slider arrows */
+  .slider-btn{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:8px;border:none;background:rgba(0,0,0,0.6);color:#fff;display:grid;place-items:center;cursor:pointer;z-index:40}
+  .slider-left{left:8px}
+  .slider-right{right:8px}
+  .slider-btn:active{transform:translateY(-50%) scale(.98)}
+
+  /* LIST view - jangan diubah (tetap seperti semula) */
   .list-view .group-items{display:flex;flex-direction:column;gap:8px}
-  .link-card{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:var(--card-bg);box-shadow:0 6px 18px rgba(2,6,23,0.45);cursor:pointer;transition:transform .12s,box-shadow .12s}
-  .link-card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(2,6,23,0.6)}
   .link-info{display:flex;align-items:center;gap:12px;flex:1}
   .link-icon{width:44px;height:44px;min-width:44px;border-radius:8px;display:grid;place-items:center;font-size:1.25rem;color:var(--muted);background:rgba(255,255,255,0.02);object-fit:cover}
   .link-title{font-weight:600;margin:0}
@@ -32,16 +61,24 @@
   .btn-icon:hover{color:#fff;transform:scale(1.12)}
   .favorite{color:#ffd700!important}
   .highlight{border:2px solid var(--accent);border-radius:10px}
+
+  /* preview + popups keep original styles */
   .preview-popup{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);justify-content:center;align-items:center;z-index:1200}
   .preview-content{width:92%;max-width:900px;height:80%;background:var(--panel);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
   .preview-header{display:flex;justify-content:flex-end;gap:8px;padding:8px;background:#000}
   .preview-iframe{flex:1;border:none}
-  .settings-menu{display:none;position:absolute;top:56px;right:10px;background:var(--panel);border:1px solid #222;border-radius:10px;padding:10px;z-index:1100;min-width:240px;box-shadow:0 8px 24px rgba(0,0,0,0.6)}
-  .settings-menu.open{display:flex;flex-direction:column;gap:8px}
+
+  /* SETTINGS modal (ditengah layar) with dark background for menu */
+  .settings-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1500;justify-content:center;align-items:center}
+  .settings-overlay.open{display:flex}
+  .settings-menu{background:var(--settings-bg);border-radius:12px;padding:16px;min-width:320px;max-width:92%;box-shadow:0 12px 40px rgba(2,6,23,0.7);display:flex;flex-direction:column;gap:10px;color:#e6eef8}
   .settings-row{display:flex;align-items:center;gap:8px;justify-content:space-between}
   .settings-row label{font-size:0.95rem}
+
+  /* TIPS keep same but positioned relative to header (small popup) */
   .tips-menu{display:none;position:absolute;top:56px;right:140px;background:var(--panel);border:1px solid #222;border-radius:10px;padding:10px;z-index:1100;min-width:260px;box-shadow:0 8px 24px rgba(0,0,0,0.6)}
   .tips-menu.open{display:block}
+
   .reset-popup{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(4px);justify-content:center;align-items:center;z-index:1300}
   .reset-box{background:var(--panel);padding:18px;border-radius:10px;width:92%;max-width:420px;position:relative}
   .reset-close{position:absolute;right:10px;top:8px;background:none;border:none;color:#fff;font-size:1.1rem;cursor:pointer}
@@ -53,11 +90,25 @@
   .btn-primary{padding:8px 12px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer}
   .btn-ghost{padding:8px 12px;border-radius:8px;border:1px solid #333;background:transparent;color:#fff;cursor:pointer}
   .btn-primary[disabled]{opacity:.6;cursor:not-allowed}
-  .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.06);padding:8px 12px;border-radius:8px;font-size:0.95rem;opacity:0;transition:opacity .25s;z-index:1500}
+
+  /* toast pindah ke atas */
+  .toast{position:fixed;top:18px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.06);padding:8px 12px;border-radius:8px;font-size:0.95rem;opacity:0;transition:opacity .25s;z-index:1600}
   .toast.show{opacity:1}
+
   .original-link-small{padding:6px;text-align:center;font-size:0.85rem;color:#9aa6bf;background:transparent;border-top:1px solid rgba(255,255,255,0.02)}
-  /* ensure bottom does not overlap controls */
-  @media (max-width:760px){ .header h1{font-size:1.12rem} }
+
+  /* loading overlay with spinner */
+  .loading-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1700;justify-content:center;align-items:center;flex-direction:column;gap:12px}
+  .loading-overlay.open{display:flex}
+  .spinner{
+    width:64px;height:64px;border-radius:50%;border:6px solid rgba(255,255,255,0.08);border-top-color:var(--accent);animation:spin 1s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .loading-text{font-size:0.95rem;color:#e6eef8}
+  /* thin scrollbar for card-view */
+  .card-view .group-items::-webkit-scrollbar{height:8px}
+  .card-view .group-items::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.06);border-radius:8px}
+  @media (max-width:760px){ .header h1{font-size:1.12rem} .card-view .link-card{flex:0 0 200px;min-width:200px;height:300px} }
 </style>
 </head>
 <body>
@@ -67,24 +118,38 @@
       <input id="search-box" placeholder="search here">
       <button id="btn-settings" title=""><i class="fa-solid fa-gear"></i> <span id="btn-settings-label"></span></button>
       <button id="btn-tips" title=""><i class="fa-solid fa-lightbulb"></i> <span id="btn-tips-label"></span></button>
+    </div>
+  </div>
 
-      <!-- settings -->
-      <div class="settings-menu" id="settings-menu" aria-hidden="true">
-        <div class="settings-row"><label id="lbl-language"></label><select id="sel-language"><option value="id">Indonesia</option><option value="en">English</option></select></div>
-        <div class="settings-row"><label id="lbl-view"></label><select id="sel-view"><option value="list">List</option><option value="grid">Grid</option><option value="card">Card</option></select></div>
-        <div class="settings-row"><label id="lbl-reset"></label><button id="btn-reset" class="btn-ghost"></button></div>
+  <!-- SETTINGS modal overlay (ditengah layar) -->
+  <div class="settings-overlay" id="settings-overlay" aria-hidden="true">
+    <div class="settings-menu" id="settings-menu" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <strong id="settings-title">Pengaturan</strong>
+        <button id="settings-close" class="btn-ghost" title="Tutup">✖</button>
       </div>
+      <div class="settings-row"><label id="lbl-language"></label><select id="sel-language"><option value="id">Indonesia</option><option value="en">English</option></select></div>
+      <div class="settings-row"><label id="lbl-view"></label><select id="sel-view"><option value="list">List</option><option value="grid">Grid</option><option value="card">Card</option></select></div>
 
-      <!-- tips -->
-      <div class="tips-menu" id="tips-menu" aria-hidden="true">
-        <div id="tips-content"></div>
-        <div style="height:8px"></div>
-        <div style="display:flex;justify-content:flex-end;gap:8px">
-          <button id="tips-reset-btn" class="btn-ghost"></button>
-          <a id="original-link-bottom" href="#" target="_blank" class="btn-ghost" style="text-decoration:none"></a>
+      <div class="settings-row" style="align-items:center;gap:10px">
+        <div style="display:flex;flex-direction:column">
+          <label id="lbl-merge">Gabungkan Lokal & Global</label>
+          <small style="color:#9aa6bf">Jika dicentang, tampilan tidak memisah grup berdasarkan sumber</small>
         </div>
+        <input type="checkbox" id="chk-merge" />
       </div>
 
+      <div class="settings-row"><label id="lbl-reset"></label><button id="btn-reset" class="btn-ghost"></button></div>
+    </div>
+  </div>
+
+  <!-- tips popup (small) -->
+  <div class="tips-menu" id="tips-menu" aria-hidden="true">
+    <div id="tips-content"></div>
+    <div style="height:8px"></div>
+    <div style="display:flex;justify-content:flex-end;gap:8px">
+      <button id="tips-reset-btn" class="btn-ghost"></button>
+      <a id="original-link-bottom" href="#" target="_blank" class="btn-ghost" style="text-decoration:none"></a>
     </div>
   </div>
 
@@ -132,11 +197,37 @@
   <!-- small original link bottom (non-intrusive) -->
   <div class="original-link-small" id="original-link-small"><a id="original-link-anchor" href="#" target="_blank" style="color:var(--accent);text-decoration:underline"></a></div>
 
+  <!-- loading overlay -->
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="spinner" aria-hidden="true"></div>
+    <div class="loading-text" id="loading-text">Memuat data...</div>
+  </div>
+
 <script>
 /* ======== Texts ======== */
 const T = {
-  id:{ title:"Pusat Link Favorit", settings:"Pengaturan", settings_title:"Pengaturan", lbl_language:"Bahasa", lbl_view:"Tampilan", lbl_reset:"Reset", reset_button:"Reset Data", reset_instruction:'Ketik <span class="stabilo">RESET</span> untuk menghapus semua data', reset_input_placeholder:"Ketik RESET untuk konfirmasi", reset_proceed:"Lanjut", reset_cancel:"Batal", confirm_text:"Yakin ingin menghapus semua data? Tindakan ini tidak bisa dibatalkan.", agree:"Setuju", cancel:"Batal", toast_loaded:"Data berhasil dimuat", toast_partial:"Beberapa data gagal dimuat", toast_failed:"Gagal memuat data, menampilkan favorit jika ada", footer_error:"Jika eror, coba reset (Pengaturan → Reset)", preview_open:"Buka Link", preview_close:"Tutup", original_link_text:"Original Link"}, 
-  en:{ title:"Favorite Links Hub", settings:"Settings", settings_title:"Settings", lbl_language:"Language", lbl_view:"View", lbl_reset:"Reset", reset_button:"Reset Data", reset_instruction:'Type <span class="stabilo">RESET</span> to clear all data', reset_input_placeholder:"Type RESET to confirm", reset_proceed:"Proceed", reset_cancel:"Cancel", confirm_text:"Are you sure you want to clear all data? This action cannot be undone.", agree:"Agree", cancel:"Cancel", toast_loaded:"Data loaded successfully", toast_partial:"Some data failed to load", toast_failed:"Failed to load data, showing favorites if available", footer_error:"If error, try reset (Settings → Reset)", preview_open:"Open Link", preview_close:"Close", original_link_text:"Original Link"}
+  id:{
+    title:"Pusat Link Favorit", settings:"Pengaturan", settings_title:"Pengaturan",
+    lbl_language:"Bahasa", lbl_view:"Tampilan", lbl_reset:"Reset", reset_button:"Reset Data",
+    reset_instruction:'Ketik <span class="stabilo">RESET</span> untuk menghapus semua data',
+    reset_input_placeholder:"Ketik RESET untuk konfirmasi", reset_proceed:"Lanjut", reset_cancel:"Batal",
+    confirm_text:"Yakin ingin menghapus semua data? Tindakan ini tidak bisa dibatalkan.",
+    agree:"Setuju", cancel:"Batal", toast_loaded:"Data berhasil dimuat",
+    toast_partial:"Beberapa data gagal dimuat", toast_failed:"Gagal memuat data, menampilkan favorit jika ada",
+    footer_error:"Jika eror, coba reset (Pengaturan → Reset)", preview_open:"Buka Link", preview_close:"Tutup",
+    original_link_text:"Original Link", lbl_merge:"Gabungkan Lokal & Global"
+  },
+  en:{
+    title:"Favorite Links Hub", settings:"Settings", settings_title:"Settings",
+    lbl_language:"Language", lbl_view:"View", lbl_reset:"Reset", reset_button:"Reset Data",
+    reset_instruction:'Type <span class="stabilo">RESET</span> to clear all data',
+    reset_input_placeholder:"Type RESET to confirm", reset_proceed:"Proceed", reset_cancel:"Cancel",
+    confirm_text:"Are you sure you want to clear all data? This action cannot be undone.",
+    agree:"Agree", cancel:"Cancel", toast_loaded:"Data loaded successfully",
+    toast_partial:"Some data failed to load", toast_failed:"Failed to load data, showing favorites if available",
+    footer_error:"If error, try reset (Settings → Reset)", preview_open:"Open Link", preview_close:"Close",
+    original_link_text:"Original Link", lbl_merge:"Merge Local & Global"
+  }
 };
 
 const ORIGINAL_LINK = "https://kuningminum.github.io/Kumin/Global%20Links.html";
@@ -146,17 +237,24 @@ let favoriteLinks = JSON.parse(localStorage.getItem("favoriteLinks")||"[]");
 let browserLang = (navigator.language && navigator.language.startsWith("id")) ? "id" : "en";
 let currentLang = localStorage.getItem("lang") || browserLang;
 let viewMode = localStorage.getItem("viewMode") || "list";
+let mergeSources = (localStorage.getItem("merge_sources") === "1"); // new setting
 let linksData = [];
-let lastErrorMessage = ""; // string shown only inside Tips when exists
+let lastErrorMessage = ""; // string shown inside Tips when exists
+let lastLoadStatus = { local:false, global:false }; // store last load status
 
 /* ======== DOM ======== */
 const headerTitle = document.getElementById("header-title");
+
+/* settings modal elements */
 const btnSettings = document.getElementById("btn-settings");
 const btnSettingsLabel = document.getElementById("btn-settings-label");
+const settingsOverlay = document.getElementById("settings-overlay");
 const settingsMenu = document.getElementById("settings-menu");
 const selLanguage = document.getElementById("sel-language");
 const selView = document.getElementById("sel-view");
 const btnReset = document.getElementById("btn-reset");
+const settingsClose = document.getElementById("settings-close");
+const chkMerge = document.getElementById("chk-merge");
 
 const btnTips = document.getElementById("btn-tips");
 const tipsMenu = document.getElementById("tips-menu");
@@ -185,11 +283,19 @@ const confirmText = document.getElementById("confirm-text");
 const confirmCancel = document.getElementById("confirm-cancel");
 const confirmAgree = document.getElementById("confirm-agree");
 
+/* loading overlay */
+const loadingOverlay = document.getElementById("loading-overlay");
+const loadingText = document.getElementById("loading-text");
+
 /* ======== Helpers ======== */
 function t(key){ return (T[currentLang] && T[currentLang][key]) || key; }
-function showToast(msg){ toast.textContent = msg; toast.classList.add("show"); setTimeout(()=>toast.classList.remove("show"),3000); }
+function showToast(msg, ms=3000){
+  toast.textContent = msg;
+  toast.classList.add("show");
+  setTimeout(()=>toast.classList.remove("show"), ms);
+}
 
-/* ======== UI apply language ======== */
+/* ======== UI apply language & merge state ======== */
 function applyLanguageUI(){
   headerTitle.textContent = t("title");
   btnSettings.title = t("settings_title");
@@ -197,6 +303,7 @@ function applyLanguageUI(){
   document.getElementById("lbl-language").textContent = t("lbl_language");
   document.getElementById("lbl-view").textContent = t("lbl_view");
   document.getElementById("lbl-reset").textContent = t("lbl_reset");
+  document.getElementById("lbl-merge").textContent = t("lbl_merge");
   document.getElementById("btn-reset").textContent = t("reset_button");
   resetInstruction.innerHTML = t("reset_instruction");
   resetInput.placeholder = t("reset_input_placeholder");
@@ -212,61 +319,138 @@ function applyLanguageUI(){
   originalLinkBottom.textContent = t("original_link_text");
   selLanguage.value = currentLang;
   selView.value = viewMode;
+  chkMerge.checked = mergeSources;
 }
 applyLanguageUI();
 
-/* ======== Render links (compact spacing) ======== */
+/* ======== Render links (support mergeSources + sliders) ======== */
 function renderLinks(list, search=""){
   linkContainer.innerHTML = "";
   const groups = {};
   list.forEach(l=>{
-    const type = l.type || "local";
+    // if mergeSources true, we group by grup_id only (ignore local/global type)
     const gid = l.grup_id || l.grup || "Tanpa Grup";
     const gen = l.grup_en || l.grup || "No Group";
-    const key = type + "__" + gid;
-    if(!groups[key]) groups[key] = {links:[], name:{id:gid,en:gen}, type};
+    const key = gid;
+    if(!groups[key]) groups[key] = {links:[], name:{id:gid,en:gen}, types: new Set()};
     groups[key].links.push(l);
+    groups[key].types.add(l.type || "local");
   });
-  if(favoriteLinks.length) groups["FAVORIT"] = {links: favoriteLinks, name:{id:"Favorit",en:"Favorite"}, type:"favorite"};
+
+  // favorit tetap muncul sebagai satu grup di atas jika ada
+  if(favoriteLinks.length) groups["FAVORIT"] = {links: favoriteLinks, name:{id:"Favorit",en:"Favorite"}, types: new Set(["favorite"])};
+
+  // keys keep insertion order but ensure FAVORIT first
   const keys = Object.keys(groups).sort((a,b)=> a==="FAVORIT"? -1 : b==="FAVORIT"? 1: 0);
-  linkContainer.className = "container " + (viewMode==="grid"?"grid-view":viewMode==="card"?"card-view":"list-view");
+
+  // jika layar kecil, paksa ke list view
+  const isSmall = window.innerWidth <= 760;
+  const effectiveView = isSmall ? "list" : viewMode;
+  linkContainer.className = "container " + (effectiveView==="grid"?"grid-view":effectiveView==="card"?"card-view":"list-view");
+
   const q = (search||"").toLowerCase();
-  keys.forEach(k=>{
+  keys.forEach((k, idx)=>{
     const g = groups[k];
     if(!g) return;
     const gc = document.createElement("section");
     gc.className = "group-container";
-    const h = document.createElement("h2");
-    h.className = "group-title";
+    const h = document.createElement("h2"); h.className = "group-title";
     let gname = (currentLang==="id")?g.name.id:g.name.en;
-    if(g.type==="local" && k!=="FAVORIT") gname += " (Lokal)";
-    if(g.type==="global") gname += " (Global)";
+    // if not merging show (Lokal) or (Global) labels per earlier behavior, unless FAVORIT
+    if(!mergeSources && k!=="FAVORIT"){
+      // if group types contains only local or global we append label
+      const typesArr = Array.from(g.types);
+      if(typesArr.length===1 && typesArr[0]!=="favorite"){
+        if(typesArr[0]==="local") gname += " (Lokal)";
+        if(typesArr[0]==="global") gname += " (Global)";
+      } else {
+        // mixed sources: indicate mixed
+        if(typesArr.includes("local") && typesArr.includes("global")) gname += " (Local+Global)";
+      }
+    }
     h.textContent = gname;
     gc.appendChild(h);
-    const items = document.createElement("div"); items.className = "group-items";
-    g.links.forEach(link=>{
-      const titleText = (currentLang==="id")?link.title_id:(link.title_en||link.title_id);
-      if(q && !(titleText.toLowerCase().includes(q) || (link.grup_id||"").toLowerCase().includes(q) || (link.grup_en||"").toLowerCase().includes(q))) return;
-      const card = document.createElement("div"); card.className="link-card";
-      const info = document.createElement("div"); info.className="link-info";
-      const icon = document.createElement("div"); icon.className="link-icon";
-      if(link.img){ const img=document.createElement("img"); img.src=link.img; img.style.width="100%"; img.style.height="100%"; img.style.objectFit="cover"; img.style.borderRadius="6px"; icon.appendChild(img);} else { icon.innerHTML = `<i class="${link.icon||'fa-solid fa-link'}"></i>`; }
-      const title = document.createElement("div"); title.className="link-title"; title.textContent = titleText;
-      info.appendChild(icon); info.appendChild(title);
-      const acts = document.createElement("div"); acts.className="link-actions";
-      const eye = document.createElement("button"); eye.className="btn-icon"; eye.innerHTML='<i class="fa-solid fa-eye"></i>'; eye.title=t("preview_open");
-      eye.addEventListener("click",(e)=>{ e.stopPropagation(); openPreview(link.url); });
-      const open = document.createElement("button"); open.className="btn-icon"; open.innerHTML='<i class="fa-solid fa-arrow-up-right-from-square"></i>'; open.title=(currentLang==="id"?"Buka Link":"Open Link");
-      open.addEventListener("click",(e)=>{ e.stopPropagation(); window.location.href = link.url;});
-      const favBtn = document.createElement("button"); favBtn.className="btn-icon"; favBtn.innerHTML = '<i class="fa-solid fa-star"></i>';
-      if(favoriteLinks.some(f=>f.url===link.url)) favBtn.classList.add("favorite");
-      favBtn.addEventListener("click",(e)=>{ e.stopPropagation(); const found = favoriteLinks.find(f=>f.url===link.url); if(found){ favoriteLinks = favoriteLinks.filter(f=>f.url!==link.url); favBtn.classList.remove("favorite"); } else { favoriteLinks.push({...link}); favBtn.classList.add("favorite"); } localStorage.setItem("favoriteLinks", JSON.stringify(favoriteLinks)); renderLinks(linksData, searchBox.value); });
-      acts.appendChild(eye); acts.appendChild(open); acts.appendChild(favBtn);
-      card.appendChild(info); card.appendChild(acts);
-      card.addEventListener("click", ()=> window.location.href = link.url );
-      items.appendChild(card);
-    });
-    gc.appendChild(items);
+
+    // for card view wrap to add slider buttons
+    if(effectiveView==="card"){
+      const wrap = document.createElement("div"); wrap.className = "group-wrap";
+      const left = document.createElement("button"); left.className = "slider-btn slider-left"; left.innerHTML = '<i class="fa-solid fa-chevron-left"></i>';
+      const right = document.createElement("button"); right.className = "slider-btn slider-right"; right.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+      const items = document.createElement("div"); items.className = "group-items";
+      // build cards
+      g.links.forEach(link=>{
+        const titleText = (currentLang==="id")?link.title_id:(link.title_en||link.title_id);
+        if(q && !(titleText.toLowerCase().includes(q) || (link.grup_id||"").toLowerCase().includes(q) || (link.grup_en||"").toLowerCase().includes(q))) return;
+        const card = document.createElement("div"); card.className = "link-card card-item";
+        const icon = document.createElement("div"); icon.className = "link-icon";
+        if(link.img){ const img=document.createElement("img"); img.src=link.img; img.style.width="100%"; img.style.height="100%"; img.style.objectFit="cover"; img.style.borderRadius="12px"; icon.appendChild(img);} else { icon.innerHTML = `<i class="${link.icon||'fa-solid fa-link'}"></i>`; }
+        const title = document.createElement("div"); title.className = "link-title"; title.textContent = titleText;
+        const acts = document.createElement("div"); acts.className = "link-actions";
+        const eye = document.createElement("button"); eye.className="btn-icon"; eye.innerHTML='<i class="fa-solid fa-eye"></i>'; eye.title=t("preview_open");
+        eye.addEventListener("click",(e)=>{ e.stopPropagation(); openPreview(link.url); });
+        const open = document.createElement("button"); open.className="btn-icon"; open.innerHTML='<i class="fa-solid fa-arrow-up-right-from-square"></i>'; open.title=(currentLang==="id"?"Buka Link":"Open Link");
+        open.addEventListener("click",(e)=>{ e.stopPropagation(); window.location.href = link.url;});
+        const favBtn = document.createElement("button"); favBtn.className="btn-icon"; favBtn.innerHTML = '<i class="fa-solid fa-star"></i>';
+        if(favoriteLinks.some(f=>f.url===link.url)) favBtn.classList.add("favorite");
+        favBtn.addEventListener("click",(e)=>{ e.stopPropagation(); const found = favoriteLinks.find(f=>f.url===link.url); if(found){ favoriteLinks = favoriteLinks.filter(f=>f.url!==link.url); favBtn.classList.remove("favorite"); } else { favoriteLinks.push({...link}); favBtn.classList.add("favorite"); } localStorage.setItem("favoriteLinks", JSON.stringify(favoriteLinks)); renderLinks(linksData, searchBox.value); });
+        acts.appendChild(eye); acts.appendChild(open); acts.appendChild(favBtn);
+        card.appendChild(icon); card.appendChild(title); card.appendChild(acts);
+        card.addEventListener("click", ()=> window.location.href = link.url );
+        items.appendChild(card);
+      });
+      wrap.appendChild(left); wrap.appendChild(items); wrap.appendChild(right);
+      gc.appendChild(wrap);
+
+      // slider behavior (scroll by card width)
+      left.addEventListener("click", ()=> {
+        // scroll left by container width * 0.7
+        items.scrollBy({left: -Math.round(items.clientWidth * 0.7), behavior:'smooth'});
+      });
+      right.addEventListener("click", ()=> {
+        items.scrollBy({left: Math.round(items.clientWidth * 0.7), behavior:'smooth'});
+      });
+
+      // hide arrows if not overflow
+      setTimeout(()=>{ // allow layout
+        if(items.scrollWidth <= items.clientWidth + 4){ left.style.display='none'; right.style.display='none'; } else { left.style.display='grid'; right.style.display='grid'; }
+      },60);
+
+    } else {
+      // grid or list mode
+      const items = document.createElement("div"); items.className = "group-items";
+      g.links.forEach(link=>{
+        const titleText = (currentLang==="id")?link.title_id:(link.title_en||link.title_id);
+        if(q && !(titleText.toLowerCase().includes(q) || (link.grup_id||"").toLowerCase().includes(q) || (link.grup_en||"").toLowerCase().includes(q))) return;
+        const card = document.createElement("div"); card.className = "link-card";
+        if(effectiveView==="grid"){
+          const icon = document.createElement("div"); icon.className="link-icon";
+          if(link.img){ const img=document.createElement("img"); img.src=link.img; img.style.width="100%"; img.style.height="100%"; img.style.objectFit="cover"; img.style.borderRadius="6px"; icon.appendChild(img);} else { icon.innerHTML = `<i class="${link.icon||'fa-solid fa-link'}"></i>`; }
+          const title = document.createElement("div"); title.className="link-title"; title.textContent = titleText;
+          card.appendChild(icon); card.appendChild(title);
+        } else {
+          // list
+          const info = document.createElement("div"); info.className="link-info";
+          const icon = document.createElement("div"); icon.className="link-icon";
+          if(link.img){ const img=document.createElement("img"); img.src=link.img; img.style.width="100%"; img.style.height="100%"; img.style.objectFit="cover"; img.style.borderRadius="6px"; icon.appendChild(img);} else { icon.innerHTML = `<i class="${link.icon||'fa-solid fa-link'}"></i>`; }
+          const title = document.createElement("div"); title.className="link-title"; title.textContent = titleText;
+          info.appendChild(icon); info.appendChild(title);
+          const acts = document.createElement("div"); acts.className="link-actions";
+          const eye = document.createElement("button"); eye.className="btn-icon"; eye.innerHTML='<i class="fa-solid fa-eye"></i>'; eye.title=t("preview_open");
+          eye.addEventListener("click",(e)=>{ e.stopPropagation(); openPreview(link.url); });
+          const open = document.createElement("button"); open.className="btn-icon"; open.innerHTML='<i class="fa-solid fa-arrow-up-right-from-square"></i>'; open.title=(currentLang==="id"?"Buka Link":"Open Link");
+          open.addEventListener("click",(e)=>{ e.stopPropagation(); window.location.href = link.url;});
+          const favBtn = document.createElement("button"); favBtn.className="btn-icon"; favBtn.innerHTML = '<i class="fa-solid fa-star"></i>';
+          if(favoriteLinks.some(f=>f.url===link.url)) favBtn.classList.add("favorite");
+          favBtn.addEventListener("click",(e)=>{ e.stopPropagation(); const found = favoriteLinks.find(f=>f.url===link.url); if(found){ favoriteLinks = favoriteLinks.filter(f=>f.url!==link.url); favBtn.classList.remove("favorite"); } else { favoriteLinks.push({...link}); favBtn.classList.add("favorite"); } localStorage.setItem("favoriteLinks", JSON.stringify(favoriteLinks)); renderLinks(linksData, searchBox.value); });
+          acts.appendChild(eye); acts.appendChild(open); acts.appendChild(favBtn);
+          card.appendChild(info); card.appendChild(acts);
+        }
+        card.addEventListener("click", ()=> window.location.href = link.url );
+        items.appendChild(card);
+      });
+      gc.appendChild(items);
+    }
+
     linkContainer.appendChild(gc);
   });
 }
@@ -276,17 +460,25 @@ function openPreview(url){ previewFrame.src = url; previewPopup.style.display = 
 btnClose.addEventListener("click", ()=>{ previewPopup.style.display = "none"; previewFrame.src = ""; });
 
 /* ======== Settings interactions ======== */
-btnSettings.addEventListener("click", (e)=>{ settingsMenu.classList.toggle("open"); tipsMenu.classList.remove("open"); });
+btnSettings.addEventListener("click", (e)=>{ settingsOverlay.classList.add("open"); tipsMenu.classList.remove("open"); });
+settingsClose.addEventListener("click", ()=> settingsOverlay.classList.remove("open"));
+// click outside to close modal
+settingsOverlay.addEventListener("click", (e)=>{ if(e.target === settingsOverlay) settingsOverlay.classList.remove("open"); });
+
 selLanguage.addEventListener("change", ()=>{ currentLang = selLanguage.value; localStorage.setItem("lang", currentLang); applyLanguageUI(); renderLinks(linksData, searchBox.value); });
 selView.addEventListener("change", ()=>{ viewMode = selView.value; localStorage.setItem("viewMode", viewMode); renderLinks(linksData, searchBox.value); });
-btnReset.addEventListener("click", ()=>{ settingsMenu.classList.remove("open"); openResetPopup(); });
+
+// merge checkbox
+chkMerge.addEventListener("change", ()=>{ mergeSources = chkMerge.checked; localStorage.setItem("merge_sources", mergeSources ? "1" : "0"); renderLinks(linksData, searchBox.value); });
+
+btnReset.addEventListener("click", ()=>{ settingsOverlay.classList.remove("open"); openResetPopup(); });
 
 /* ======== Tips interactions ======== */
-btnTips.addEventListener("click", ()=>{ tipsMenu.classList.toggle("open"); settingsMenu.classList.remove("open"); updateTipsContent(); });
+btnTips.addEventListener("click", (e)=>{ tipsMenu.classList.toggle("open"); settingsOverlay.classList.remove("open"); updateTipsContent(); });
 tipsResetBtn.addEventListener("click", ()=>{ tipsMenu.classList.remove("open"); openResetPopup(); });
 
 function updateTipsContent(){
-  // show lastErrorMessage if exists, else a small tip
+  // tips should remain full detail (user wanted full info)
   if(lastErrorMessage){
     tipsContent.innerHTML = `<strong>${currentLang==="id"?"Peringatan":"Warning"}:</strong> ${lastErrorMessage} <div style="height:6px"></div><small>${t("original_link_text")}: <a href="${ORIGINAL_LINK}" target="_blank" rel="noopener">${ORIGINAL_LINK}</a></small>`;
   } else {
@@ -332,62 +524,112 @@ function openConfirmPopup(){
   };
 }
 
-/* ======== Load links tolerant ======== */
+/* ======== Load links tolerant with status messages + loading spinner ======== */
 async function loadLinks(){
+  loadingOverlay.classList.add("open");
+  loadingText.textContent = "Memuat data...";
+
   const all = [];
-  let errorCount = 0;
+  let localSuccess = false;
+  let globalSuccess = false;
   lastErrorMessage = "";
+
+  // local
   try{
     const res = await fetch("links.json?_="+Date.now());
+    if(!res.ok) throw new Error("local HTTP " + res.status);
     const j = await res.json();
-    if(j.links && Array.isArray(j.links)) all.push(...j.links.map(x=>({...x,type:"local"})));
-  } catch(e){ console.warn("local fail",e); errorCount++; lastErrorMessage += (currentLang==="id"?"Gagal memuat data lokal. ":"Failed to load local data. "); }
+    if(j.links && Array.isArray(j.links)) {
+      all.push(...j.links.map(x=>({...x,type:"local"})));
+      localSuccess = true;
+    } else {
+      localSuccess = false;
+    }
+  } catch(e){ console.warn("local fail",e); localSuccess = false; lastErrorMessage += (currentLang==="id"?"Gagal memuat data lokal. ":"Failed to load local data. ") + (e && e.message ? `(${e.message})` : ""); }
+
+  // global
   try{
     const res2 = await fetch("https://raw.githubusercontent.com/KuningMinum/Kumin/refs/heads/main/link_global.json");
+    if(!res2.ok) throw new Error("global HTTP " + res2.status);
     const j2 = await res2.json();
-    if(j2.links && Array.isArray(j2.links)) all.push(...j2.links.map(x=>({...x,type:"global"})));
-  } catch(e){ console.warn("global fail",e); errorCount++; lastErrorMessage += (currentLang==="id"?"Gagal memuat data global. ":"Failed to load global data. "); }
+    if(j2.links && Array.isArray(j2.links)) {
+      all.push(...j2.links.map(x=>({...x,type:"global"})));
+      globalSuccess = true;
+    } else {
+      globalSuccess = false;
+    }
+  } catch(e){ console.warn("global fail",e); globalSuccess = false; lastErrorMessage += (currentLang==="id"?" Gagal memuat data global. ":" Failed to load global data. ") + (e && e.message ? `(${e.message})` : ""); }
 
+  // store lastLoadStatus
+  lastLoadStatus.local = localSuccess;
+  lastLoadStatus.global = globalSuccess;
+
+  // prepare toast: show O/X status (O = berhasil, X = gagal)
+  const localMark = localSuccess ? "O" : "X";
+  const globalMark = globalSuccess ? "O" : "X";
+  const toastMsg = `Local: ${localMark} — Global: ${globalMark}`;
+  showToast(toastMsg, 4500);
+
+  // prepare full lastErrorMessage for tips (user wanted full info there)
+  if(!localSuccess || !globalSuccess){
+    // keep the constructed error details in lastErrorMessage (already appended)
+    if(!lastErrorMessage) lastErrorMessage = (currentLang==="id" ? "Beberapa sumber gagal dimuat." : "Some sources failed to load.");
+  } else {
+    lastErrorMessage = ""; // clear if all good
+  }
+
+  // fallback to favorites if nothing loaded
   if(all.length === 0 && favoriteLinks.length) all.push(...favoriteLinks);
 
-  if(errorCount > 0){
-    // keep message only for tips; show a small toast
-    showToast(errorCount === 2 ? t("toast_failed") : t("toast_partial"));
-  } else {
-    showToast(t("toast_loaded"));
-  }
+  // hide loading overlay when done (short delay so spinner visible)
+  setTimeout(()=> loadingOverlay.classList.remove("open"), 600);
+
+  // update tips content
+  updateTipsContent();
 
   return all;
 }
 
-/* ======== Init ======== */
+/* ======== Init & responsive behavior ======== */
+function enforceSmallScreenBehavior(){
+  if(window.innerWidth <= 760){
+    selView.value = "list";
+  } else {
+    selView.value = viewMode;
+  }
+}
+window.addEventListener("resize", ()=> { enforceSmallScreenBehavior(); renderLinks(linksData, searchBox.value); });
+
 function init(){
   selLanguage.value = currentLang;
   selView.value = viewMode;
+  chkMerge.checked = mergeSources;
   applyLanguageUI();
   updateTipsContent();
   originalLinkBottom.href = ORIGINAL_LINK;
   document.getElementById("original-link-small").querySelector("#original-link-anchor").textContent = t("original_link_text");
   document.getElementById("original-link-anchor").href = ORIGINAL_LINK;
 
+  enforceSmallScreenBehavior();
+
   loadLinks().then(d=>{
     linksData = d;
     renderLinks(linksData);
   }).catch(e=>{
     console.error(e);
-    // still rely on lastErrorMessage and showToast
     showToast(t("toast_failed"));
+    loadingOverlay.classList.remove("open");
   });
 }
 init();
 
-/* ======== Search ======== */
+/* ======== Search (aktif) ======== */
 searchBox.addEventListener("input", ()=> renderLinks(linksData, searchBox.value));
 
-/* close menus when click outside */
+/* close tips when click outside (header area) */
 document.addEventListener("click", (e)=>{
-  if(!settingsMenu.contains(e.target) && !btnSettings.contains(e.target)) settingsMenu.classList.remove("open");
-  if(!tipsMenu.contains(e.target) && !btnTips.contains(e.target)) tipsMenu.classList.remove("open");
+  const tipsMenuEl = document.getElementById("tips-menu");
+  if(tipsMenuEl && !tipsMenuEl.contains(e.target) && !btnTips.contains(e.target)) tipsMenuEl.classList.remove("open");
 });
 </script>
 </body>
