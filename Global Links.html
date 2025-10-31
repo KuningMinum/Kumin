@@ -5,7 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Pusat Link Favorit</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
-<style>
+<!--
+  BASE STYLE (bisa diubah oleh Edit CSS)
+  NOTE: settings-style dipisah supaya tidak ter-overwrite oleh Edit CSS
+-->
+<style id="base-style">
   :root{
     --bg:#05060a; --panel:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
     --muted:#b7c1d6; --card-bg: rgba(255,255,255,0.03);
@@ -20,12 +24,11 @@
   .header h1{margin:0;flex:1;font-size:1.4rem}
   .controls{display:flex;gap:6px;align-items:center}
   .controls input,.controls button,.controls select{padding:7px 10px;border-radius:10px;border:none;background:rgba(0,0,0,0.45);color:#fff;font-size:0.95rem;cursor:pointer;outline:none}
-  .controls input{min-width:180px}
+  .controls input{min-width:160px}
   .controls button i{margin-right:6px}
   .container{padding:12px;display:grid;gap:12px;flex:1;overflow:auto}
   .group-container{margin-bottom:12px;padding:10px;border-radius:10px}
   .group-title{font-size:1.12rem;font-weight:700;margin:0 0 8px;color:var(--highlight);padding-bottom:4px}
-  /* alternating background for groups (subtle, keep dark theme) */
   .container > .group-container:nth-child(odd){ background: var(--group-dark) }
   .container > .group-container:nth-child(even){ background: var(--group-light) }
 
@@ -34,15 +37,16 @@
   .grid-view .link-card{background:var(--card-bg);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;box-shadow:0 8px 22px rgba(2,6,23,0.6);transition:transform .12s;cursor:pointer;aspect-ratio:4/3;overflow:hidden}
   .grid-view .link-icon{width:100%;height:55%;border-radius:8px;display:grid;place-items:center;font-size:1.6rem;color:var(--muted);background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));object-fit:cover}
   .grid-view .link-title{font-weight:700;margin:0;font-size:1rem}
-  .grid-view .link-info{display:block}
+  .grid-view .link-desc{font-size:0.85rem;color:#b9c6dc;min-height:2.2rem;overflow:hidden}
 
-  /* CARD view: group becomes slider with arrows */
+  /* CARD view slider */
   .card-view .group-wrap{position:relative}
   .card-view .group-items{display:flex;gap:12px;overflow-x:auto;padding:6px 40px;scroll-snap-type:x mandatory;scroll-behavior:smooth}
-  .card-view .link-card{flex:0 0 220px;height:320px;min-width:220px;border-radius:14px;padding:14px;display:flex;flex-direction:column;align-items:center;text-align:center;box-shadow:0 10px 30px rgba(2,6,23,0.6);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));scroll-snap-align:center;transition:transform .12s}
+  .card-view .link-card{flex:0 0 220px;height:340px;min-width:220px;border-radius:14px;padding:14px;display:flex;flex-direction:column;align-items:center;text-align:center;box-shadow:0 10px 30px rgba(2,6,23,0.6);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));scroll-snap-align:center;transition:transform .12s}
   .card-view .link-card:hover{transform:translateY(-6px)}
   .card-view .link-icon{width:120px;height:120px;border-radius:16px;display:grid;place-items:center;font-size:2.2rem;color:var(--muted);background:var(--glass);margin-bottom:10px;object-fit:cover}
   .card-view .link-title{font-weight:700;margin:6px 0 0;font-size:1rem}
+  .card-view .link-desc{font-size:0.85rem;color:#b9c6dc;min-height:2.4rem;overflow:hidden}
   .card-view .link-actions{margin-top:auto;display:flex;gap:8px}
 
   /* slider arrows */
@@ -51,65 +55,60 @@
   .slider-right{right:8px}
   .slider-btn:active{transform:translateY(-50%) scale(.98)}
 
-  /* LIST view - jangan diubah (tetap seperti semula) */
+  /* LIST view */
   .list-view .group-items{display:flex;flex-direction:column;gap:8px}
-  .link-info{display:flex;align-items:center;gap:12px;flex:1}
+  .flat-items{display:flex;flex-direction:column;gap:8px}
+  .item-row{display:flex;align-items:center;justify-content:space-between;padding:10px;border-radius:8px;background:rgba(255,255,255,0.01)}
+  .item-left{display:flex;align-items:center;gap:12px}
   .link-icon{width:44px;height:44px;min-width:44px;border-radius:8px;display:grid;place-items:center;font-size:1.25rem;color:var(--muted);background:rgba(255,255,255,0.02);object-fit:cover}
   .link-title{font-weight:600;margin:0}
+  .link-desc{font-size:0.9rem;color:#b9c6dc}
   .link-actions{display:flex;gap:8px;align-items:center;margin-left:12px}
-  .btn-icon{background:none;border:none;color:var(--muted);font-size:1.05rem;cursor:pointer}
-  .btn-icon:hover{color:#fff;transform:scale(1.12)}
+  .btn-icon{background:none;border:none;color:var(--muted);font-size:1.05rem;cursor:pointer;padding:6px;border-radius:8px}
+  .btn-icon:hover{color:#fff;background:rgba(255,255,255,0.02);transform:scale(1.03)}
   .favorite{color:#ffd700!important}
   .highlight{border:2px solid var(--accent);border-radius:10px}
 
-  /* preview + popups keep original styles */
+  /* preview + popups */
   .preview-popup{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);justify-content:center;align-items:center;z-index:1200}
   .preview-content{width:92%;max-width:900px;height:80%;background:var(--panel);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
   .preview-header{display:flex;justify-content:flex-end;gap:8px;padding:8px;background:#000}
   .preview-iframe{flex:1;border:none}
 
-  /* SETTINGS modal (ditengah layar) with dark background for menu */
-  .settings-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1500;justify-content:center;align-items:center}
-  .settings-overlay.open{display:flex}
-  .settings-menu{background:var(--settings-bg);border-radius:12px;padding:16px;min-width:320px;max-width:92%;box-shadow:0 12px 40px rgba(2,6,23,0.7);display:flex;flex-direction:column;gap:10px;color:#e6eef8}
-  .settings-row{display:flex;align-items:center;gap:8px;justify-content:space-between}
-  .settings-row label{font-size:0.95rem}
-
-  /* TIPS keep same but positioned relative to header (small popup) */
-  .tips-menu{display:none;position:absolute;top:56px;right:140px;background:var(--panel);border:1px solid #222;border-radius:10px;padding:10px;z-index:1100;min-width:260px;box-shadow:0 8px 24px rgba(0,0,0,0.6)}
-  .tips-menu.open{display:block}
-
-  .reset-popup{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(4px);justify-content:center;align-items:center;z-index:1300}
-  .reset-box{background:var(--panel);padding:18px;border-radius:10px;width:92%;max-width:420px;position:relative}
-  .reset-close{position:absolute;right:10px;top:8px;background:none;border:none;color:#fff;font-size:1.1rem;cursor:pointer}
-  .reset-instruction{margin:6px 0;font-size:0.98rem}
-  .reset-instruction .stabilo{background:var(--highlight);color:#000;padding:0 6px;border-radius:4px;font-weight:700}
-  .reset-input{width:100%;padding:10px;border-radius:8px;border:none;background:#222;color:#fff;text-transform:uppercase;text-align:center;font-size:1rem;outline:none}
-  .confirm-popup{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(4px);justify-content:center;align-items:center;z-index:1400}
-  .confirm-box{background:var(--panel);padding:18px;border-radius:10px;width:92%;max-width:420px;text-align:center}
-  .btn-primary{padding:8px 12px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer}
-  .btn-ghost{padding:8px 12px;border-radius:8px;border:1px solid #333;background:transparent;color:#fff;cursor:pointer}
-  .btn-primary[disabled]{opacity:.6;cursor:not-allowed}
-
-  /* toast pindah ke atas */
   .toast{position:fixed;top:18px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.06);padding:8px 12px;border-radius:8px;font-size:0.95rem;opacity:0;transition:opacity .25s;z-index:1600}
   .toast.show{opacity:1}
 
   .original-link-small{padding:6px;text-align:center;font-size:0.85rem;color:#9aa6bf;background:transparent;border-top:1px solid rgba(255,255,255,0.02)}
 
-  /* loading overlay with spinner */
   .loading-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1700;justify-content:center;align-items:center;flex-direction:column;gap:12px}
   .loading-overlay.open{display:flex}
-  .spinner{
-    width:64px;height:64px;border-radius:50%;border:6px solid rgba(255,255,255,0.08);border-top-color:var(--accent);animation:spin 1s linear infinite;
-  }
+  .spinner{width:64px;height:64px;border-radius:50%;border:6px solid rgba(255,255,255,0.08);border-top-color:var(--accent);animation:spin 1s linear infinite;}
   @keyframes spin{to{transform:rotate(360deg)}}
   .loading-text{font-size:0.95rem;color:#e6eef8}
-  /* thin scrollbar for card-view */
-  .card-view .group-items::-webkit-scrollbar{height:8px}
-  .card-view .group-items::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.06);border-radius:8px}
   @media (max-width:760px){ .header h1{font-size:1.12rem} .card-view .link-card{flex:0 0 200px;min-width:200px;height:300px} }
 </style>
+
+<!-- SETTINGS STYLE (tidak akan di-overwrite oleh Edit CSS) -->
+<style id="settings-style">
+  .settings-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1500;justify-content:center;align-items:center}
+  .settings-overlay.open{display:flex}
+  .settings-menu{background:rgba(0,0,0,0.92);border-radius:12px;padding:16px;min-width:320px;max-width:92%;box-shadow:0 12px 40px rgba(2,6,23,0.7);display:flex;flex-direction:column;gap:10px;color:#e6eef8}
+  .settings-row{display:flex;align-items:center;gap:8px;justify-content:space-between}
+  .settings-row label{font-size:0.95rem}
+  .stabilo{background:#ffd94d;color:#000;padding:0 6px;border-radius:4px;font-weight:700}
+  .editcss-popup{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1800;justify-content:center;align-items:center}
+  .editcss-box{background:var(--panel);padding:12px;border-radius:10px;width:92%;max-width:920px;max-height:86vh;overflow:auto;display:flex;flex-direction:column;gap:8px}
+  .editcss-textarea{width:100%;min-height:280px;background:#0b0c0f;color:#e6eef8;border-radius:8px;padding:10px;border:1px solid rgba(255,255,255,0.03);font-family:monospace;font-size:13px}
+  .debug-popup{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1900;justify-content:center;align-items:center}
+  .debug-box{background:var(--panel);padding:12px;border-radius:10px;width:92%;max-width:920px;max-height:86vh;overflow:auto;display:flex;flex-direction:column;gap:8px}
+  .debug-textarea{width:100%;min-height:120px;background:#0b0c0f;color:#e6eef8;border-radius:8px;padding:10px;border:1px solid rgba(255,255,255,0.03);font-family:monospace;font-size:12px;white-space:pre-wrap;word-break:break-word}
+  .reset-popup{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(4px);justify-content:center;align-items:center;z-index:1300}
+  .reset-box{background:var(--panel);padding:18px;border-radius:10px;width:92%;max-width:420px;position:relative}
+  .reset-close{position:absolute;right:10px;top:8px;background:none;border:none;color:#fff;font-size:1.1rem;cursor:pointer}
+</style>
+
+<!-- placeholder for custom CSS applied to base-style (user-editable) -->
+<style id="custom-css-placeholder"></style>
 </head>
 <body>
   <div class="header">
@@ -117,39 +116,76 @@
     <div class="controls">
       <input id="search-box" placeholder="search here">
       <button id="btn-settings" title=""><i class="fa-solid fa-gear"></i> <span id="btn-settings-label"></span></button>
-      <button id="btn-tips" title=""><i class="fa-solid fa-lightbulb"></i> <span id="btn-tips-label"></span></button>
+      <button id="btn-debug" title=""><i class="fa-solid fa-bug"></i> <span id="btn-debug-label">Debug</span></button>
     </div>
   </div>
 
-  <!-- SETTINGS modal overlay (ditengah layar) -->
+  <!-- SETTINGS modal overlay -->
   <div class="settings-overlay" id="settings-overlay" aria-hidden="true">
     <div class="settings-menu" id="settings-menu" role="dialog" aria-modal="true" aria-labelledby="settings-title">
       <div style="display:flex;justify-content:space-between;align-items:center">
         <strong id="settings-title">Pengaturan</strong>
         <button id="settings-close" class="btn-ghost" title="Tutup">✖</button>
       </div>
+
       <div class="settings-row"><label id="lbl-language"></label><select id="sel-language"><option value="id">Indonesia</option><option value="en">English</option></select></div>
       <div class="settings-row"><label id="lbl-view"></label><select id="sel-view"><option value="list">List</option><option value="grid">Grid</option><option value="card">Card</option></select></div>
 
       <div class="settings-row" style="align-items:center;gap:10px">
         <div style="display:flex;flex-direction:column">
           <label id="lbl-merge">Gabungkan Lokal & Global</label>
-          <small style="color:#9aa6bf">Jika dicentang, tampilan tidak memisah grup berdasarkan sumber</small>
+          <small style="color:#9aa6bf">Jika dicentang, sumber tidak dipisah per grup</small>
         </div>
         <input type="checkbox" id="chk-merge" />
+      </div>
+
+      <div class="settings-row" style="align-items:center;gap:10px">
+        <div style="display:flex;flex-direction:column">
+          <label id="lbl-simple">Mode Sederhana</label>
+          <small style="color:#9aa6bf">Jika aktif, tampilan hanya menampilkan item (tanpa grup). Untuk kembali, buka Pengaturan.</small>
+        </div>
+        <input type="checkbox" id="chk-simple" />
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <label>Edit CSS — untuk membuka ketik <span class="stabilo">EDITCSS</span> di bawah</label>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input id="open-edit-input" placeholder="Ketik EDITCSS untuk membuka" style="flex:1;padding:8px;border-radius:8px;border:none;background:#0b0c0f;color:#fff" />
+          <button id="open-edit-btn" class="btn-primary" disabled>Buka Edit CSS</button>
+        </div>
       </div>
 
       <div class="settings-row"><label id="lbl-reset"></label><button id="btn-reset" class="btn-ghost"></button></div>
     </div>
   </div>
 
-  <!-- tips popup (small) -->
-  <div class="tips-menu" id="tips-menu" aria-hidden="true">
-    <div id="tips-content"></div>
-    <div style="height:8px"></div>
-    <div style="display:flex;justify-content:flex-end;gap:8px">
-      <button id="tips-reset-btn" class="btn-ghost"></button>
-      <a id="original-link-bottom" href="#" target="_blank" class="btn-ghost" style="text-decoration:none"></a>
+  <!-- edit-css modal -->
+  <div class="editcss-popup" id="editcss-popup" aria-hidden="true">
+    <div class="editcss-box" role="dialog" aria-modal="true" aria-labelledby="editcss-title">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <strong id="editcss-title">Edit CSS (mengubah style utama)</strong>
+        <button id="editcss-close" class="btn-ghost">✖</button>
+      </div>
+      <small style="color:#9aa6bf">Perhatian: Edit CSS akan mengganti CSS utama (semua layout & style) KECUALI styling pengaturan/modal. Backup otomatis disimpan. Jika mau kembalikan, tekan Reset CSS.</small>
+      <textarea id="editcss-textarea" class="editcss-textarea" placeholder="/* tulis css untuk mengganti seluruh base-style di sini */"></textarea>
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button id="reset-css-btn" class="btn-ghost">Reset CSS ke Asli</button>
+        <button id="apply-css-btn" class="btn-primary">Terapkan CSS</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- debug popup (hanya pesan kesalahan) -->
+  <div class="debug-popup" id="debug-popup" aria-hidden="true">
+    <div class="debug-box" role="dialog" aria-modal="true" aria-labelledby="debug-title">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <strong id="debug-title">Debug - Pesan Kesalahan</strong>
+        <button id="debug-close" class="btn-ghost">✖</button>
+      </div>
+      <div id="debug-area" class="debug-textarea" style="white-space:pre-wrap;word-break:break-word">Tidak ada pesan kesalahan.</div>
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button id="copy-debug-btn" class="btn-primary">Copy</button>
+      </div>
     </div>
   </div>
 
@@ -166,101 +202,76 @@
     </div>
   </div>
 
-  <!-- reset popup 1 -->
+  <!-- reset popup -->
   <div class="reset-popup" id="reset-popup">
     <div class="reset-box">
       <button class="reset-close" id="reset-close">❌</button>
-      <p class="reset-instruction" id="reset-instruction"></p>
-      <input id="reset-input" class="reset-input" placeholder="" />
+      <p class="reset-instruction" id="reset-instruction">Ketik <span class="stabilo">RESET</span> untuk konfirmasi penghapusan data.</p>
+      <input id="reset-input" class="reset-input" placeholder="Ketik RESET untuk konfirmasi" />
       <div style="height:8px"></div>
       <div style="display:flex;gap:8px;justify-content:center">
-        <button id="reset-cancel" class="btn-ghost"></button>
-        <button id="reset-proceed" class="btn-primary"></button>
-      </div>
-    </div>
-  </div>
-
-  <!-- confirm popup 2 -->
-  <div class="confirm-popup" id="confirm-popup">
-    <div class="confirm-box">
-      <p id="confirm-text"></p>
-      <div style="height:8px"></div>
-      <div style="display:flex;gap:8px;justify-content:center">
-        <button id="confirm-cancel" class="btn-ghost"></button>
-        <button id="confirm-agree" class="btn-primary" disabled></button>
+        <button id="reset-cancel" class="btn-ghost">Batal</button>
+        <button id="reset-proceed" class="btn-primary">Lanjut</button>
       </div>
     </div>
   </div>
 
   <div class="toast" id="toast"></div>
-
-  <!-- small original link bottom (non-intrusive) -->
   <div class="original-link-small" id="original-link-small"><a id="original-link-anchor" href="#" target="_blank" style="color:var(--accent);text-decoration:underline"></a></div>
-
-  <!-- loading overlay -->
-  <div class="loading-overlay" id="loading-overlay">
-    <div class="spinner" aria-hidden="true"></div>
-    <div class="loading-text" id="loading-text">Memuat data...</div>
-  </div>
+  <div class="loading-overlay" id="loading-overlay"><div class="spinner" aria-hidden="true"></div><div class="loading-text" id="loading-text">Memuat data...</div></div>
 
 <script>
-/* ======== Texts ======== */
+/* ======== Bahasa & teks ======== */
 const T = {
-  id:{
-    title:"Pusat Link Favorit", settings:"Pengaturan", settings_title:"Pengaturan",
-    lbl_language:"Bahasa", lbl_view:"Tampilan", lbl_reset:"Reset", reset_button:"Reset Data",
-    reset_instruction:'Ketik <span class="stabilo">RESET</span> untuk menghapus semua data',
-    reset_input_placeholder:"Ketik RESET untuk konfirmasi", reset_proceed:"Lanjut", reset_cancel:"Batal",
-    confirm_text:"Yakin ingin menghapus semua data? Tindakan ini tidak bisa dibatalkan.",
-    agree:"Setuju", cancel:"Batal", toast_loaded:"Data berhasil dimuat",
-    toast_partial:"Beberapa data gagal dimuat", toast_failed:"Gagal memuat data, menampilkan favorit jika ada",
-    footer_error:"Jika eror, coba reset (Pengaturan → Reset)", preview_open:"Buka Link", preview_close:"Tutup",
-    original_link_text:"Original Link", lbl_merge:"Gabungkan Lokal & Global"
-  },
-  en:{
-    title:"Favorite Links Hub", settings:"Settings", settings_title:"Settings",
-    lbl_language:"Language", lbl_view:"View", lbl_reset:"Reset", reset_button:"Reset Data",
-    reset_instruction:'Type <span class="stabilo">RESET</span> to clear all data',
-    reset_input_placeholder:"Type RESET to confirm", reset_proceed:"Proceed", reset_cancel:"Cancel",
-    confirm_text:"Are you sure you want to clear all data? This action cannot be undone.",
-    agree:"Agree", cancel:"Cancel", toast_loaded:"Data loaded successfully",
-    toast_partial:"Some data failed to load", toast_failed:"Failed to load data, showing favorites if available",
-    footer_error:"If error, try reset (Settings → Reset)", preview_open:"Open Link", preview_close:"Close",
-    original_link_text:"Original Link", lbl_merge:"Merge Local & Global"
-  }
+  id:{ title:"Pusat Link Favorit", settings:"Pengaturan", lbl_language:"Bahasa", lbl_view:"Tampilan", lbl_reset:"Reset", reset_button:"Reset Data",
+       reset_instruction:'Ketik <span class="stabilo">RESET</span> untuk menghapus semua data', reset_input_placeholder:"Ketik RESET untuk konfirmasi",
+       preview_open:"Buka Link", preview_close:"Tutup", original_link_text:"Original Link", lbl_merge:"Gabungkan Lokal & Global",
+       simple_label:"Mode Sederhana", copy_link:"Salin", open_link:"Buka", preview:"Pratinjau",
+       css_apply_success:"CSS diterapkan", css_reset_success:"CSS dikembalikan ke default", no_errors:"Tidak ada pesan kesalahan." },
+  en:{ title:"Favorite Links Hub", settings:"Settings", lbl_language:"Language", lbl_view:"View", lbl_reset:"Reset", reset_button:"Reset Data",
+       reset_instruction:'Type <span class="stabilo">RESET</span> to clear all data', reset_input_placeholder:"Type RESET to confirm",
+       preview_open:"Open Link", preview_close:"Close", original_link_text:"Original Link", lbl_merge:"Merge Local & Global",
+       simple_label:"Simple Mode", copy_link:"Copy", open_link:"Open", preview:"Preview",
+       css_apply_success:"CSS applied", css_reset_success:"CSS reset to default", no_errors:"No errors." }
 };
-
 const ORIGINAL_LINK = "https://kuningminum.github.io/Kumin/Global%20Links.html";
 
 /* ======== State ======== */
 let favoriteLinks = JSON.parse(localStorage.getItem("favoriteLinks")||"[]");
-let browserLang = (navigator.language && navigator.language.startsWith("id")) ? "id" : "en";
-let currentLang = localStorage.getItem("lang") || browserLang;
+let currentLang = localStorage.getItem("lang") || ((navigator.language && navigator.language.startsWith("id")) ? "id" : "en");
 let viewMode = localStorage.getItem("viewMode") || "list";
-let mergeSources = (localStorage.getItem("merge_sources") === "1"); // new setting
+let mergeSources = (localStorage.getItem("merge_sources") === "1");
+let simpleMode = (localStorage.getItem("simple_mode") === "1");
 let linksData = [];
-let lastErrorMessage = ""; // string shown inside Tips when exists
-let lastLoadStatus = { local:false, global:false }; // store last load status
+let lastErrorMessage = "";
+let lastLoadStatus = { local:false, global:false };
+let originalBaseCss = document.getElementById('base-style').textContent || "";
+let localLinkOverrides = JSON.parse(localStorage.getItem("local_link_overrides")||"{}");
+let storedCustomCss = localStorage.getItem("custom_css") || "";
 
-/* ======== DOM ======== */
+/* ======== DOM refs ======== */
 const headerTitle = document.getElementById("header-title");
-
-/* settings modal elements */
 const btnSettings = document.getElementById("btn-settings");
-const btnSettingsLabel = document.getElementById("btn-settings-label");
 const settingsOverlay = document.getElementById("settings-overlay");
-const settingsMenu = document.getElementById("settings-menu");
 const selLanguage = document.getElementById("sel-language");
 const selView = document.getElementById("sel-view");
 const btnReset = document.getElementById("btn-reset");
-const settingsClose = document.getElementById("settings-close");
 const chkMerge = document.getElementById("chk-merge");
+const chkSimple = document.getElementById("chk-simple");
+const openEditInput = document.getElementById("open-edit-input");
+const openEditBtn = document.getElementById("open-edit-btn");
 
-const btnTips = document.getElementById("btn-tips");
-const tipsMenu = document.getElementById("tips-menu");
-const tipsContent = document.getElementById("tips-content");
-const tipsResetBtn = document.getElementById("tips-reset-btn");
-const originalLinkBottom = document.getElementById("original-link-anchor");
+const editcssPopup = document.getElementById("editcss-popup");
+const editcssTextarea = document.getElementById("editcss-textarea");
+const applyCssBtn = document.getElementById("apply-css-btn");
+const resetCssBtn = document.getElementById("reset-css-btn");
+const editcssClose = document.getElementById("editcss-close");
+
+const debugBtn = document.getElementById("btn-debug");
+const debugPopup = document.getElementById("debug-popup");
+const debugArea = document.getElementById("debug-area");
+const debugClose = document.getElementById("debug-close");
+const copyDebugBtn = document.getElementById("copy-debug-btn");
 
 const linkContainer = document.getElementById("link-container");
 const previewPopup = document.getElementById("preview-popup");
@@ -270,188 +281,224 @@ const btnClose = document.getElementById("btn-close");
 const toast = document.getElementById("toast");
 const searchBox = document.getElementById("search-box");
 
-/* reset UI */
-const resetPopup = document.getElementById("reset-popup");
-const resetInstruction = document.getElementById("reset-instruction");
-const resetInput = document.getElementById("reset-input");
-const resetCancel = document.getElementById("reset-cancel");
-const resetProceed = document.getElementById("reset-proceed");
-const resetClose = document.getElementById("reset-close");
-
-const confirmPopup = document.getElementById("confirm-popup");
-const confirmText = document.getElementById("confirm-text");
-const confirmCancel = document.getElementById("confirm-cancel");
-const confirmAgree = document.getElementById("confirm-agree");
-
-/* loading overlay */
 const loadingOverlay = document.getElementById("loading-overlay");
 const loadingText = document.getElementById("loading-text");
+const baseStyleEl = document.getElementById("base-style");
+const settingsStyleEl = document.getElementById("settings-style");
 
 /* ======== Helpers ======== */
-function t(key){ return (T[currentLang] && T[currentLang][key]) || key; }
-function showToast(msg, ms=3000){
-  toast.textContent = msg;
-  toast.classList.add("show");
-  setTimeout(()=>toast.classList.remove("show"), ms);
-}
+function t(k){ return (T[currentLang] && T[currentLang][k]) || k; }
+function showToast(msg, ms=3000){ toast.textContent = msg; toast.classList.add("show"); setTimeout(()=>toast.classList.remove("show"), ms); }
 
-/* ======== UI apply language & merge state ======== */
+/* ======== Apply UI language & states ======== */
 function applyLanguageUI(){
   headerTitle.textContent = t("title");
-  btnSettings.title = t("settings_title");
-  btnSettingsLabel.textContent = t("settings");
   document.getElementById("lbl-language").textContent = t("lbl_language");
   document.getElementById("lbl-view").textContent = t("lbl_view");
   document.getElementById("lbl-reset").textContent = t("lbl_reset");
-  document.getElementById("lbl-merge").textContent = t("lbl_merge");
   document.getElementById("btn-reset").textContent = t("reset_button");
-  resetInstruction.innerHTML = t("reset_instruction");
-  resetInput.placeholder = t("reset_input_placeholder");
-  resetProceed.textContent = t("reset_proceed");
-  resetCancel.textContent = t("reset_cancel");
-  confirmText.textContent = t("confirm_text");
-  confirmCancel.textContent = t("cancel");
-  confirmAgree.textContent = t("agree") + " (5)";
-  btnGo.title = t("preview_open");
-  btnClose.title = t("preview_close");
-  document.getElementById("btn-tips-label").textContent = currentLang==="id" ? "Tips" : "Tips";
-  tipsResetBtn.textContent = t("reset_button");
-  originalLinkBottom.textContent = t("original_link_text");
+  document.getElementById("lbl-merge").textContent = t("lbl_merge");
+  document.getElementById("lbl-simple").textContent = t("simple_label");
   selLanguage.value = currentLang;
   selView.value = viewMode;
   chkMerge.checked = mergeSources;
+  chkSimple.checked = simpleMode;
+  document.getElementById("original-link-anchor").textContent = t("original_link_text");
 }
 applyLanguageUI();
 
-/* ======== Render links (support mergeSources + sliders) ======== */
+/* ======== Apply saved custom CSS (if any) ======== */
+function applyCustomCssOnLoad(){
+  const css = localStorage.getItem("custom_css") || "";
+  if(css){
+    baseStyleEl.textContent = css;
+    editcssTextarea.value = css;
+  } else {
+    baseStyleEl.textContent = originalBaseCss;
+  }
+}
+applyCustomCssOnLoad();
+
+/* ======== Utility: apply local overrides to links (kept but editing removed) ======== */
+function applyLocalOverrides(arr){
+  return arr.map(l=>{
+    const key = l.url || (l.title_id || l.title_en || Math.random().toString(36).slice(2));
+    if(localLinkOverrides[key]){
+      return {...l, ...localLinkOverrides[key], type:'local'};
+    }
+    return l;
+  });
+}
+
+/* ======== Render links ======== */
 function renderLinks(list, search=""){
   linkContainer.innerHTML = "";
+
+  const q = (search||"").toLowerCase();
+
+  // MODE SEDERHANA: tampilkan semua item flat (tanpa grup)
+  if(simpleMode){
+    const items = applyLocalOverrides(list).filter(l=>{
+      const titleText = (currentLang==="id")? (l.title_id||l.title_en||"") : (l.title_en||l.title_id||"");
+      return !q || titleText.toLowerCase().includes(q) || (l.grup_id||"").toLowerCase().includes(q) || (l.grup_en||"").toLowerCase().includes(q);
+    });
+    const container = document.createElement("div"); container.className = "flat-items";
+    container.innerHTML = `<div style="padding:8px;color:#9aa6bf">Mode Sederhana aktif — semua item ditampilkan tanpa grup. Matikan di Pengaturan untuk kembali.</div>`;
+    items.forEach(link=>{
+      const titleText = (currentLang==="id")? (link.title_id||link.title_en||"") : (link.title_en||link.title_id||"");
+      const row = document.createElement("div"); row.className = "item-row";
+      const left = document.createElement("div"); left.className = "item-left";
+      const icon = document.createElement("div"); icon.className = "link-icon"; if(link.img){ const img=document.createElement("img"); img.src=link.img; img.style.width="100%"; img.style.height="100%"; img.style.objectFit="cover"; img.style.borderRadius="6px"; icon.appendChild(img);} else { icon.innerHTML = `<i class="${link.icon||'fa-solid fa-link'}"></i>`; }
+      const tEl = document.createElement("div"); tEl.innerHTML = `<div class="link-title">${titleText}</div><div class="link-desc" style="font-size:0.8rem;color:#9aa6bf">${(currentLang==="id")? (link.description_id||"") : (link.description_en||"")}</div>`;
+      left.appendChild(icon); left.appendChild(tEl);
+
+      const actions = document.createElement("div"); actions.className = "link-actions";
+      const eye = document.createElement("button"); eye.className="btn-icon"; eye.title = t("preview"); eye.innerHTML = '<i class="fa-solid fa-eye"></i>';
+      eye.addEventListener("click",(e)=>{ e.stopPropagation(); openPreview(link.url); });
+      const open = document.createElement("button"); open.className="btn-icon"; open.title = t("open_link"); open.innerHTML = '<i class="fa-solid fa-arrow-up-right-from-square"></i>';
+      open.addEventListener("click",(e)=>{ e.stopPropagation(); window.location.href = link.url; });
+      const copyBtn = document.createElement("button"); copyBtn.className="btn-icon"; copyBtn.title = t("copy_link"); copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i>';
+      copyBtn.addEventListener("click",(e)=>{ e.stopPropagation(); navigator.clipboard && navigator.clipboard.writeText(link.url).then(()=> showToast(t("copy_link")+" ✅")); });
+      const favBtn = document.createElement("button"); favBtn.className="btn-icon"; favBtn.innerHTML = '<i class="fa-solid fa-star"></i>';
+      if(favoriteLinks.some(f=>f.url===link.url)) favBtn.classList.add("favorite");
+      favBtn.addEventListener("click",(e)=>{ e.stopPropagation(); const found = favoriteLinks.find(f=>f.url===link.url); if(found){ favoriteLinks = favoriteLinks.filter(f=>f.url!==link.url); favBtn.classList.remove("favorite"); } else { favoriteLinks.push({...link}); favBtn.classList.add("favorite"); } localStorage.setItem("favoriteLinks", JSON.stringify(favoriteLinks)); renderLinks(linksData, searchBox.value); });
+
+      actions.appendChild(eye); actions.appendChild(open); actions.appendChild(copyBtn); actions.appendChild(favBtn);
+      row.appendChild(left); row.appendChild(actions);
+      row.addEventListener("click", ()=> window.location.href = link.url );
+      container.appendChild(row);
+    });
+    linkContainer.appendChild(container);
+    return;
+  }
+
+  // Biasa: grouping (mergeSources affects grouping key)
+  let processed = applyLocalOverrides(list);
   const groups = {};
-  list.forEach(l=>{
-    // if mergeSources true, we group by grup_id only (ignore local/global type)
+  processed.forEach(l=>{
     const gid = l.grup_id || l.grup || "Tanpa Grup";
-    const gen = l.grup_en || l.grup || "No Group";
-    const key = gid;
-    if(!groups[key]) groups[key] = {links:[], name:{id:gid,en:gen}, types: new Set()};
+    const key = mergeSources ? gid : ((l.type||"local")+"__"+gid);
+    if(!groups[key]) groups[key] = {links:[], name:{id:gid,en:gid}, types: new Set()};
     groups[key].links.push(l);
-    groups[key].types.add(l.type || "local");
+    groups[key].types.add(l.type||"local");
   });
 
-  // favorit tetap muncul sebagai satu grup di atas jika ada
-  if(favoriteLinks.length) groups["FAVORIT"] = {links: favoriteLinks, name:{id:"Favorit",en:"Favorite"}, types: new Set(["favorite"])};
+  if(favoriteLinks.length){
+    const favKey = "FAVORIT";
+    groups[favKey] = groups[favKey] || {links:[], name:{id:"Favorit",en:"Favorite"}, types: new Set()};
+    groups[favKey].links = favoriteLinks;
+    groups[favKey].types.add("favorite");
+  }
 
-  // keys keep insertion order but ensure FAVORIT first
   const keys = Object.keys(groups).sort((a,b)=> a==="FAVORIT"? -1 : b==="FAVORIT"? 1: 0);
-
-  // jika layar kecil, paksa ke list view
   const isSmall = window.innerWidth <= 760;
   const effectiveView = isSmall ? "list" : viewMode;
   linkContainer.className = "container " + (effectiveView==="grid"?"grid-view":effectiveView==="card"?"card-view":"list-view");
 
-  const q = (search||"").toLowerCase();
-  keys.forEach((k, idx)=>{
+  keys.forEach(k=>{
     const g = groups[k];
     if(!g) return;
-    const gc = document.createElement("section");
-    gc.className = "group-container";
+    const section = document.createElement("section"); section.className = "group-container";
     const h = document.createElement("h2"); h.className = "group-title";
-    let gname = (currentLang==="id")?g.name.id:g.name.en;
-    // if not merging show (Lokal) or (Global) labels per earlier behavior, unless FAVORIT
+    let gname = (currentLang==="id")? g.name.id : g.name.en;
     if(!mergeSources && k!=="FAVORIT"){
-      // if group types contains only local or global we append label
-      const typesArr = Array.from(g.types);
-      if(typesArr.length===1 && typesArr[0]!=="favorite"){
-        if(typesArr[0]==="local") gname += " (Lokal)";
-        if(typesArr[0]==="global") gname += " (Global)";
+      const types = Array.from(g.types);
+      if(types.length===1 && types[0]!=="favorite"){
+        if(types[0]==="local") gname += " (Lokal)";
+        if(types[0]==="global") gname += " (Global)";
       } else {
-        // mixed sources: indicate mixed
-        if(typesArr.includes("local") && typesArr.includes("global")) gname += " (Local+Global)";
+        if(types.includes("local") && types.includes("global")) gname += " (Local+Global)";
       }
     }
     h.textContent = gname;
-    gc.appendChild(h);
+    section.appendChild(h);
 
-    // for card view wrap to add slider buttons
     if(effectiveView==="card"){
-      const wrap = document.createElement("div"); wrap.className = "group-wrap";
-      const left = document.createElement("button"); left.className = "slider-btn slider-left"; left.innerHTML = '<i class="fa-solid fa-chevron-left"></i>';
-      const right = document.createElement("button"); right.className = "slider-btn slider-right"; right.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
-      const items = document.createElement("div"); items.className = "group-items";
-      // build cards
+      const wrap = document.createElement("div"); wrap.className="group-wrap";
+      const left = document.createElement("button"); left.className="slider-btn slider-left"; left.innerHTML = '<i class="fa-solid fa-chevron-left"></i>';
+      const right = document.createElement("button"); right.className="slider-btn slider-right"; right.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+      const items = document.createElement("div"); items.className="group-items";
       g.links.forEach(link=>{
-        const titleText = (currentLang==="id")?link.title_id:(link.title_en||link.title_id);
-        if(q && !(titleText.toLowerCase().includes(q) || (link.grup_id||"").toLowerCase().includes(q) || (link.grup_en||"").toLowerCase().includes(q))) return;
+        const titleText = (currentLang==="id")? (link.title_id||link.title_en||"") : (link.title_en||link.title_id||"");
+        if(q && !(titleText.toLowerCase().includes(q) || (link.grup_id||"").toLowerCase().includes(q))) return;
         const card = document.createElement("div"); card.className = "link-card card-item";
-        const icon = document.createElement("div"); icon.className = "link-icon";
-        if(link.img){ const img=document.createElement("img"); img.src=link.img; img.style.width="100%"; img.style.height="100%"; img.style.objectFit="cover"; img.style.borderRadius="12px"; icon.appendChild(img);} else { icon.innerHTML = `<i class="${link.icon||'fa-solid fa-link'}"></i>`; }
+        const icon = document.createElement("div"); icon.className = "link-icon"; if(link.img){ const img=document.createElement("img"); img.src=link.img; img.style.width="100%"; img.style.height="100%"; img.style.objectFit="cover"; img.style.borderRadius="12px"; icon.appendChild(img);} else { icon.innerHTML = `<i class="${link.icon||'fa-solid fa-link'}"></i>`; }
         const title = document.createElement("div"); title.className = "link-title"; title.textContent = titleText;
+        const desc = document.createElement("div"); desc.className = "link-desc"; desc.textContent = (currentLang==="id")? (link.description_id||"") : (link.description_en||"");
+
         const acts = document.createElement("div"); acts.className = "link-actions";
-        const eye = document.createElement("button"); eye.className="btn-icon"; eye.innerHTML='<i class="fa-solid fa-eye"></i>'; eye.title=t("preview_open");
+        const eye = document.createElement("button"); eye.className="btn-icon"; eye.title = t("preview"); eye.innerHTML = '<i class="fa-solid fa-eye"></i>';
         eye.addEventListener("click",(e)=>{ e.stopPropagation(); openPreview(link.url); });
-        const open = document.createElement("button"); open.className="btn-icon"; open.innerHTML='<i class="fa-solid fa-arrow-up-right-from-square"></i>'; open.title=(currentLang==="id"?"Buka Link":"Open Link");
-        open.addEventListener("click",(e)=>{ e.stopPropagation(); window.location.href = link.url;});
+        const open = document.createElement("button"); open.className="btn-icon"; open.title = t("open_link"); open.innerHTML = '<i class="fa-solid fa-arrow-up-right-from-square"></i>';
+        open.addEventListener("click",(e)=>{ e.stopPropagation(); window.location.href = link.url; });
+        const copyBtn = document.createElement("button"); copyBtn.className="btn-icon"; copyBtn.title = t("copy_link"); copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i>';
+        copyBtn.addEventListener("click",(e)=>{ e.stopPropagation(); navigator.clipboard && navigator.clipboard.writeText(link.url).then(()=> showToast(t("copy_link")+" ✅")); });
         const favBtn = document.createElement("button"); favBtn.className="btn-icon"; favBtn.innerHTML = '<i class="fa-solid fa-star"></i>';
         if(favoriteLinks.some(f=>f.url===link.url)) favBtn.classList.add("favorite");
         favBtn.addEventListener("click",(e)=>{ e.stopPropagation(); const found = favoriteLinks.find(f=>f.url===link.url); if(found){ favoriteLinks = favoriteLinks.filter(f=>f.url!==link.url); favBtn.classList.remove("favorite"); } else { favoriteLinks.push({...link}); favBtn.classList.add("favorite"); } localStorage.setItem("favoriteLinks", JSON.stringify(favoriteLinks)); renderLinks(linksData, searchBox.value); });
-        acts.appendChild(eye); acts.appendChild(open); acts.appendChild(favBtn);
-        card.appendChild(icon); card.appendChild(title); card.appendChild(acts);
+
+        acts.appendChild(eye); acts.appendChild(open); acts.appendChild(copyBtn); acts.appendChild(favBtn);
+        card.appendChild(icon); card.appendChild(title); card.appendChild(desc); card.appendChild(acts);
         card.addEventListener("click", ()=> window.location.href = link.url );
         items.appendChild(card);
       });
+
       wrap.appendChild(left); wrap.appendChild(items); wrap.appendChild(right);
-      gc.appendChild(wrap);
-
-      // slider behavior (scroll by card width)
-      left.addEventListener("click", ()=> {
-        // scroll left by container width * 0.7
-        items.scrollBy({left: -Math.round(items.clientWidth * 0.7), behavior:'smooth'});
-      });
-      right.addEventListener("click", ()=> {
-        items.scrollBy({left: Math.round(items.clientWidth * 0.7), behavior:'smooth'});
-      });
-
-      // hide arrows if not overflow
-      setTimeout(()=>{ // allow layout
-        if(items.scrollWidth <= items.clientWidth + 4){ left.style.display='none'; right.style.display='none'; } else { left.style.display='grid'; right.style.display='grid'; }
-      },60);
+      section.appendChild(wrap);
+      left.addEventListener("click", ()=> items.scrollBy({left: -Math.round(items.clientWidth * 0.7), behavior:'smooth'}));
+      right.addEventListener("click", ()=> items.scrollBy({left: Math.round(items.clientWidth * 0.7), behavior:'smooth'}));
+      setTimeout(()=>{ if(items.scrollWidth <= items.clientWidth + 4){ left.style.display='none'; right.style.display='none'; } else { left.style.display='grid'; right.style.display='grid'; } },80);
 
     } else {
-      // grid or list mode
-      const items = document.createElement("div"); items.className = "group-items";
+      const items = document.createElement("div"); items.className="group-items";
       g.links.forEach(link=>{
-        const titleText = (currentLang==="id")?link.title_id:(link.title_en||link.title_id);
-        if(q && !(titleText.toLowerCase().includes(q) || (link.grup_id||"").toLowerCase().includes(q) || (link.grup_en||"").toLowerCase().includes(q))) return;
+        const titleText = (currentLang==="id")? (link.title_id||link.title_en||"") : (link.title_en||link.title_id||"");
+        if(q && !(titleText.toLowerCase().includes(q) || (link.grup_id||"").toLowerCase().includes(q))) return;
         const card = document.createElement("div"); card.className = "link-card";
         if(effectiveView==="grid"){
-          const icon = document.createElement("div"); icon.className="link-icon";
-          if(link.img){ const img=document.createElement("img"); img.src=link.img; img.style.width="100%"; img.style.height="100%"; img.style.objectFit="cover"; img.style.borderRadius="6px"; icon.appendChild(img);} else { icon.innerHTML = `<i class="${link.icon||'fa-solid fa-link'}"></i>`; }
+          const icon = document.createElement("div"); icon.className="link-icon"; if(link.img){ const img=document.createElement("img"); img.src=link.img; img.style.width="100%"; img.style.height="100%"; img.style.objectFit="cover"; img.style.borderRadius="6px"; icon.appendChild(img);} else { icon.innerHTML = `<i class="${link.icon||'fa-solid fa-link'}"></i>`; }
           const title = document.createElement("div"); title.className="link-title"; title.textContent = titleText;
-          card.appendChild(icon); card.appendChild(title);
-        } else {
-          // list
-          const info = document.createElement("div"); info.className="link-info";
-          const icon = document.createElement("div"); icon.className="link-icon";
-          if(link.img){ const img=document.createElement("img"); img.src=link.img; img.style.width="100%"; img.style.height="100%"; img.style.objectFit="cover"; img.style.borderRadius="6px"; icon.appendChild(img);} else { icon.innerHTML = `<i class="${link.icon||'fa-solid fa-link'}"></i>`; }
-          const title = document.createElement("div"); title.className="link-title"; title.textContent = titleText;
-          info.appendChild(icon); info.appendChild(title);
+          const desc = document.createElement("div"); desc.className="link-desc"; desc.textContent = (currentLang==="id")? (link.description_id||"") : (link.description_en||"");
           const acts = document.createElement("div"); acts.className="link-actions";
-          const eye = document.createElement("button"); eye.className="btn-icon"; eye.innerHTML='<i class="fa-solid fa-eye"></i>'; eye.title=t("preview_open");
+          const eye = document.createElement("button"); eye.className="btn-icon"; eye.title=t("preview"); eye.innerHTML='<i class="fa-solid fa-eye"></i>';
           eye.addEventListener("click",(e)=>{ e.stopPropagation(); openPreview(link.url); });
-          const open = document.createElement("button"); open.className="btn-icon"; open.innerHTML='<i class="fa-solid fa-arrow-up-right-from-square"></i>'; open.title=(currentLang==="id"?"Buka Link":"Open Link");
-          open.addEventListener("click",(e)=>{ e.stopPropagation(); window.location.href = link.url;});
+          const open = document.createElement("button"); open.className="btn-icon"; open.title=t("open_link"); open.innerHTML='<i class="fa-solid fa-arrow-up-right-from-square"></i>';
+          open.addEventListener("click",(e)=>{ e.stopPropagation(); window.location.href = link.url; });
+          const copyBtn = document.createElement("button"); copyBtn.className="btn-icon"; copyBtn.title = t("copy_link"); copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i>';
+          copyBtn.addEventListener("click",(e)=>{ e.stopPropagation(); navigator.clipboard && navigator.clipboard.writeText(link.url).then(()=> showToast(t("copy_link")+" ✅")); });
           const favBtn = document.createElement("button"); favBtn.className="btn-icon"; favBtn.innerHTML = '<i class="fa-solid fa-star"></i>';
           if(favoriteLinks.some(f=>f.url===link.url)) favBtn.classList.add("favorite");
           favBtn.addEventListener("click",(e)=>{ e.stopPropagation(); const found = favoriteLinks.find(f=>f.url===link.url); if(found){ favoriteLinks = favoriteLinks.filter(f=>f.url!==link.url); favBtn.classList.remove("favorite"); } else { favoriteLinks.push({...link}); favBtn.classList.add("favorite"); } localStorage.setItem("favoriteLinks", JSON.stringify(favoriteLinks)); renderLinks(linksData, searchBox.value); });
-          acts.appendChild(eye); acts.appendChild(open); acts.appendChild(favBtn);
+
+          acts.appendChild(eye); acts.appendChild(open); acts.appendChild(copyBtn); acts.appendChild(favBtn);
+          card.appendChild(icon); card.appendChild(title); card.appendChild(desc); card.appendChild(acts);
+        } else {
+          const info = document.createElement("div"); info.className="link-info";
+          const icon = document.createElement("div"); icon.className="link-icon"; if(link.img){ const img=document.createElement("img"); img.src=link.img; img.style.width="100%"; img.style.height="100%"; img.style.objectFit="cover"; img.style.borderRadius="6px"; icon.appendChild(img);} else { icon.innerHTML = `<i class="${link.icon||'fa-solid fa-link'}"></i>`; }
+          const title = document.createElement("div"); title.className="link-title"; title.textContent = titleText;
+          const desc = document.createElement("div"); desc.className="link-desc"; desc.textContent = (currentLang==="id")? (link.description_id||"") : (link.description_en||"");
+          info.appendChild(icon); info.appendChild(title); info.appendChild(desc);
+          const acts = document.createElement("div"); acts.className="link-actions";
+          const eye = document.createElement("button"); eye.className="btn-icon"; eye.title=t("preview"); eye.innerHTML='<i class="fa-solid fa-eye"></i>';
+          eye.addEventListener("click",(e)=>{ e.stopPropagation(); openPreview(link.url); });
+          const open = document.createElement("button"); open.className="btn-icon"; open.title=t("open_link"); open.innerHTML='<i class="fa-solid fa-arrow-up-right-from-square"></i>';
+          open.addEventListener("click",(e)=>{ e.stopPropagation(); window.location.href = link.url; });
+          const copyBtn = document.createElement("button"); copyBtn.className="btn-icon"; copyBtn.title = t("copy_link"); copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i>';
+          copyBtn.addEventListener("click",(e)=>{ e.stopPropagation(); navigator.clipboard && navigator.clipboard.writeText(link.url).then(()=> showToast(t("copy_link")+" ✅")); });
+          const favBtn = document.createElement("button"); favBtn.className="btn-icon"; favBtn.innerHTML = '<i class="fa-solid fa-star"></i>';
+          if(favoriteLinks.some(f=>f.url===link.url)) favBtn.classList.add("favorite");
+          favBtn.addEventListener("click",(e)=>{ e.stopPropagation(); const found = favoriteLinks.find(f=>f.url===link.url); if(found){ favoriteLinks = favoriteLinks.filter(f=>f.url!==link.url); favBtn.classList.remove("favorite"); } else { favoriteLinks.push({...link}); favBtn.classList.add("favorite"); } localStorage.setItem("favoriteLinks", JSON.stringify(favoriteLinks)); renderLinks(linksData, searchBox.value); });
+
+          acts.appendChild(eye); acts.appendChild(open); acts.appendChild(copyBtn); acts.appendChild(favBtn);
           card.appendChild(info); card.appendChild(acts);
         }
         card.addEventListener("click", ()=> window.location.href = link.url );
         items.appendChild(card);
       });
-      gc.appendChild(items);
+      section.appendChild(items);
     }
 
-    linkContainer.appendChild(gc);
+    linkContainer.appendChild(section);
   });
 }
 
@@ -460,75 +507,101 @@ function openPreview(url){ previewFrame.src = url; previewPopup.style.display = 
 btnClose.addEventListener("click", ()=>{ previewPopup.style.display = "none"; previewFrame.src = ""; });
 
 /* ======== Settings interactions ======== */
-btnSettings.addEventListener("click", (e)=>{ settingsOverlay.classList.add("open"); tipsMenu.classList.remove("open"); });
-settingsClose.addEventListener("click", ()=> settingsOverlay.classList.remove("open"));
-// click outside to close modal
-settingsOverlay.addEventListener("click", (e)=>{ if(e.target === settingsOverlay) settingsOverlay.classList.remove("open"); });
+btnSettings.addEventListener("click", ()=>{ settingsOverlay.classList.add("open"); });
+document.getElementById("settings-close").addEventListener("click", ()=> settingsOverlay.classList.remove("open"));
+settingsOverlay.addEventListener("click",(e)=>{ if(e.target === settingsOverlay) settingsOverlay.classList.remove("open"); });
 
 selLanguage.addEventListener("change", ()=>{ currentLang = selLanguage.value; localStorage.setItem("lang", currentLang); applyLanguageUI(); renderLinks(linksData, searchBox.value); });
 selView.addEventListener("change", ()=>{ viewMode = selView.value; localStorage.setItem("viewMode", viewMode); renderLinks(linksData, searchBox.value); });
 
-// merge checkbox
 chkMerge.addEventListener("change", ()=>{ mergeSources = chkMerge.checked; localStorage.setItem("merge_sources", mergeSources ? "1" : "0"); renderLinks(linksData, searchBox.value); });
+chkSimple.addEventListener("change", ()=>{ simpleMode = chkSimple.checked; localStorage.setItem("simple_mode", simpleMode ? "1" : "0"); renderLinks(linksData, searchBox.value); });
 
-btnReset.addEventListener("click", ()=>{ settingsOverlay.classList.remove("open"); openResetPopup(); });
+document.getElementById("btn-reset").addEventListener("click", ()=>{ settingsOverlay.classList.remove("open"); openResetPopup(); });
 
-/* ======== Tips interactions ======== */
-btnTips.addEventListener("click", (e)=>{ tipsMenu.classList.toggle("open"); settingsOverlay.classList.remove("open"); updateTipsContent(); });
-tipsResetBtn.addEventListener("click", ()=>{ tipsMenu.classList.remove("open"); openResetPopup(); });
+/* Edit CSS gating */
+openEditInput.addEventListener("input", ()=> {
+  openEditBtn.disabled = openEditInput.value.trim().toUpperCase() !== "EDITCSS";
+});
+openEditBtn.addEventListener("click", ()=> {
+  editcssPopup.style.display = "flex";
+  editcssPopup.setAttribute("aria-hidden","false");
+  editcssTextarea.value = localStorage.getItem("custom_css") || originalBaseCss;
+});
 
-function updateTipsContent(){
-  // tips should remain full detail (user wanted full info)
-  if(lastErrorMessage){
-    tipsContent.innerHTML = `<strong>${currentLang==="id"?"Peringatan":"Warning"}:</strong> ${lastErrorMessage} <div style="height:6px"></div><small>${t("original_link_text")}: <a href="${ORIGINAL_LINK}" target="_blank" rel="noopener">${ORIGINAL_LINK}</a></small>`;
-  } else {
-    tipsContent.innerHTML = `<strong>${currentLang==="id"?"Tips":"Tip"}:</strong> ${currentLang==="id"?"Jika ada masalah muat data, buka Pengaturan lalu Reset.":"If data fails to load, open Settings then Reset."}`;
-  }
-  tipsResetBtn.textContent = t("reset_button");
-  originalLinkBottom.textContent = t("original_link_text");
-  originalLinkBottom.href = ORIGINAL_LINK;
-}
-
-/* ======== Reset flow ======== */
-function openResetPopup(){ resetInput.value=""; resetPopup.style.display="flex"; }
-resetClose.addEventListener("click", ()=> resetPopup.style.display = "none");
-resetCancel.addEventListener("click", ()=> resetPopup.style.display = "none");
-resetProceed.addEventListener("click", ()=>{
-  const v = (resetInput.value||"").trim().toUpperCase();
-  if(v === "RESET"){
-    resetPopup.style.display = "none";
-    openConfirmPopup();
-  } else {
-    resetInput.style.boxShadow = "0 0 0 6px rgba(255,217,77,0.25)";
-    setTimeout(()=> resetInput.style.boxShadow = "none",900);
-    showToast(t("reset_input_placeholder"));
+/* Edit CSS actions:
+   - Terapkan: mengganti isi <style id="base-style"> (MENIMPA styling utama)
+   - Reset CSS: kembalikan ke originalBaseCss
+   NOTE: settings-style tidak diubah, jadi modal pengaturan tetap konsisten.
+*/
+editcssClose.addEventListener("click", ()=> { editcssPopup.style.display = "none"; editcssPopup.setAttribute("aria-hidden","true"); });
+applyCssBtn.addEventListener("click", ()=> {
+  const css = editcssTextarea.value || "";
+  // simpan backup original jika belum tersimpan
+  if(!localStorage.getItem("base_css_backup")) localStorage.setItem("base_css_backup", originalBaseCss);
+  // terapkan ke base-style
+  baseStyleEl.textContent = css;
+  localStorage.setItem("custom_css", css);
+  showToast(t("css_apply_success"));
+});
+resetCssBtn.addEventListener("click", ()=> {
+  if(confirm("Kembalikan CSS ke keadaan asli?")){
+    localStorage.removeItem("custom_css");
+    const backup = localStorage.getItem("base_css_backup") || originalBaseCss;
+    baseStyleEl.textContent = backup;
+    editcssTextarea.value = backup;
+    showToast(t("css_reset_success"));
   }
 });
 
-function openConfirmPopup(){
-  confirmPopup.style.display = "flex";
-  confirmAgree.disabled = true;
-  let sec = 5;
-  confirmAgree.textContent = `${t("agree")} (${sec})`;
-  const timer = setInterval(()=>{
-    sec--;
-    if(sec>0) confirmAgree.textContent = `${t("agree")} (${sec})`;
-    else { clearInterval(timer); confirmAgree.disabled = false; confirmAgree.textContent = t("agree"); }
-  },1000);
-  confirmCancel.onclick = ()=> { confirmPopup.style.display = "none"; };
-  confirmAgree.onclick = ()=> {
-    localStorage.clear();
-    confirmPopup.style.display = "none";
-    showToast(currentLang==="id"?"Menghapus data...":"Clearing data...");
-    setTimeout(()=> location.reload(), 600);
-  };
-}
+/* DEBUG (hanya pesan kesalahan) */
+debugBtn.addEventListener("click", ()=> {
+  const msg = lastErrorMessage && lastErrorMessage.trim() ? lastErrorMessage : t("no_errors");
+  debugArea.textContent = msg;
+  debugPopup.style.display = "flex";
+});
+debugClose.addEventListener("click", ()=> debugPopup.style.display = "none");
+copyDebugBtn.addEventListener("click", ()=> {
+  const text = debugArea.textContent;
+  navigator.clipboard && navigator.clipboard.writeText(text).then(()=> showToast("Copied debug ✅"));
+});
 
-/* ======== Load links tolerant with status messages + loading spinner ======== */
+/* Reset flow (mesti ketik RESET) */
+const resetPopup = document.getElementById("reset-popup");
+const resetClose = document.getElementById("reset-close");
+const resetInput = document.getElementById("reset-input");
+const resetCancel = document.getElementById("reset-cancel");
+const resetProceed = document.getElementById("reset-proceed");
+const confirmPopup = document.getElementById("confirm-popup");
+const confirmAgree = document.getElementById("confirm-agree");
+resetClose && resetClose.addEventListener("click", ()=> resetPopup.style.display = "none");
+resetCancel && resetCancel.addEventListener("click", ()=> resetPopup.style.display = "none");
+function openResetPopup(){ resetInput.value=""; resetPopup.style.display="flex"; }
+resetProceed && resetProceed.addEventListener("click", ()=>{
+  const v = (resetInput.value||"").trim().toUpperCase();
+  if(v === "RESET"){
+    resetPopup.style.display = "none";
+    // immediate confirm step
+    if(confirm("Yakin ingin menghapus semua data lokal (favorites, overrides, css)? Tindakan ini tidak bisa dibatalkan.")){
+      localStorage.removeItem("favoriteLinks");
+      localStorage.removeItem("local_link_overrides");
+      localStorage.removeItem("custom_css");
+      localStorage.removeItem("merge_sources");
+      localStorage.removeItem("simple_mode");
+      alert("Selesai. Halaman akan dimuat ulang.");
+      location.reload();
+    }
+  } else {
+    resetInput.style.boxShadow = "0 0 0 6px rgba(255,217,77,0.25)";
+    setTimeout(()=> resetInput.style.boxShadow = "none",900);
+    showToast("Ketik RESET untuk konfirmasi");
+  }
+});
+
+/* ======== Load links tolerant + set lastErrorMessage (O/X) ======== */
 async function loadLinks(){
   loadingOverlay.classList.add("open");
   loadingText.textContent = "Memuat data...";
-
   const all = [];
   let localSuccess = false;
   let globalSuccess = false;
@@ -539,97 +612,53 @@ async function loadLinks(){
     const res = await fetch("links.json?_="+Date.now());
     if(!res.ok) throw new Error("local HTTP " + res.status);
     const j = await res.json();
-    if(j.links && Array.isArray(j.links)) {
-      all.push(...j.links.map(x=>({...x,type:"local"})));
-      localSuccess = true;
-    } else {
-      localSuccess = false;
-    }
-  } catch(e){ console.warn("local fail",e); localSuccess = false; lastErrorMessage += (currentLang==="id"?"Gagal memuat data lokal. ":"Failed to load local data. ") + (e && e.message ? `(${e.message})` : ""); }
+    if(j.links && Array.isArray(j.links)) { all.push(...j.links.map(x=>({...x,type:"local"}))); localSuccess = true; } else localSuccess=false;
+  } catch(e){ console.warn("local fail",e); localSuccess=false; lastErrorMessage += (currentLang==="id"?"Gagal memuat data lokal. ":"Failed to load local data. ") + (e && e.message ? `(${e.message})` : ""); }
 
   // global
   try{
     const res2 = await fetch("https://raw.githubusercontent.com/KuningMinum/Kumin/refs/heads/main/link_global.json");
     if(!res2.ok) throw new Error("global HTTP " + res2.status);
     const j2 = await res2.json();
-    if(j2.links && Array.isArray(j2.links)) {
-      all.push(...j2.links.map(x=>({...x,type:"global"})));
-      globalSuccess = true;
-    } else {
-      globalSuccess = false;
-    }
-  } catch(e){ console.warn("global fail",e); globalSuccess = false; lastErrorMessage += (currentLang==="id"?" Gagal memuat data global. ":" Failed to load global data. ") + (e && e.message ? `(${e.message})` : ""); }
+    if(j2.links && Array.isArray(j2.links)) { all.push(...j2.links.map(x=>({...x,type:"global"}))); globalSuccess = true; } else globalSuccess=false;
+  } catch(e){ console.warn("global fail",e); globalSuccess=false; lastErrorMessage += (currentLang==="id"?" Gagal memuat data global. ":" Failed to load global data. ") + (e && e.message ? `(${e.message})` : ""); }
 
-  // store lastLoadStatus
-  lastLoadStatus.local = localSuccess;
-  lastLoadStatus.global = globalSuccess;
+  lastLoadStatus.local = localSuccess; lastLoadStatus.global = globalSuccess;
+  const localMark = localSuccess ? "O" : "X"; const globalMark = globalSuccess ? "O" : "X";
+  showToast(`Local: ${localMark} — Global: ${globalMark}`, 4500);
 
-  // prepare toast: show O/X status (O = berhasil, X = gagal)
-  const localMark = localSuccess ? "O" : "X";
-  const globalMark = globalSuccess ? "O" : "X";
-  const toastMsg = `Local: ${localMark} — Global: ${globalMark}`;
-  showToast(toastMsg, 4500);
-
-  // prepare full lastErrorMessage for tips (user wanted full info there)
   if(!localSuccess || !globalSuccess){
-    // keep the constructed error details in lastErrorMessage (already appended)
-    if(!lastErrorMessage) lastErrorMessage = (currentLang==="id" ? "Beberapa sumber gagal dimuat." : "Some sources failed to load.");
-  } else {
-    lastErrorMessage = ""; // clear if all good
-  }
+    if(!lastErrorMessage) lastErrorMessage = (currentLang==="id"?"Beberapa sumber gagal dimuat.":"Some sources failed to load.");
+  } else lastErrorMessage = "";
 
-  // fallback to favorites if nothing loaded
   if(all.length === 0 && favoriteLinks.length) all.push(...favoriteLinks);
 
-  // hide loading overlay when done (short delay so spinner visible)
   setTimeout(()=> loadingOverlay.classList.remove("open"), 600);
-
-  // update tips content
-  updateTipsContent();
-
   return all;
 }
 
-/* ======== Init & responsive behavior ======== */
+/* ======== Init & search ======== */
 function enforceSmallScreenBehavior(){
-  if(window.innerWidth <= 760){
-    selView.value = "list";
-  } else {
-    selView.value = viewMode;
-  }
+  if(window.innerWidth <= 760){ selView.value = "list"; } else selView.value = viewMode;
 }
 window.addEventListener("resize", ()=> { enforceSmallScreenBehavior(); renderLinks(linksData, searchBox.value); });
 
 function init(){
-  selLanguage.value = currentLang;
-  selView.value = viewMode;
-  chkMerge.checked = mergeSources;
+  selLanguage.value = currentLang; selView.value = viewMode; chkMerge.checked = mergeSources; chkSimple.checked = simpleMode;
   applyLanguageUI();
-  updateTipsContent();
-  originalLinkBottom.href = ORIGINAL_LINK;
-  document.getElementById("original-link-small").querySelector("#original-link-anchor").textContent = t("original_link_text");
+  applyCustomCssOnLoad();
   document.getElementById("original-link-anchor").href = ORIGINAL_LINK;
-
   enforceSmallScreenBehavior();
-
-  loadLinks().then(d=>{
-    linksData = d;
-    renderLinks(linksData);
-  }).catch(e=>{
-    console.error(e);
-    showToast(t("toast_failed"));
-    loadingOverlay.classList.remove("open");
-  });
+  loadLinks().then(d=>{ linksData = d; renderLinks(linksData); }).catch(e=>{ console.error(e); showToast("Gagal memuat data"); loadingOverlay.classList.remove("open"); });
 }
 init();
 
-/* ======== Search (aktif) ======== */
 searchBox.addEventListener("input", ()=> renderLinks(linksData, searchBox.value));
 
-/* close tips when click outside (header area) */
+/* close debug popup by clicking outside */
 document.addEventListener("click", (e)=>{
-  const tipsMenuEl = document.getElementById("tips-menu");
-  if(tipsMenuEl && !tipsMenuEl.contains(e.target) && !btnTips.contains(e.target)) tipsMenuEl.classList.remove("open");
+  const dbg = document.getElementById("debug-popup");
+  if(dbg && dbg.style.display === "flex" && !dbg.contains(e.target) && !debugBtn.contains(e.target)) dbg.style.display='none';
 });
 </script>
 </body>
