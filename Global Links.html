@@ -241,7 +241,12 @@ let favoriteLinks = JSON.parse(localStorage.getItem("favoriteLinks")||"[]");
 let currentLang = localStorage.getItem("lang") || ((navigator.language && navigator.language.startsWith("id")) ? "id" : "en");
 let viewMode = localStorage.getItem("viewMode") || "list";
 let mergeSources = (localStorage.getItem("merge_sources") === "1");
-let simpleMode = (localStorage.getItem("simple_mode") === "1");
+
+// ---------- default simpleMode = true on first visit ----------
+const saved_simple = localStorage.getItem("simple_mode");
+let simpleMode = (saved_simple === null) ? true : (saved_simple === "1");
+// ----------------------------------------------------------------
+
 let linksData = [];
 let lastErrorMessage = "";
 let lastLoadStatus = { local:false, global:false };
@@ -342,10 +347,52 @@ function renderLinks(list, search=""){
       const titleText = (currentLang==="id")? (l.title_id||l.title_en||"") : (l.title_en||l.title_id||"");
       return !q || titleText.toLowerCase().includes(q) || (l.grup_id||"").toLowerCase().includes(q) || (l.grup_en||"").toLowerCase().includes(q);
     });
+
     const container = document.createElement("div"); container.className = "flat-items";
     container.innerHTML = `<div style="padding:8px;color:#9aa6bf">Mode Sederhana aktif — semua item ditampilkan tanpa grup. Matikan di Pengaturan untuk kembali.</div>`;
+
+    // Tampilkan FAVORIT dulu (jika ada) sebagai list sederhana
+    if(favoriteLinks && favoriteLinks.length){
+      const favHeader = document.createElement("div"); favHeader.className = "group-container";
+      const fh = document.createElement("h2"); fh.className = "group-title"; fh.textContent = (currentLang==="id")? "Favorit" : "Favorites";
+      favHeader.appendChild(fh);
+      const favList = document.createElement("div"); favList.className = "group-items";
+      favoriteLinks.forEach(link=>{
+        const titleTextRaw = (currentLang==="id")? (link.title_id||link.title_en||"") : (link.title_en||link.title_id||"");
+        const groupName = (currentLang==="id")? (link.grup_id || link.grup || "Tanpa Grup") : (link.grup_en || link.grup || "No Group");
+        const titleText = `(${groupName}) ${titleTextRaw}`;
+        const row = document.createElement("div"); row.className = "item-row";
+        const left = document.createElement("div"); left.className = "item-left";
+        const icon = document.createElement("div"); icon.className = "link-icon"; if(link.img){ const img=document.createElement("img"); img.src=link.img; img.style.width="100%"; img.style.height="100%"; img.style.objectFit="cover"; img.style.borderRadius="6px"; icon.appendChild(img);} else { icon.innerHTML = `<i class="${link.icon||'fa-solid fa-link'}"></i>`; }
+        const tEl = document.createElement("div"); tEl.innerHTML = `<div class="link-title">${titleText}</div><div class="link-desc" style="font-size:0.8rem;color:#9aa6bf">${(currentLang==="id")? (link.description_id||"") : (link.description_en||"")}</div>`;
+        left.appendChild(icon); left.appendChild(tEl);
+
+        const actions = document.createElement("div"); actions.className = "link-actions";
+        const eye = document.createElement("button"); eye.className="btn-icon"; eye.title = t("preview"); eye.innerHTML = '<i class="fa-solid fa-eye"></i>';
+        eye.addEventListener("click",(e)=>{ e.stopPropagation(); openPreview(link.url); });
+        const open = document.createElement("button"); open.className="btn-icon"; open.title = t("open_link"); open.innerHTML = '<i class="fa-solid fa-arrow-up-right-from-square"></i>';
+        open.addEventListener("click",(e)=>{ e.stopPropagation(); window.location.href = link.url; });
+        const copyBtn = document.createElement("button"); copyBtn.className="btn-icon"; copyBtn.title = t("copy_link"); copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i>';
+        copyBtn.addEventListener("click",(e)=>{ e.stopPropagation(); navigator.clipboard && navigator.clipboard.writeText(link.url).then(()=> showToast(t("copy_link")+" ✅")); });
+        const favBtn = document.createElement("button"); favBtn.className="btn-icon"; favBtn.innerHTML = '<i class="fa-solid fa-star"></i>';
+        favBtn.classList.add("favorite");
+        favBtn.addEventListener("click",(e)=>{ e.stopPropagation(); favoriteLinks = favoriteLinks.filter(f=>f.url!==link.url); localStorage.setItem("favoriteLinks", JSON.stringify(favoriteLinks)); renderLinks(linksData, searchBox.value); });
+
+        actions.appendChild(eye); actions.appendChild(open); actions.appendChild(copyBtn); actions.appendChild(favBtn);
+        row.appendChild(left); row.appendChild(actions);
+        row.addEventListener("click", ()=> window.location.href = link.url );
+        favList.appendChild(row);
+      });
+      favHeader.appendChild(favList);
+      container.appendChild(favHeader);
+    }
+
+    // Semua item (flat), dengan prefix (nama grup) di depan judul
     items.forEach(link=>{
-      const titleText = (currentLang==="id")? (link.title_id||link.title_en||"") : (link.title_en||link.title_id||"");
+      const titleRaw = (currentLang==="id")? (link.title_id||link.title_en||"") : (link.title_en||link.title_id||"");
+      const groupName = (currentLang==="id")? (link.grup_id || link.grup || "Tanpa Grup") : (link.grup_en || link.grup || "No Group");
+      const titleText = `(${groupName}) ${titleRaw}`;
+
       const row = document.createElement("div"); row.className = "item-row";
       const left = document.createElement("div"); left.className = "item-left";
       const icon = document.createElement("div"); icon.className = "link-icon"; if(link.img){ const img=document.createElement("img"); img.src=link.img; img.style.width="100%"; img.style.height="100%"; img.style.objectFit="cover"; img.style.borderRadius="6px"; icon.appendChild(img);} else { icon.innerHTML = `<i class="${link.icon||'fa-solid fa-link'}"></i>`; }
@@ -368,6 +415,7 @@ function renderLinks(list, search=""){
       row.addEventListener("click", ()=> window.location.href = link.url );
       container.appendChild(row);
     });
+
     linkContainer.appendChild(container);
     return;
   }
@@ -458,7 +506,7 @@ function renderLinks(list, search=""){
         if(effectiveView==="grid"){
           const icon = document.createElement("div"); icon.className="link-icon"; if(link.img){ const img=document.createElement("img"); img.src=link.img; img.style.width="100%"; img.style.height="100%"; img.style.objectFit="cover"; img.style.borderRadius="6px"; icon.appendChild(img);} else { icon.innerHTML = `<i class="${link.icon||'fa-solid fa-link'}"></i>`; }
           const title = document.createElement("div"); title.className="link-title"; title.textContent = titleText;
-          const desc = document.createElement("div"); desc.className="link-desc"; desc.textContent = (currentLang==="id")? (link.description_id||"") : (link.description_en||"");
+          const desc = document.createElement("div"); desc.className = "link-desc"; desc.textContent = (currentLang==="id")? (link.description_id||"") : (link.description_en||"");
           const acts = document.createElement("div"); acts.className="link-actions";
           const eye = document.createElement("button"); eye.className="btn-icon"; eye.title=t("preview"); eye.innerHTML='<i class="fa-solid fa-eye"></i>';
           eye.addEventListener("click",(e)=>{ e.stopPropagation(); openPreview(link.url); });
@@ -582,13 +630,10 @@ resetProceed && resetProceed.addEventListener("click", ()=>{
   if(v === "RESET"){
     resetPopup.style.display = "none";
     // immediate confirm step
-    if(confirm("Yakin ingin menghapus semua data lokal (favorites, overrides, css)? Tindakan ini tidak bisa dibatalkan.")){
-      localStorage.removeItem("favoriteLinks");
-      localStorage.removeItem("local_link_overrides");
-      localStorage.removeItem("custom_css");
-      localStorage.removeItem("merge_sources");
-      localStorage.removeItem("simple_mode");
-      alert("Selesai. Halaman akan dimuat ulang.");
+    if(confirm("Yakin ingin menghapus semua data lokal (favorites, overrides, css, settings)? Tindakan ini tidak bisa dibatalkan.")){
+      // HAPUS TOTAL semua data lokal
+      localStorage.clear();
+      alert("Selesai. Semua data lokal dihapus. Halaman akan dimuat ulang.");
       location.reload();
     }
   } else {
