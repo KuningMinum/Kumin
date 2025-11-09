@@ -31,7 +31,7 @@
       "title_id": "YouTube Kuning Minum Gaming",
       "title_en": "Kuning Minum Gaming YouTube",
       "url": "https://www.youtube.com/@KuningMinumGaming",
-      "icon": "fab fa-youtube",
+      "icon": "https://brandslogos.com/wp-content/uploads/images/large/unity-logo.png",
       "grup_id": "YouTube",
       "grup_en": "YouTube",
       "type": "global"
@@ -41,15 +41,6 @@
       "title_en": "Kuning Minum Official YouTube",
       "url": "https://www.youtube.com/@kuningminumofficial",
       "icon": "fab fa-youtube",
-      "grup_id": "YouTube",
-      "grup_en": "YouTube",
-      "type": "global"
-    },
-    {
-      "title_id": "YouTube Halo Semuanya",
-      "title_en": "Halo Semuanya YouTube",
-      "url": "https://www.youtube.com/@halosemuanya",
-      "icon": "https://blog-asset.jakartanotebook.com/2024/09/photo-1571131116858-2295ade82a72.webp",
       "grup_id": "YouTube",
       "grup_en": "YouTube",
       "type": "global"
@@ -67,7 +58,7 @@
       "title_id": "Donasi Saweria",
       "title_en": "Saweria Donation",
       "url": "https://saweria.co/KuningMinum",
-      "icon": "https://yt3.ggpht.com/ytc/AKedOLTKJ-lUwZQjuFlGd5pVwUMKH2GXSI3_K0IWIK-X=s900-c-k-c0x00ffffff-no-rj",
+      "icon": "https://d1fdloi71mui9q.cloudfront.net/Zd2OesPiTRyUlOLh01ah_vqAU6rLS5ySXzmBdFaaU_saweria%20icon.png",
       "grup_id": "Link Lainnya",
       "grup_en": "Other Links",
       "type": "global"
