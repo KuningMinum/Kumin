@@ -46,15 +46,6 @@
       "type": "global"
     },
     {
-      "title_id": "YouTube Halo Semuanya",
-      "title_en": "Halo Semuanya YouTube",
-      "url": "https://www.youtube.com/@halosemuanya",
-      "icon": "https://blog-asset.jakartanotebook.com/2024/09/photo-1571131116858-2295ade82a72.webp",
-      "grup_id": "YouTube",
-      "grup_en": "YouTube",
-      "type": "global"
-    },
-    {
       "title_id": "GitHub Kuning Minum",
       "title_en": "Kuning Minum GitHub",
       "url": "https://kuningminum.github.io/kuningminum/",
@@ -74,4 +65,3 @@
     }
   ]
 }
-
