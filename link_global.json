@@ -49,8 +49,7 @@
       "title_id": "YouTube Halo Semuanya",
       "title_en": "Halo Semuanya YouTube",
       "url": "https://www.youtube.com/@halosemuanya",
-      "icon": "fab fa-youtube",
-      "foto": "https://blog-asset.jakartanotebook.com/2024/09/photo-1571131116858-2295ade82a72.webp",
+      "icon": "https://blog-asset.jakartanotebook.com/2024/09/photo-1571131116858-2295ade82a72.webp",
       "grup_id": "YouTube",
       "grup_en": "YouTube",
       "type": "global"
@@ -75,6 +74,4 @@
     }
   ]
 }
-
-eeee
 
