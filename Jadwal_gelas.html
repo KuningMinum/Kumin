@@ -1,87 +1,98 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <title>Jadwal Produksi Gelas Mug</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f2f4f7;
-            padding: 20px;
-            padding-bottom: 80px;
-        }
-        .container {
-            max-width: 900px;
-            margin: auto;
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-        }
-        h1, h2 {
-            text-align: center;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jadwal Produksi Gelas Mug</title>
 
-        /* Kalender */
-        .calendar {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
-            margin-top: 20px;
-        }
-        .day {
-            border: 1px solid #ccc;
-            padding: 10px;
-            text-align: center;
-            border-radius: 6px;
-        }
-        .header {
-            font-weight: bold;
-            background: #e9ecef;
-        }
-        .work {
-            background: #ffdddd;
-            border-color: #ff4d4d;
-            font-weight: bold;
-        }
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#f2f4f7;
+    margin:0;
+    padding:12px;
+    padding-bottom:90px;
+}
+.container{
+    max-width:600px;
+    margin:auto;
+    background:#fff;
+    padding:14px;
+    border-radius:8px;
+}
+h1{
+    font-size:18px;
+    text-align:center;
+}
+h2{
+    font-size:14px;
+    text-align:center;
+    margin-bottom:10px;
+}
 
-        /* Tabel */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 30px;
-        }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 10px;
-            text-align: center;
-        }
-        th {
-            background: #e9ecef;
-        }
+/* Kalender */
+.calendar{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:5px;
+}
+.day{
+    border:1px solid #ccc;
+    padding:6px;
+    text-align:center;
+    border-radius:5px;
+    font-size:12px;
+}
+.header{
+    font-weight:bold;
+    background:#e9ecef;
+}
+.work{
+    background:#ffdddd;
+    border-color:#ff4d4d;
+    font-weight:bold;
+}
 
-        /* Footer fixed */
-        .footer-fixed {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: #ffffff;
-            border-top: 2px solid #ccc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            padding: 12px;
-            font-weight: bold;
-        }
+/* Tabel */
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+    font-size:12px;
+}
+th,td{
+    border:1px solid #ccc;
+    padding:6px;
+    text-align:center;
+}
+th{
+    background:#e9ecef;
+}
 
-        .deadline-fixed {
-            background: #ffeb3b;
-            padding: 6px 12px;
-            border-radius: 4px;
-        }
-    </style>
+/* Footer fixed */
+.footer-fixed{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:#fff;
+    border-top:2px solid #ccc;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:8px 12px;
+    font-size:12px;
+    box-sizing:border-box;
+}
+.deadline-fixed{
+    background:#ffeb3b;
+    padding:4px 8px;
+    border-radius:4px;
+    font-weight:bold;
+}
+</style>
 </head>
+
 <body>
 
 <div class="container">
@@ -116,51 +127,51 @@
 
     <table>
         <thead>
-            <tr>
-                <th>Tanggal</th>
-                <th>Hari</th>
-                <th>Waktu Kerja</th>
-                <th>Jumlah Gelas Mug</th>
-            </tr>
+        <tr>
+            <th>Tanggal</th>
+            <th>Hari</th>
+            <th>Waktu</th>
+            <th>Gelas</th>
+        </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>5 Januari</td>
-                <td>Senin</td>
-                <td>Abis pulang (bebas)</td>
-                <td>9</td>
-            </tr>
-            <tr>
-                <td>7 Januari</td>
-                <td>Rabu</td>
-                <td>Jam PKKWU</td>
-                <td>9</td>
-            </tr>
-            <tr>
-                <td>8 Januari</td>
-                <td>Kamis</td>
-                <td>PKKWU atau habis Debian</td>
-                <td>9</td>
-            </tr>
-            <tr>
-                <td>9 Januari</td>
-                <td>Jumat</td>
-                <td>Jam ibu olahraga</td>
-                <td>9</td>
-            </tr>
-            <tr>
-                <td>12 Januari</td>
-                <td>Senin</td>
-                <td>Abis pulang</td>
-                <td>5</td>
-            </tr>
+        <tr>
+            <td>5 Jan</td>
+            <td>Senin</td>
+            <td>Abis pulang</td>
+            <td>9</td>
+        </tr>
+        <tr>
+            <td>7 Jan</td>
+            <td>Rabu</td>
+            <td>Jam PKKWU</td>
+            <td>9</td>
+        </tr>
+        <tr>
+            <td>8 Jan</td>
+            <td>Kamis</td>
+            <td>PKKWU / Debian</td>
+            <td>9</td>
+        </tr>
+        <tr>
+            <td>9 Jan</td>
+            <td>Jumat</td>
+            <td>Olahraga ibu</td>
+            <td>9</td>
+        </tr>
+        <tr>
+            <td>12 Jan</td>
+            <td>Senin</td>
+            <td>Abis pulang</td>
+            <td>5</td>
+        </tr>
         </tbody>
     </table>
 </div>
 
 <div class="footer-fixed">
     <div>DI BUAT OLEH AHMAD RIJANI</div>
-    <div class="deadline-fixed">DEADLINE: 15 JANUARI</div>
+    <div class="deadline-fixed">DEADLINE 15 JANUARI</div>
 </div>
 
 </body>
