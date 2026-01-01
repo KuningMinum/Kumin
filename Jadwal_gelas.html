@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Jadwal Produksi Gelas Mug</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f4f7;
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+
+        /* Kalender */
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-top: 20px;
+        }
+        .day {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+            border-radius: 6px;
+        }
+        .header {
+            font-weight: bold;
+            background: #e9ecef;
+        }
+        .work {
+            background: #ffdddd;
+            border-color: #ff4d4d;
+            font-weight: bold;
+        }
+
+        /* Tabel */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background: #e9ecef;
+        }
+
+        /* Footer fixed */
+        .footer-fixed {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #ffffff;
+            border-top: 2px solid #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            padding: 12px;
+            font-weight: bold;
+        }
+
+        .deadline-fixed {
+            background: #ffeb3b;
+            padding: 6px 12px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Jadwal Bikin Gelas Mug</h1>
+    <h2>Kalender Januari</h2>
+
+    <div class="calendar">
+        <div class="day header">Sen</div>
+        <div class="day header">Sel</div>
+        <div class="day header">Rab</div>
+        <div class="day header">Kam</div>
+        <div class="day header">Jum</div>
+        <div class="day header">Sab</div>
+        <div class="day header">Min</div>
+
+        <div class="day work">5</div>
+        <div class="day">6</div>
+        <div class="day work">7</div>
+        <div class="day work">8</div>
+        <div class="day work">9</div>
+        <div class="day">10</div>
+        <div class="day">11</div>
+
+        <div class="day work">12</div>
+        <div class="day">13</div>
+        <div class="day">14</div>
+        <div class="day">15</div>
+        <div class="day">16</div>
+        <div class="day">17</div>
+        <div class="day">18</div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Tanggal</th>
+                <th>Hari</th>
+                <th>Waktu Kerja</th>
+                <th>Jumlah Gelas Mug</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>5 Januari</td>
+                <td>Senin</td>
+                <td>Abis pulang (bebas)</td>
+                <td>9</td>
+            </tr>
+            <tr>
+                <td>7 Januari</td>
+                <td>Rabu</td>
+                <td>Jam PKKWU</td>
+                <td>9</td>
+            </tr>
+            <tr>
+                <td>8 Januari</td>
+                <td>Kamis</td>
+                <td>PKKWU atau habis Debian</td>
+                <td>9</td>
+            </tr>
+            <tr>
+                <td>9 Januari</td>
+                <td>Jumat</td>
+                <td>Jam ibu olahraga</td>
+                <td>9</td>
+            </tr>
+            <tr>
+                <td>12 Januari</td>
+                <td>Senin</td>
+                <td>Abis pulang</td>
+                <td>5</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="footer-fixed">
+    <div>DI BUAT OLEH AHMAD RIJANI</div>
+    <div class="deadline-fixed">DEADLINE: 15 JANUARI</div>
+</div>
+
+</body>
+</html>
