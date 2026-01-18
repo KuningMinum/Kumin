@@ -46,6 +46,15 @@
       "type": "global"
     },
     {
+      "title_id": "YouTube Kumin_AI",
+      "title_en": "Kumin_AI YouTube",
+      "url": "https://www.youtube.com/@kumin_Ai",
+      "icon": "https://yt3.googleusercontent.com/W8Y_BCPJqnoc8ZQUt3akhcOGyP7-zzLbKSSR5XKeHXcKCXmcqhSTrow8RuQCsnGaHI2LrlGY=s160-c-k-c0x00ffffff-no-rj",
+      "grup_id": "YouTube",
+      "grup_en": "YouTube",
+      "type": "global"
+    },
+    {
       "title_id": "TikTok Kuning Minum Gaming",
       "title_en": "Kuning Minum Gaming TikTok",
       "url": "https://www.tiktok.com/@kuningminumgaming",
