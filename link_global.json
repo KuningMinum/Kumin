@@ -49,7 +49,16 @@
       "title_id": "YouTube Kumin_AI",
       "title_en": "Kumin_AI YouTube",
       "url": "https://www.youtube.com/@kumin_Ai",
-      "icon": "https://yt3.googleusercontent.com/W8Y_BCPJqnoc8ZQUt3akhcOGyP7-zzLbKSSR5XKeHXcKCXmcqhSTrow8RuQCsnGaHI2LrlGY=s160-c-k-c0x00ffffff-no-rj",
+      "icon": "https://yt3.googleusercontent.com/3vrlX1G-WgD4oH0O43_Y9JAmFK_ss4jYO3MkbfLwd9_QkDrrUuFE-g8wvkvre9tsP8_vIkxG7w=s160-c-k-c0x00ffffff-no-rj",
+      "grup_id": "YouTube",
+      "grup_en": "YouTube",
+      "type": "global"
+    },
+    {
+      "title_id": "YouTube Kuning Minum",
+      "title_en": "Kuning Minum YouTube",
+      "url": "https://www.youtube.com/@kuning_minum",
+      "icon": "https://yt3.googleusercontent.com/FvS8dKpieHKEV4fsFR-1NmRg0icz8IWFZb29AJp__B00dWATkC83zRXLxRMziWpElrdm5eytIQ=s160-c-k-c0x00ffffff-no-rj",
       "grup_id": "YouTube",
       "grup_en": "YouTube",
       "type": "global"
@@ -88,7 +97,7 @@
       "icon": "https://d1fdloi71mui9q.cloudfront.net/FAqbAKh1RSWKi94Texjv_Saweria%202.png",
       "grup_id": "Link Lainnya",
       "grup_en": "Other Links",
-      "type": "global"
+      "type": "dddddddddddddddddddddddddddddddddddddddddddddontol"
     }
   ]
 }
