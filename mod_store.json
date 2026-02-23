@@ -2,24 +2,13 @@
   "version": 1,
   "mods": [
     {
-      "id": "dark-pro",
-      "name": "Dark Pro UI",
+      "id": "store-bug",
+      "name": "Store Bug",
       "author": "Store",
       "description": "Tema gelap modern dengan kontras lebih tegas.",
-      "icon": "https://example.com/icons/dark.png",
+      "icon": "https://static.vecteezy.com/system/resources/previews/020/276/914/non_2x/404-internet-error-page-icon-404-number-symbol-free-vector.jpg",
       "version": "1.0.0",
-      "entry": "https://raw.githubusercontent.com/KuningMinum/Kumin/refs/heads/main/mod/bold.js"
-    },
-    {
-      "id": "TWS",
-      "name": "Compact List Mode",
-      "author": "Store",
-      "description": "Memadatkan tampilan list agar lebih banyak item terlihat.",
-      "icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYek6gWAa96Kkt0cTusILt3upl2CFfKIQq-w&s",
-      "version": "1.0.0",
-      "entry": "(function(){\n  // == ERO4MOD ==\n  // @name Button & Layout Manager\n  // @desc Mod baru: tombol modern + layout rapi\n  // @version 1.0\n\n  // Style global tombol baru + layout\n  const style = document.createElement('style');\n  style.id = 'ero4-btn-layout-style';\n  style.textContent = `\n    /* Semua tombol default jadi modern */\n    button, .btn {\n      background: linear-gradient(90deg, #4cc9f0, #4361ee) !important;\n      color: #000 !important;\n      border: none !important;\n      border-radius: 12px !important;\n      padding: 8px 16px !important;\n      font-weight: 600 !important;\n      cursor: pointer !important;\n      transition: all .2s ease !important;\n    }\n    button:hover, .btn:hover {\n      transform: translateY(-2px) scale(1.02) !important;\n      box-shadow: 0 6px 18px rgba(76,201,240,0.5) !important;\n    }\n\n    /* Layout utama rapi */\n    .grid {\n      display: grid !important;\n      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;\n      gap: 14px !important;\n    }\n\n    .card {\n      border-radius: 14px !important;\n      padding: 14px !important;\n      background: #0a0a0a !important;\n      border: 1px solid rgba(255,255,255,0.06) !important;\n      box-shadow: 0 10px 25px rgba(0,0,0,0.7) !important;\n      transition: transform .2s ease !important;\n    }\n    .card:hover {\n      transform: translateY(-3px) !important;\n    }\n\n    /* List / row spacing */\n    .list, .safe-list {\n      gap: 12px !important;\n    }\n\n    /* Checkbox & toggle */\n    .chk {\n      width: 20px !important;\n      height: 20px !important;\n      cursor: pointer !important;\n    }\n  `;\n\n  if(!document.getElementById(style.id)){\n    document.head.appendChild(style);\n    console.log('Button & Layout Manager aktif: semua tombol dan layout diubah ✅');\n  } else {\n    console.log('Button & Layout Manager sudah aktif.');\n  }\n\n})();"
+      "entry": ""
     }
   ]
 }
-
-
