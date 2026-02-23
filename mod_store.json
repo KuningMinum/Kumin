@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "mods": [
+    {
+      "id": "dark-pro",
+      "name": "Dark Pro UI",
+      "author": "Store",
+      "description": "Tema gelap modern dengan kontras lebih tegas.",
+      "icon": "https://example.com/icons/dark.png",
+      "version": "1.0.0",
+      "entry": "https://example.com/mods/dark-pro.js"
+    },
+    {
+      "id": "compact-list",
+      "name": "Compact List Mode",
+      "author": "Store",
+      "description": "Memadatkan tampilan list agar lebih banyak item terlihat.",
+      "icon": "https://example.com/icons/compact.png",
+      "version": "1.0.0",
+      "entry": "https://example.com/mods/compact-list.js"
+    },
+    {
+      "id": "animated-ui",
+      "name": "Animated UI",
+      "author": "Store",
+      "description": "Menambahkan animasi transisi halus di seluruh UI.",
+      "icon": "https://example.com/icons/anim.png",
+      "version": "1.0.0",
+      "entry": "https://example.com/mods/animated-ui.js"
+    }
+  ]
+}
