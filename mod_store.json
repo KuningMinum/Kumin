@@ -11,22 +11,77 @@
       "entry": "https://raw.githubusercontent.com/KuningMinum/Kumin/refs/heads/main/mod/bold.js"
     },
     {
-      "id": "compact-list",
+      "id": "TWS",
       "name": "Compact List Mode",
       "author": "Store",
       "description": "Memadatkan tampilan list agar lebih banyak item terlihat.",
-      "icon": "https://example.com/icons/compact.png",
+      "icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYek6gWAa96Kkt0cTusILt3upl2CFfKIQq-w&s",
       "version": "1.0.0",
-      "entry": "https://example.com/mods/compact-list.js"
-    },
-    {
-      "id": "animated-ui",
-      "name": "Animated UI",
-      "author": "Store",
-      "description": "Menambahkan animasi transisi halus di seluruh UI.",
-      "icon": "https://example.com/icons/anim.png",
-      "version": "1.0.0",
-      "entry": "https://example.com/mods/animated-ui.js"
+      "entry": "(function(){
+  // == ERO4MOD ==
+  // @name Button & Layout Manager
+  // @desc Mod baru: tombol modern + layout rapi
+  // @version 1.0
+
+  // Style global tombol baru + layout
+  const style = document.createElement("style");
+  style.id = "ero4-btn-layout-style";
+  style.textContent = `
+    /* Semua tombol default jadi modern */
+    button, .btn {
+      background: linear-gradient(90deg, #4cc9f0, #4361ee) !important;
+      color: #000 !important;
+      border: none !important;
+      border-radius: 12px !important;
+      padding: 8px 16px !important;
+      font-weight: 600 !important;
+      cursor: pointer !important;
+      transition: all .2s ease !important;
     }
-  ]
-}
+    button:hover, .btn:hover {
+      transform: translateY(-2px) scale(1.02) !important;
+      box-shadow: 0 6px 18px rgba(76,201,240,0.5) !important;
+    }
+
+    /* Layout utama rapi */
+    .grid {
+      display: grid !important;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+      gap: 14px !important;
+    }
+
+    .card {
+      border-radius: 14px !important;
+      padding: 14px !important;
+      background: #0a0a0a !important;
+      border: 1px solid rgba(255,255,255,0.06) !important;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.7) !important;
+      transition: transform .2s ease !important;
+    }
+    .card:hover {
+      transform: translateY(-3px) !important;
+    }
+
+    /* List / row spacing */
+    .list, .safe-list {
+      gap: 12px !important;
+    }
+
+    /* Checkbox & toggle */
+    .chk {
+      width: 20px !important;
+      height: 20px !important;
+      cursor: pointer !important;
+    }
+  `;
+
+  if(!document.getElementById(style.id)){
+    document.head.appendChild(style);
+    console.log("Button & Layout Manager aktif: semua tombol dan layout diubah ✅");
+  } else {
+    console.log("Button & Layout Manager sudah aktif.");
+  }
+
+})();
+"
+    },
