@@ -8,7 +8,7 @@
       "description": "Tema gelap modern dengan kontras lebih tegas.",
       "icon": "https://example.com/icons/dark.png",
       "version": "1.0.0",
-      "entry": "https://raw.githubusercontent.com/KuningMinum/Kumin/refs/heads/main/mod/bold.ero4mod"
+      "entry": "https://raw.githubusercontent.com/KuningMinum/Kumin/refs/heads/main/mod/bold.js"
     },
     {
       "id": "compact-list",
