@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Store Aero</title>
+  <style>
+    /* Reset sederhana */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background: #e0eaff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .store-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    .item {
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(8px);
+      border-radius: 15px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .item:hover {
+      transform: translateY(-5px);
+    }
+
+    .item img {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .item h2 {
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+
+    .item p {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 10px;
+    }
+
+    .item button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 8px;
+      background: #5b9df9;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .item button:hover {
+      background: #4a86e8;
+    }
+  </style>
+</head>
+<body>
+  <h1>💎 Aero Store 💎</h1>
+  <div class="store-container">
+    <div class="item">
+      <img src="https://via.placeholder.com/200x150" alt="Item 1">
+      <h2>Item Epic</h2>
+      <p>Deskripsi singkat item ini.</p>
+      <button>Beli 🛒</button>
+    </div>
+    <div class="item">
+      <img src="https://via.placeholder.com/200x150" alt="Item 2">
+      <h2>Item Legendary</h2>
+      <p>Deskripsi singkat item ini juga.</p>
+      <button>Beli 🛒</button>
+    </div>
+    <div class="item">
+      <img src="https://via.placeholder.com/200x150" alt="Item 3">
+      <h2>Item Rare</h2>
+      <p>Deskripsi singkat item keren ini.</p>
+      <button>Beli 🛒</button>
+    </div>
+  </div>
+</body>
+</html>
