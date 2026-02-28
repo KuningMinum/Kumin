@@ -1,0 +1,13 @@
+[
+  {
+    "id": "mod-red",
+    "nama": "Red",
+    "deskripsi": "UI mod named Red for testing purposes.",
+    "file": "red.ero4mod",
+    "ukuran": "500 KB",
+    "tags": ["ui"],
+    "screenshots": [
+      "mods/screens/red-1.png"
+    ]
+  }
+]
