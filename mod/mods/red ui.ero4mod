@@ -1,0 +1,77 @@
+(function(){
+  // == ERO4MOD 3D VISUAL KAPSUL MERAH ==
+  // @name Button & Card 3D Kapsul Merah
+  // @desc Tombol & card kapsul, merah, dengan efek 3D lebih nyata
+  // @version 1.2
+
+  const style = document.createElement("style");
+  style.id = "ero4-btn-card-3d-red-style";
+  style.textContent = `
+    /* Tombol kapsul merah */
+    button, .btn {
+      background: linear-gradient(145deg, #ff4c4c, #e60000) !important;
+      color: #fff !important;
+      border: none !important;
+      border-radius: 50px !important; /* kapsul */
+      padding: 10px 22px !important;
+      font-weight: 700 !important;
+      cursor: pointer !important;
+      transition: transform 0.2s ease, box-shadow 0.25s ease !important;
+      transform-style: preserve-3d;
+      box-shadow: 0 8px 20px rgba(230,0,0,0.5);
+    }
+    button:hover, .btn:hover {
+      transform: translateY(-4px) scale(1.05) rotateX(2deg) rotateY(2deg) !important;
+      box-shadow: 0 14px 28px rgba(230,0,0,0.7) !important;
+    }
+
+    /* Card kapsul merah gelap */
+    .card {
+      border-radius: 24px !important; /* kapsul lebih besar */
+      padding: 18px !important;
+      background: linear-gradient(145deg, #330000, #660000) !important;
+      border: 1px solid rgba(255,0,0,0.15) !important;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.8) !important;
+      transition: transform 0.2s ease, box-shadow 0.25s ease !important;
+      transform-style: preserve-3d;
+    }
+    .card:hover {
+      transform: translateY(-6px) rotateX(3deg) rotateY(3deg) !important;
+      box-shadow: 0 18px 36px rgba(255,0,0,0.7) !important;
+    }
+
+    /* Layout grid tetap */
+    .grid {
+      display: grid !important;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+      gap: 16px !important;
+    }
+  `;
+
+  if(!document.getElementById(style.id)){
+    document.head.appendChild(style);
+    console.log("Button & Card 3D Kapsul Merah aktif ✅");
+  } else {
+    console.log("Button & Card 3D Kapsul Merah sudah aktif.");
+  }
+
+  // Efek mouse 3D kapsul lebih smooth
+  const elements3D = document.querySelectorAll('.card, button, .btn');
+  document.addEventListener('mousemove', (e) => {
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    const xAxis = (centerX - e.pageX) / 25; 
+    const yAxis = (centerY - e.pageY) / 25;
+
+    elements3D.forEach(el => {
+      el.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+    });
+  });
+
+  document.addEventListener('mouseleave', () => {
+    elements3D.forEach(el => {
+      el.style.transform = `rotateY(0deg) rotateX(0deg)`;
+    });
+  });
+
+})();
