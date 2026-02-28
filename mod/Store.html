@@ -1,108 +1,546 @@
-<!DOCTYPE html>
-<html lang="id">
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Store Aero</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ero4 Mod Store</title>
   <style>
-    /* Reset sederhana */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
+    :root{
+      --bg:#0b0f14;
+      --panel:#0f1418;
+      --muted:#9aa6b2;
+      --accent:#60a5fa;
+      --card:#0c1115;
+      --glass: rgba(255,255,255,0.03);
+      --radius:12px;
+      --shadow: 0 6px 18px rgba(2,6,23,0.6);
+      --glass-2: rgba(255,255,255,0.02);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Inter, Roboto, system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial;
+      background:linear-gradient(180deg,var(--bg),#020406);
+      color:#e6eef6;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      min-height:100vh;
     }
 
-    body {
-      background: #e0eaff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:18px 20px;
+      background:linear-gradient(90deg, rgba(255,255,255,0.02), transparent);
+      border-bottom:1px solid rgba(255,255,255,0.03);
+      position:sticky;
+      top:0;
+      z-index:10;
+      backdrop-filter: blur(6px);
+    }
+    .brand{
+      display:flex;align-items:center;gap:12px;
+    }
+    h1{font-size:18px;margin:0;font-weight:600;letter-spacing:0.2px}
+    .controls{
+      display:flex;gap:10px;align-items:center;
     }
 
-    h1 {
-      margin-bottom: 20px;
-      color: #333;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    .searchbar{display:flex;gap:8px;align-items:center;background:var(--glass);padding:8px;border-radius:12px}
+    .searchbar input[type="search"]{
+      background:transparent;border:0;color:var(--muted);outline:none;font-size:14px;width:260px;
     }
-
-    .store-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      width: 100%;
-      max-width: 1000px;
+    .taglist{display:flex;gap:8px;flex-wrap:wrap}
+    .tag{
+      padding:6px 10px;border-radius:999px;background:var(--glass-2);color:var(--muted);font-size:13px;border:1px solid rgba(255,255,255,0.02);cursor:pointer;
     }
+    .tag.active{background:linear-gradient(90deg,var(--accent),#7c3aed);color:#031025;border:1px solid rgba(255,255,255,0.06);}
 
-    .item {
-      background: rgba(255,255,255,0.7);
-      backdrop-filter: blur(8px);
-      border-radius: 15px;
-      padding: 15px;
-      text-align: center;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease;
+    main{max-width:1100px;margin:26px auto;padding:0 18px}
+    #status{color:var(--muted);margin-bottom:12px;font-size:13px}
+
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding:14px;border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid rgba(255,255,255,0.02);
+      display:flex;flex-direction:column;gap:8px;
     }
-
-    .item:hover {
-      transform: translateY(-5px);
+    .thumb{
+      height:140px;background:#08121a;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;
     }
+    .tags-small{display:flex;gap:6px;flex-wrap:wrap}
+    .tag-pill{font-size:11px;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,0.02);color:var(--muted);border:1px solid rgba(255,255,255,0.01)}
+    .meta{font-size:12px;color:var(--muted)}
+    .title{font-weight:700;margin:0;font-size:15px;color:#eaf2ff}
+    .desc{font-size:13px;color:var(--muted);line-height:1.35;margin:0 0 6px 0;min-height:36px}
 
-    .item img {
-      width: 100%;
-      border-radius: 10px;
-      margin-bottom: 10px;
+    .actions{display:flex;gap:8px;margin-top:auto}
+    .btn{
+      border:0;padding:8px 10px;border-radius:10px;font-weight:700;cursor:pointer;font-size:13px;
     }
+    .btn-download{background:var(--accent);color:#031025}
+    .btn-view{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
+    .btn-download[disabled]{opacity:0.5;cursor:not-allowed}
 
-    .item h2 {
-      font-size: 18px;
-      margin-bottom: 5px;
-    }
+    footer{max-width:1100px;margin:18px auto;color:var(--muted);font-size:13px;padding:0 18px;text-align:center}
 
-    .item p {
-      font-size: 14px;
-      color: #555;
-      margin-bottom: 10px;
-    }
+    /* modal */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+    .modal{width:100%;max-width:880px;background:linear-gradient(180deg,#09131a,#071018);border-radius:14px;padding:18px;border:1px solid rgba(255,255,255,0.03);box-shadow:var(--shadow);color:#eaf2ff}
+    .modal-header{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .modal-body{display:flex;gap:14px;margin-top:12px}
+    .modal-left{flex:0 0 380px}
+    .main-shot{height:300px;background:#071218;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--muted)}
+    .thumbs{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+    .thumbs img{width:72px;height:48px;object-fit:cover;border-radius:8px;cursor:pointer;border:2px solid transparent}
+    .thumbs img.active{border-color:var(--accent)}
+    .modal-right{flex:1;display:flex;flex-direction:column;gap:8px}
+    .meta-rows{display:flex;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+    .close-btn{background:transparent;border:0;color:var(--muted);font-weight:800;cursor:pointer;font-size:18px}
 
-    .item button {
-      padding: 8px 15px;
-      border: none;
-      border-radius: 8px;
-      background: #5b9df9;
-      color: white;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    .item button:hover {
-      background: #4a86e8;
+    @media(max-width:800px){
+      .modal-body{flex-direction:column}
+      .modal-left{flex-basis:auto;width:100%}
+      .main-shot{height:220px}
     }
   </style>
 </head>
 <body>
-  <h1>💎 Aero Store 💎</h1>
-  <div class="store-container">
-    <div class="item">
-      <img src="https://via.placeholder.com/200x150" alt="Item 1">
-      <h2>Item Epic</h2>
-      <p>Deskripsi singkat item ini.</p>
-      <button>Beli 🛒</button>
+  <header>
+    <div class="brand">
+      <div>
+        <h1>Ero4 Mod Store</h1>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px">Mod manager — dark theme • modern layout</div>
+      </div>
     </div>
-    <div class="item">
-      <img src="https://via.placeholder.com/200x150" alt="Item 2">
-      <h2>Item Legendary</h2>
-      <p>Deskripsi singkat item ini juga.</p>
-      <button>Beli 🛒</button>
+
+    <div class="controls" aria-hidden="false">
+      <div class="searchbar" role="search">
+        <input id="searchInput" type="search" placeholder="Search name, id, tag..." aria-label="Search mods" />
+        <button id="clearSearch" class="btn" style="background:transparent;border:0;color:var(--muted);font-weight:700">×</button>
+      </div>
     </div>
-    <div class="item">
-      <img src="https://via.placeholder.com/200x150" alt="Item 3">
-      <h2>Item Rare</h2>
-      <p>Deskripsi singkat item keren ini.</p>
-      <button>Beli 🛒</button>
+  </header>
+
+  <main>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap">
+      <div id="status">Loading items...</div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <div id="filterTags" class="taglist" aria-label="Filter tags"></div>
+        <button id="backBtn" class="btn" style="background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--muted)">Back</button>
+      </div>
+    </div>
+
+    <section id="itemsGrid" class="grid" aria-live="polite"></section>
+  </main>
+
+  <footer>
+    Place .ero4mod files and screenshots in <code style="background:rgba(255,255,255,0.03);padding:4px 8px;border-radius:6px">mods/</code> and <code style="background:rgba(255,255,255,0.03);padding:4px 8px;border-radius:6px">mods/screens/</code> relative to index.html.
+  </footer>
+
+  <!-- Modal detail -->
+  <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal" role="document">
+      <div class="modal-header">
+        <div>
+          <div id="modalTitle" style="font-weight:800;font-size:16px"></div>
+          <div id="modalId" style="font-size:12px;color:var(--muted);margin-top:4px"></div>
+        </div>
+        <div>
+          <button id="downloadModal" class="btn btn-download">Download</button>
+          <button id="closeModal" class="close-btn" title="Close">✕</button>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-left">
+          <div id="mainShot" class="main-shot">No image</div>
+          <div class="thumbs" id="thumbs"></div>
+        </div>
+
+        <div class="modal-right">
+          <div class="meta-rows" id="modalMeta"></div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.4" id="modalDesc"></div>
+          <div style="margin-top:auto;display:flex;gap:8px">
+            <button id="modalOpenFolder" class="btn btn-view">View folder location</button>
+            <button id="modalCopyId" class="btn btn-view">Copy ID</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+
+  <script>
+    // Elements
+    const statusEl = document.getElementById('status');
+    const itemsGrid = document.getElementById('itemsGrid');
+    const filterTagsEl = document.getElementById('filterTags');
+    const searchInput = document.getElementById('searchInput');
+    const clearSearch = document.getElementById('clearSearch');
+    const backBtn = document.getElementById('backBtn');
+
+    // Modal
+    const modalBackdrop = document.getElementById('modalBackdrop');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalId = document.getElementById('modalId');
+    const modalMeta = document.getElementById('modalMeta');
+    const modalDesc = document.getElementById('modalDesc');
+    const mainShot = document.getElementById('mainShot');
+    const thumbs = document.getElementById('thumbs');
+    const downloadModal = document.getElementById('downloadModal');
+    const closeModal = document.getElementById('closeModal');
+    const modalOpenFolder = document.getElementById('modalOpenFolder');
+    const modalCopyId = document.getElementById('modalCopyId');
+
+    let allItems = [];
+    let activeTag = null;
+    let usedDummy = false;
+    let currentItem = null;
+    const initialTags = ['ui', 'font'];
+    let otherTagsVisible = false;
+
+    backBtn.addEventListener('click', () => {
+      if (history.length > 1) history.back();
+      else window.location.href = '/';
+    });
+
+    clearSearch.addEventListener('click', () => {
+      searchInput.value = '';
+      applyFilters();
+    });
+
+    searchInput.addEventListener('input', () => {
+      applyFilters();
+    });
+
+    function fetchItems() {
+      usedDummy = false;
+      fetch('item.json', { cache: 'no-store' })
+        .then(res => {
+          if (!res.ok) throw new Error('item.json not found (HTTP ' + res.status + ')');
+          return res.json();
+        })
+        .then(json => {
+          if (!Array.isArray(json) || json.length === 0) {
+            throw new Error('item.json empty');
+          }
+          allItems = json.map(normalizeItem);
+          usedDummy = false;
+          renderTagControls();
+          renderItems(allItems);
+        })
+        .catch(err => {
+          console.warn('Fallback to dummy items due to error loading item.json:', err);
+          usedDummy = true;
+          allItems = getDummyItems().map(normalizeItem);
+          renderTagControls();
+          renderItems(allItems);
+        });
+    }
+
+    function normalizeItem(it) {
+      return {
+        id: it.id || ('dummy-' + Math.random().toString(36).slice(2,9)),
+        name: it.nama || it.name || 'Unnamed Mod',
+        description: it.deskripsi || it.description || '',
+        file: it.file || (it.id ? (it.id + '.ero4mod') : null),
+        size: it.ukuran || it.size || '-',
+        tags: Array.isArray(it.tags) ? it.tags.map(t => String(t).toLowerCase()) : [],
+        screenshots: Array.isArray(it.screenshots) ? it.screenshots : []
+      };
+    }
+
+    function renderItems(list) {
+      itemsGrid.innerHTML = '';
+      const visible = filterAndSearch(list);
+      if (usedDummy) {
+        statusEl.textContent = 'No items — displaying 3 dummy entries.';
+      } else {
+        statusEl.textContent = `${visible.length} items found.`;
+      }
+
+      visible.forEach(item => {
+        const card = document.createElement('article');
+        card.className = 'card';
+        card.setAttribute('data-id', item.id);
+
+        const thumb = document.createElement('div');
+        thumb.className = 'thumb';
+        if (item.screenshots && item.screenshots.length > 0) {
+          const img = document.createElement('img');
+          img.src = item.screenshots[0];
+          img.alt = item.name;
+          img.style.width = '100%';
+          img.style.height = '100%';
+          img.style.objectFit = 'cover';
+          thumb.innerHTML = '';
+          thumb.appendChild(img);
+        } else {
+          thumb.textContent = 'No image';
+        }
+
+        const title = document.createElement('div');
+        title.className = 'title';
+        title.textContent = item.name;
+
+        const desc = document.createElement('div');
+        desc.className = 'desc';
+        desc.textContent = item.description;
+
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+        meta.innerHTML = `ID: ${item.id} • Size: ${item.size}`;
+
+        const tagsRow = document.createElement('div');
+        tagsRow.className = 'tags-small';
+        item.tags.slice(0,5).forEach(t => {
+          const p = document.createElement('span');
+          p.className = 'tag-pill';
+          p.textContent = t;
+          p.addEventListener('click', (e) => {
+            e.stopPropagation();
+            setActiveTag(t);
+          });
+          tagsRow.appendChild(p);
+        });
+
+        const actions = document.createElement('div');
+        actions.className = 'actions';
+
+        const viewBtn = document.createElement('button');
+        viewBtn.className = 'btn btn-view';
+        viewBtn.textContent = 'View';
+        viewBtn.addEventListener('click', () => openModal(item));
+
+        const downloadBtn = document.createElement('button');
+        downloadBtn.className = 'btn btn-download';
+        downloadBtn.textContent = 'Download';
+        downloadBtn.addEventListener('click', () => handleDownload(item));
+
+        actions.appendChild(viewBtn);
+        actions.appendChild(downloadBtn);
+
+        card.appendChild(thumb);
+        card.appendChild(title);
+        card.appendChild(desc);
+        card.appendChild(meta);
+        card.appendChild(tagsRow);
+        card.appendChild(actions);
+
+        itemsGrid.appendChild(card);
+      });
+
+      if (visible.length === 0) {
+        itemsGrid.innerHTML = `<div style="grid-column:1/-1;padding:28px;border-radius:12px;background:var(--panel);color:var(--muted);text-align:center">No mods match the filters.</div>`;
+      }
+    }
+
+    function filterAndSearch(list) {
+      const q = (searchInput.value || '').trim().toLowerCase();
+      return list.filter(it => {
+        const matchTag = activeTag ? it.tags.includes(activeTag) : true;
+        const matchQ = q === '' ? true :
+          (it.name.toLowerCase().includes(q) || it.id.toLowerCase().includes(q) || it.tags.join(' ').includes(q) || it.description.toLowerCase().includes(q));
+        return matchTag && matchQ;
+      });
+    }
+
+    function renderTagControls() {
+      // collect unique tags
+      const allTagsSet = new Set();
+      allItems.forEach(it => it.tags.forEach(t => allTagsSet.add(t)));
+      const allTags = Array.from(allTagsSet).sort();
+
+      // separate initial and other tags
+      const initial = initialTags.map(t => t.toLowerCase()).filter(t => allTags.includes(t));
+      const other = allTags.filter(t => !initial.includes(t));
+
+      filterTagsEl.innerHTML = '';
+
+      // "All" button
+      const allBtn = document.createElement('div');
+      allBtn.className = 'tag' + (activeTag === null ? ' active' : '');
+      allBtn.textContent = 'All';
+      allBtn.addEventListener('click', () => setActiveTag(null));
+      filterTagsEl.appendChild(allBtn);
+
+      // initial tags (ui, font). If they don't exist in JSON still show them as inactive buttons.
+      initialTags.forEach(t => {
+        const el = document.createElement('div');
+        el.className = 'tag' + (t === activeTag ? ' active' : '');
+        el.textContent = t;
+        el.addEventListener('click', () => setActiveTag(t));
+        filterTagsEl.appendChild(el);
+      });
+
+      // show/hide other tags control
+      if (other.length > 0) {
+        const toggleBtn = document.createElement('div');
+        toggleBtn.className = 'tag';
+        toggleBtn.textContent = otherTagsVisible ? 'Hide other tags' : 'Show other tags';
+        toggleBtn.addEventListener('click', () => {
+          otherTagsVisible = !otherTagsVisible;
+          renderTagControls();
+        });
+        filterTagsEl.appendChild(toggleBtn);
+
+        if (otherTagsVisible) {
+          // render other tags
+          other.forEach(tag => {
+            const el = document.createElement('div');
+            el.className = 'tag' + (tag === activeTag ? ' active' : '');
+            el.textContent = tag;
+            el.addEventListener('click', () => setActiveTag(tag));
+            filterTagsEl.appendChild(el);
+          });
+        }
+      }
+    }
+
+    function setActiveTag(tag) {
+      activeTag = tag;
+      renderTagControls();
+      renderItems(allItems);
+    }
+
+    // Modal logic
+    function openModal(item) {
+      currentItem = item;
+      modalTitle.textContent = item.name;
+      modalId.textContent = `ID: ${item.id}`;
+      modalMeta.innerHTML = `Size: ${item.size} • Tags: ${item.tags.join(', ') || '-'}`;
+      modalDesc.textContent = item.description || '(No description)';
+      downloadModal.onclick = () => handleDownload(item);
+      modalCopyId.onclick = () => {
+        navigator.clipboard?.writeText(item.id).then(()=>{ alert('ID copied'); }).catch(()=>{ alert('Copy failed'); });
+      };
+      modalOpenFolder.onclick = () => {
+        alert('Recommended location: ./mods/ (relative to index.html)');
+      };
+
+      thumbs.innerHTML = '';
+      if (item.screenshots && item.screenshots.length > 0) {
+        mainShot.innerHTML = '';
+        const mainImg = document.createElement('img');
+        mainImg.src = item.screenshots[0];
+        mainImg.alt = item.name;
+        mainImg.style.width = '100%';
+        mainImg.style.height = '100%';
+        mainImg.style.objectFit = 'cover';
+        mainShot.appendChild(mainImg);
+
+        item.screenshots.forEach((src, idx) => {
+          const timg = document.createElement('img');
+          timg.src = src;
+          timg.alt = item.name + ' ' + (idx+1);
+          if (idx === 0) timg.classList.add('active');
+          timg.addEventListener('click', () => {
+            mainShot.innerHTML = '';
+            const im = document.createElement('img');
+            im.src = src;
+            im.style.width = '100%';
+            im.style.height = '100%';
+            im.style.objectFit = 'cover';
+            mainShot.appendChild(im);
+            thumbs.querySelectorAll('img').forEach(x => x.classList.remove('active'));
+            timg.classList.add('active');
+          });
+          thumbs.appendChild(timg);
+        });
+      } else {
+        mainShot.textContent = 'No image';
+      }
+
+      modalBackdrop.style.display = 'flex';
+    }
+
+    closeModal.addEventListener('click', () => { modalBackdrop.style.display = 'none'; });
+    modalBackdrop.addEventListener('click', (e) => { if (e.target === modalBackdrop) modalBackdrop.style.display = 'none'; });
+
+    // Download: tries HEAD on mods/<file>, otherwise create dummy blob
+    function handleDownload(item) {
+      const filePath = item.file ? ('mods/' + item.file) : null;
+      if (!filePath) {
+        createBlobAndDownload(item);
+        return;
+      }
+
+      fetch(filePath, { method: 'HEAD' })
+        .then(res => {
+          if (res.ok) {
+            const a = document.createElement('a');
+            a.href = filePath;
+            a.download = item.file;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+          } else {
+            createBlobAndDownload(item);
+          }
+        })
+        .catch(() => {
+          createBlobAndDownload(item);
+        });
+    }
+
+    function createBlobAndDownload(item) {
+      const content = {
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        generated: new Date().toISOString()
+      };
+      const blob = new Blob([JSON.stringify(content, null, 2)], { type: 'application/octet-stream' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = (item.file || sanitizeFilename(item.name) || 'dummy') + '.ero4mod';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),2000);
+    }
+
+    function sanitizeFilename(name) {
+      return name.replace(/[^a-z0-9_\-\. \u00C0-\u017F]/ig, '_');
+    }
+
+    function getDummyItems() {
+      return [
+        {
+          id:'dummy-1',
+          nama:'Dummy Mod Alpha',
+          deskripsi:'Sample dummy entry — item.json missing.',
+          file:'dummy-alpha.ero4mod',
+          ukuran:'100 KB',
+          tags:['ui','example'],
+          screenshots:[]
+        },
+        {
+          id:'dummy-2',
+          nama:'Dummy Mod Beta',
+          deskripsi:'Second dummy item for demo.',
+          file:'dummy-beta.ero4mod',
+          ukuran:'120 KB',
+          tags:['gameplay'],
+          screenshots:[]
+        },
+        {
+          id:'dummy-3',
+          nama:'Dummy Mod Gamma',
+          deskripsi:'Third dummy item for demo.',
+          file:'dummy-gamma.ero4mod',
+          ukuran:'95 KB',
+          tags:['font','skin'],
+          screenshots:[]
+        }
+      ];
+    }
+
+    // initial load
+    fetchItems();
+  </script>
 </body>
 </html>
