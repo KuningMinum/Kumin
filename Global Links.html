@@ -1,12 +1,19 @@
 <!DOCTYPE html>
+
 <html lang="id">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
 <title>Kumin Links</title>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
-<link rel="icon" href="https://raw.githubusercontent.com/KuningMinum/Kumin/refs/heads/main/image/Kuning%20minum.png" type="image/png">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet"/>
+<link href="https://raw.githubusercontent.com/KuningMinum/Kumin/refs/heads/main/image/Kuning%20minum.png" rel="icon" type="image/png"/>
 <style id="base-style">
+  * {
+     box-sizing: border-box;
+     margin: 0px;
+     padding: 0px;
+}
+
   :root{
     --bg:#05060a; --panel:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
     --muted:#b7c1d6; --card-bg: rgba(255,255,255,0.03);
@@ -17,15 +24,18 @@
     --settings-bg: rgba(0,0,0,0.92);
     --radius:12px;
   }
+  html{font-size:16px;}
   html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;color:#e6eef8;background:var(--bg);display:flex;flex-direction:column;}
+  
   .header{display:flex;align-items:center;gap:8px;padding:10px;background:var(--panel);border-bottom:1px solid rgba(255,255,255,0.03);flex-wrap:wrap;position:relative;backdrop-filter: blur(6px)}
   .header h1{margin:0;flex:1;font-size:1.2rem}
-  .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+  .controls{display:flex;gap:8px;align-items:center;flex-wrap:nowrap;justify-content:flex-end;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .controls::-webkit-scrollbar{display:none}
 
   /* search with icon */
-  .search-wrapper{position:relative;display:flex;align-items:center}
+  .search-wrapper{position:relative;display:flex;align-items:center;flex:1 1 320px;min-width:0}
   .search-wrapper i{position:absolute;left:10px;font-size:0.95rem;color:#9aa6bf}
-  .controls .search-input{padding:8px 12px 8px 34px;border-radius:10px;border:none;background:rgba(0,0,0,0.45);color:#fff;font-size:0.95rem;outline:none;min-width:0;flex:1 1 220px}
+  .controls .search-input{padding:8px 12px 8px 34px;border-radius:10px;border:none;background:rgba(0,0,0,0.45);color:#fff;font-size:0.95rem;outline:none;min-width:0;width:100%}
 
   /* filter button & centered popup */
   .btn-filter{padding:8px 10px;border-radius:10px;border:none;background:var(--accent);color:#fff;cursor:pointer}
@@ -147,8 +157,8 @@
 
 /* mobile action menu */
 .link-actions{position:relative}
-.btn-more{display:none}
-.mobile-action-menu{position:absolute;right:0;top:calc(100% + 8px);min-width:180px;background:rgba(0,0,0,0.94);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:6px;box-shadow:0 12px 40px rgba(0,0,0,0.45);z-index:80;display:none;flex-direction:column;gap:4px}
+.btn-more{display:none;margin-left:8px;transform:translateX(4px)}
+.mobile-action-menu{position:absolute;right:-6px;top:calc(100% + 8px);min-width:180px;background:rgba(0,0,0,0.94);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:6px;box-shadow:0 12px 40px rgba(0,0,0,0.45);z-index:80;display:none;flex-direction:column;gap:4px}
 .mobile-action-menu.open{display:flex}
 .mobile-action-menu button{width:100%;justify-content:flex-start;display:flex;align-items:center;gap:8px;padding:8px 10px;border:none;background:transparent;color:#e6eef8;border-radius:8px;text-align:left}
 .mobile-action-menu button:hover{background:rgba(255,255,255,0.04)}
@@ -181,45 +191,171 @@
   .modal .modal-title{font-weight:700;margin-bottom:8px;color:var(--highlight)}
 
   /* settings collapse & scrollbar improvements */
-  .settings-menu{max-height:80vh;overflow:auto}
-  .settings-menu.collapsed{width:420px;max-height:60vh}
+  .settings-menu.collapsed{padding:10px}
   .settings-menu::-webkit-scrollbar, .modal-box::-webkit-scrollbar, .editcss-box::-webkit-scrollbar{width:10px}
   .settings-menu::-webkit-scrollbar-thumb, .modal-box::-webkit-scrollbar-thumb, .editcss-box::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.06);border-radius:8px}
   @media (max-width:760px){
     .header{padding:8px}
     .header h1{font-size:1.0rem}
-    .controls{width:100%}
-    .search-wrapper{flex:1 1 100%}
-    .controls .search-input{width:100%;flex:1 1 100%}
-    .btn-filter,.btn-settings{flex:1 1 0;justify-content:center}
+    .controls{width:100%;gap:6px}
+    .search-wrapper{flex:1 1 0;min-width:0}
+    .controls .search-input{width:100%;flex:1 1 0}
+    .btn-filter,.btn-settings{flex:0 0 auto;justify-content:center;padding-left:8px;padding-right:8px}
     .card-view .link-card{flex:0 0 200px;min-width:200px;height:300px}
     .filter-panel{left:50%;top:50%;transform:translate(-50%,-50%);min-width:90%}
-    .settings-menu{width:94%;max-height:70vh}
+    .settings-menu{width:100vw;height:100vh;max-height:none}
     .link-desc{max-width:28ch}
     .preview-content,.modal-box,.debug-box,.editcss-box{width:96%}
   }
-</style>
 
+  /* win7-style buttons */
+  .win7-btn {
+     border: 1px solid var(--btn-border, rgba(255,255,255,0.12));
+     box-shadow: 0 0 0 1px var(--btn-shadow, rgba(0,0,0,0.25));
+     border-radius: 8px;
+     background: linear-gradient(135deg, var(--btn-c1, rgba(255,255,255,0.16)) 0%, var(--btn-c2, rgba(255,255,255,0.10)) 35%, var(--btn-c3, rgba(255,255,255,0.08)) 70%, var(--btn-c4, rgba(0,0,0,0.20)) 100%);
+     color: var(--btn-text, #eef3ff);
+     text-decoration: none;
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+     gap: 8px;
+     cursor: pointer;
+     transition: 0.2s;
+     user-select: none;
+     text-shadow: black 0px 0px 3px;
+  }
+
+  body.theme-default .win7-btn {
+     border: 1px solid rgb(15, 15, 15);
+     border-radius: 5px;
+     color: rgb(238, 238, 238);
+     background: linear-gradient(rgba(255, 255, 255, 0.25) 0px, rgba(117, 117, 117, 0.15) 20%, rgba(92, 92, 92, 0.15) 60%, rgba(0, 0, 0, 0.3) 60%, rgba(41, 41, 41, 0.3) 100%);
+     text-shadow: black 0px 0px 3px;
+  }
+
+  .win7-btn:hover {
+     border: 1px solid var(--btn-active-border, rgba(255,255,255,0.35));
+     box-shadow: 0 0 0 1px var(--btn-active-border, rgba(255,255,255,0.35));
+     transform: translateY(-1px);
+  }
+
+  body.theme-default .win7-btn:hover {
+     background: linear-gradient(rgba(255, 255, 255, 0.25), rgba(117, 117, 117, 0.2), rgba(92, 92, 92, 0.2), rgba(43, 43, 43, 0.3), rgba(161, 161, 161, 0.3));
+     transform: scale(1.03);
+  }
+
+  /* apply win7 look to all existing button-like controls */
+  button.win7-btn,
+  .win7-btn.btn-primary,
+  .win7-btn.btn-ghost,
+  .win7-btn.btn-filter,
+  .win7-btn.btn-settings,
+  .win7-btn.btn-icon,
+  .win7-btn.settings-tab,
+  .win7-btn.slider-btn,
+  .win7-btn.mobile-action-menu-btn {
+     font: inherit;
+  }
+
+  .controls{
+     display:flex;
+     gap:8px;
+     align-items:center;
+     flex-wrap:nowrap;
+     justify-content:flex-end;
+     margin-left:auto;
+     width:auto;
+  }
+
+  .controls .search-wrapper{
+     flex:1 1 280px;
+     min-width:220px;
+     max-width:520px;
+  }
+
+  .controls .search-input{
+     width:100%;
+  }
+
+  .header h1{
+     transform: translateY(-3px);
+     line-height: 1;
+  }
+
+  .btn-settings.settings-compact{
+     transform: scale(0.88);
+     padding: 6px 8px;
+     opacity: 0.95;
+  }
+
+  @media (max-width:760px){
+    .controls{flex-wrap:nowrap;width:100%;gap:6px}
+    .search-wrapper{flex:1 1 0;min-width:0}
+    .controls .search-input{width:100%;flex:1 1 0}
+    .btn-filter,.btn-settings{flex:0 0 auto;justify-content:center}
+  }
+
+</style>
 <style id="settings-style">
-  .settings-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1500;justify-content:center;align-items:center}
+  .settings-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:1500;justify-content:flex-start;align-items:flex-start}
   .settings-overlay.open{display:flex}
-  .settings-menu{background:rgba(0,0,0,0.92);border-radius:12px;padding:16px;min-width:320px;max-width:92%;box-shadow:0 12px 40px rgba(2,6,23,0.7);display:flex;flex-direction:column;gap:10px;color:#e6eef8}
+  #mod-warning-modal{background:rgba(0,0,0,0.92)}
+  #mod-warning-modal .modal-box{background:linear-gradient(180deg, rgba(17,22,31,0.98), rgba(10,12,18,0.98));border:1px solid rgba(255,255,255,0.08);box-shadow:0 18px 55px rgba(0,0,0,0.75)}
+  #mod-warning-modal .modal-box p{line-height:1.55;margin:0 0 8px}
+  #mod-warning-modal .modal-box button{min-height:48px;padding:12px 16px;border-radius:12px;font-weight:700}
+  #mod-warning-modal .modal-box button#mod-warning-enable{min-width:160px}
+  #mod-warning-modal .modal-box button#mod-warning-disable{min-width:240px}
+  .settings-menu{background:rgba(0,0,0,0.96);border-radius:0;padding:14px 14px 16px;min-width:100vw;max-width:none;width:100vw;height:100vh;box-shadow:none;display:flex;flex-direction:column;gap:10px;color:#e6eef8;overflow:auto}
   .settings-row{display:flex;align-items:center;gap:8px;justify-content:space-between}
   .settings-row label{font-size:0.95rem}
   .stabilo{background:#ffd94d;color:#000;padding:0 6px;border-radius:4px;font-weight:700}
   .editcss-popup{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1800;justify-content:center;align-items:center}
   .editcss-box{background:var(--panel);padding:12px;border-radius:10px;width:92%;max-width:920px;max-height:86vh;overflow:auto;display:flex;flex-direction:column;gap:8px}
   .editcss-textarea{width:100%;min-height:200px;background:#0b0c0f;color:#e6eef8;border-radius:8px;padding:10px;border:1px solid rgba(255,255,255,0.03);font-family:monospace;font-size:13px}
-  .debug-popup{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1900;justify-content:center;align-items:center}
-  .debug-box{background:var(--panel);padding:12px;border-radius:10px;width:92%;max-width:920px;max-height:86vh;overflow:auto;display:flex;flex-direction:column;gap:8px}
-  .debug-textarea{width:100%;min-height:120px;background:#0b0c0f;color:#e6eef8;border-radius:8px;padding:10px;border:1px solid rgba(255,255,255,0.03);font-family:monospace;font-size:12px;white-space:pre-wrap;word-break:break-word}
+  .debug-popup{display:none;position:fixed;inset:0;background:#05060a;z-index:1900}
+  .debug-popup.open{display:block}
+  .debug-box{width:100vw;height:100vh;display:flex;flex-direction:column;background:linear-gradient(180deg,#05060a 0%, #090b12 100%);color:#e6eef8;overflow:hidden;border:none;border-radius:0}
+  .debug-topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.56);backdrop-filter:blur(8px)}
+  .debug-title-wrap{display:flex;flex-direction:column;gap:3px;min-width:0}
+  .debug-counter{color:#9aa6bf;font-size:.88rem}
+  .debug-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;flex-wrap:wrap;border-bottom:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02)}
+  .debug-toolbar-left,.debug-footer-actions,.debug-page-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .debug-chip{padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.06);color:#dbe5f5;font-size:.85rem}
+  .debug-setting{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .debug-setting select{min-width:160px}
+  .debug-setting .win7-btn{flex:0 0 auto}
+  .debug-body{flex:1;overflow:auto;padding:12px 14px;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;background:radial-gradient(circle at top,rgba(77,144,254,0.08),transparent 35%),#05060a}
+  .debug-list{display:flex;flex-direction:column;gap:8px;min-height:100%}
+  .debug-empty{padding:18px;border:1px dashed rgba(255,255,255,0.15);border-radius:16px;color:#9aa6bf;background:rgba(255,255,255,0.02)}
+  .debug-line{display:grid;grid-template-columns:auto auto 1fr;gap:10px;align-items:start;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);white-space:pre-wrap;word-break:break-word}
+  .debug-time{color:#9aa6bf;white-space:nowrap}
+  .debug-type{padding:3px 8px;border-radius:999px;font-size:.78rem;font-weight:700;white-space:nowrap}
+  .debug-msg{color:#eef3ff}
+  .debug-detail{grid-column:3;margin-top:2px;color:#cdd7ea;opacity:.95;white-space:pre-wrap;word-break:break-word}
+  .debug-line.normal .debug-type{background:rgba(255,255,255,0.08);color:#fff}
+  .debug-line.warn{border-color:rgba(255,214,102,.25);background:rgba(255,214,102,.07)}
+  .debug-line.warn .debug-type{background:rgba(255,214,102,.18);color:#ffd94d}
+  .debug-line.warn .debug-msg,.debug-line.warn .debug-detail{color:#fff1b8}
+  .debug-line.error{border-color:rgba(255,103,103,.28);background:rgba(255,103,103,.08)}
+  .debug-line.error .debug-type{background:rgba(255,103,103,.2);color:#ff8d8d}
+  .debug-line.error .debug-msg,.debug-line.error .debug-detail{color:#ffe2e2}
+  .debug-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-top:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.56);flex-wrap:wrap}
+  @media (max-width:760px){
+    .debug-topbar,.debug-toolbar,.debug-footer{padding:10px 12px}
+    .debug-setting select{min-width:unset;width:100%}
+    .debug-toolbar-left,.debug-page-group,.debug-footer-actions{width:100%}
+    .debug-page-group,.debug-footer-actions{justify-content:space-between}
+    .debug-line{grid-template-columns:auto auto 1fr}
+  }
   .reset-popup{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(4px);justify-content:center;align-items:center;z-index:1300}
   .reset-box{background:var(--panel);padding:18px;border-radius:10px;width:92%;max-width:420px;position:relative}
   .reset-close{position:absolute;right:10px;top:8px;background:none;border:none;color:#fff;font-size:1.1rem;cursor:pointer}
 
   /* settings tabs */
   .settings-tabs{display:flex;gap:8px;flex-wrap:wrap}
-  .settings-tab{background:transparent;border:none;color:var(--muted);padding:8px 10px;border-radius:8px;cursor:pointer}
+  .settings-tab{background:transparent;border:none;color:var(--muted);padding:8px 10px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+  .settings-tab i{font-size:.95rem;line-height:1}
   .settings-tab.active{color:#000;background:var(--highlight);font-weight:700}
   .settings-panel{display:none;flex-direction:column;gap:10px}
   .settings-panel.open{display:flex}
@@ -231,385 +367,678 @@
 .mod-icon{width:36px;height:36px;border-radius:8px;display:grid;place-items:center;background:rgba(255,255,255,0.02);color:var(--muted)}
 .mod-actions button{margin-left:6px}
 .mod-store-item{display:flex;align-items:center;justify-content:space-between;padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);margin-bottom:6px}
-</style>
 
+  .source-add-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .source-add-row input{flex:1;min-width:240px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);background:#0b0c0f;color:#fff;outline:none}
+  .source-hint{font-size:.9rem;color:#9aa6bf;line-height:1.45}
+  .source-list{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+  .source-card{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:12px;border-radius:16px;background:linear-gradient(180deg,#151b29 0%, #0e1320 100%);border:1px solid rgba(255,255,255,0.08)}
+  .source-card.is-disabled{opacity:.62}
+  .source-card-main{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1}
+  .source-card-title{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .source-chip{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;background:rgba(77,144,254,0.12);color:#b9d2ff;font-size:.8rem}
+  .source-chip.locked{background:rgba(255,217,77,0.12);color:#ffe38b}
+  .source-card-title strong{font-size:1rem;word-break:break-word}
+  .source-card-meta{font-size:.88rem;color:#9aa6bf;word-break:break-all;line-height:1.35}
+  .source-card-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-end}
+  .source-card-actions .win7-btn{padding:7px 10px}
+  .source-edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .source-edit-field{display:flex;flex-direction:column;gap:6px}
+  .source-edit-field small{color:#a9b4c9}
+  .source-edit-field input,.source-edit-field textarea,.source-edit-field select{width:100%;min-width:0;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.08);background:#0b0c0f;color:#e6eef8;outline:none}
+  .source-edit-field textarea{resize:vertical}
+  .source-empty{padding:14px;border-radius:14px;border:1px dashed rgba(255,255,255,0.12);color:#9aa6bf;background:rgba(255,255,255,0.02);text-align:center}
+
+  /* data tabs: solid, non-transparent layout */
+  .data-shell{display:flex;flex-direction:column;gap:12px;background:linear-gradient(180deg,#101522 0%, #0a0e18 100%);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:14px;box-shadow:0 16px 44px rgba(0,0,0,0.38)}
+  .data-shell-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
+  .data-shell-head strong{font-size:1.05rem}
+  .data-shell-head small{color:#a9b4c9;line-height:1.45}
+  .data-tabs{display:flex;gap:8px;flex-wrap:wrap;padding:6px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:16px}
+  .data-tab{min-width:92px;justify-content:center;border-radius:999px !important;padding:10px 14px !important;opacity:.92}
+  .data-tab.active{background:linear-gradient(135deg,var(--accent),#7fb0ff) !important;color:#fff !important;box-shadow:0 10px 24px rgba(77,144,254,0.22) !important}
+  .data-panel-wrap{display:flex;flex-direction:column;gap:12px}
+  .data-subpanel{display:none;flex-direction:column;gap:12px;padding:14px;border-radius:18px;background:linear-gradient(180deg,#121826 0%, #0b111c 100%);border:1px solid rgba(255,255,255,0.08)}
+  .data-subpanel.open{display:flex}
+  .data-card{display:flex;flex-direction:column;gap:10px;padding:12px;border-radius:16px;background:linear-gradient(180deg,#161c2c 0%, #0f1522 100%);border:1px solid rgba(255,255,255,0.08)}
+  .data-card-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+  .data-card-head strong{font-size:1rem}
+  .data-card-head small{color:#a9b4c9}
+  .data-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .data-note{color:#a9b4c9;font-size:.92rem;line-height:1.45}
+  .option-switches{display:flex;flex-direction:column;gap:8px}
+  .option-switch-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border-radius:14px;background:#0b101a;border:1px solid rgba(255,255,255,0.06)}
+  .availability-note{display:block;margin-top:4px;font-size:.82rem;line-height:1.35;color:#9aa6bf}
+  .option-switch-row.is-disabled,.modal-row.is-disabled{opacity:.55}
+  .option-switch-row.is-disabled input,.modal-row.is-disabled input{cursor:not-allowed}
+
+  .option-switch-row label{margin:0}
+  .option-switch-row small{color:#a9b4c9;line-height:1.35}
+  .switch-large{display:inline-flex;align-items:center;gap:10px}
+  .switch-large input{display:none}
+  .switch-large .track{width:52px;height:28px;background:#263042;border-radius:999px;position:relative;transition:all .18s;flex:0 0 auto}
+  .switch-large .thumb{position:absolute;left:4px;top:4px;width:20px;height:20px;border-radius:50%;background:#fff;transform:translateX(0);transition:transform .18s}
+  .switch-large input:checked + .track{background:linear-gradient(90deg,var(--accent),#7fb0ff)}
+  .switch-large input:checked + .track .thumb{transform:translateX(24px)}
+  .switch-large span.text{color:#e6eef8}
+  .modal-box{background:linear-gradient(180deg,#111725 0%, #0a0f18 100%);border:1px solid rgba(255,255,255,0.08)}
+  .modal-row{padding:10px 6px;border-radius:12px;background:#0b101a;border:1px solid rgba(255,255,255,0.06);margin-bottom:8px}
+  .modal-row label{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%}
+
+</style>
+<style id="editor-style">
+.editor-shell{display:flex;flex-direction:column;gap:12px;background:linear-gradient(180deg,#101522 0%, #0a0e18 100%);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:14px;box-shadow:0 16px 44px rgba(0,0,0,0.38);max-width:100%}
+  .editor-shell-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
+  .editor-shell-head strong{font-size:1.05rem}
+  .editor-shell-head small{color:#a9b4c9;line-height:1.45}
+  .editor-status{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .editor-pill{display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;background:rgba(255,217,77,0.14);color:var(--highlight);font-weight:700}
+  .editor-pill.dirty{background:rgba(255,120,120,0.14);color:#ffb3b3}
+  .editor-info-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+  .editor-info-card{padding:10px 12px;border-radius:14px;background:#0b101a;border:1px solid rgba(255,255,255,0.06);min-width:0}
+  .editor-info-card small{color:#9aa6bf;display:block;margin-bottom:4px}
+  .editor-info-card strong{display:block;word-break:break-word;line-height:1.35}
+  .editor-meta-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .editor-meta-card{padding:10px 12px;border-radius:14px;background:#0b101a;border:1px solid rgba(255,255,255,0.06);min-width:0;display:flex;flex-direction:column;gap:6px}
+  .editor-meta-card small{color:#9aa6bf;display:block}
+  .editor-meta-card input,.editor-meta-card select{width:100%;min-width:0;padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.08);background:#0b0c0f;color:#e6eef8;outline:none}
+  .editor-meta-card input:focus,.editor-meta-card select:focus{border-color:rgba(127,176,255,0.65)}
+  .editor-js-textarea{width:100%;min-height:420px;resize:vertical;background:#0b0c0f;color:#e6eef8;border-radius:16px;padding:14px;border:1px solid rgba(255,255,255,0.05);font-family:monospace;font-size:13px;line-height:1.5;outline:none}
+  .editor-actions{display:flex;gap:8px;flex-wrap:wrap}
+  .editor-actions .win7-btn{flex:1 1 120px}
+  .editor-hint{font-size:.92rem}
+  @media (max-width:760px){
+    .editor-shell{padding:12px;gap:10px}
+    .editor-shell-head{gap:8px}
+    .editor-info-grid{grid-template-columns:1fr 1fr;gap:8px}
+    .editor-info-card{padding:10px}
+    .editor-js-textarea{min-height:320px;padding:12px;font-size:12px;line-height:1.45}
+    .editor-actions{gap:8px}
+    .editor-actions .win7-btn{flex:1 1 calc(50% - 8px);min-width:0}
+  }
+</style>
 <style id="custom-css-placeholder"></style>
+<style id="win7-override">
+  .settings-tab.win7-btn{
+    border: 1px solid var(--btn-border, rgba(255,255,255,0.12)) !important;
+    box-shadow: 0 0 0 1px var(--btn-shadow, rgba(0,0,0,0.25)) !important;
+    border-radius: 8px !important;
+    background: linear-gradient(135deg, var(--btn-c1, rgba(255,255,255,0.16)) 0%, var(--btn-c2, rgba(255,255,255,0.10)) 35%, var(--btn-c3, rgba(255,255,255,0.08)) 70%, var(--btn-c4, rgba(0,0,0,0.20)) 100%) !important;
+    color: var(--btn-text, #eef3ff) !important;
+    text-shadow: black 0px 0px 3px !important;
+    padding: 8px 10px !important;
+  }
+  .settings-tab.win7-btn.active{
+    border: 1px solid var(--btn-active-border, rgba(255,255,255,0.35)) !important;
+    box-shadow: 0 0 0 1px var(--btn-active-border, rgba(255,255,255,0.35)) !important;
+    transform: translateY(-1px) !important;
+  }
+  .settings-tab.win7-btn:hover{
+    transform: translateY(-1px) !important;
+  }
+  .settings-tab.active.win7-btn{
+    background: linear-gradient(135deg, var(--btn-c1, rgba(255,255,255,0.20)) 0%, var(--btn-c2, rgba(255,255,255,0.14)) 35%, var(--btn-c3, rgba(255,255,255,0.12)) 70%, var(--btn-c4, rgba(0,0,0,0.24)) 100%) !important;
+  }
+</style>
 </head>
 <body>
-  <div class="header">
-    <h1 id="header-title">Kumin Links</h1>
-    <div class="controls">
-      <div class="search-wrapper">
-        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-        <input id="search-box" class="search-input" placeholder="Cari link...">
-      </div>
-      <div class="dropdown">
-        <button id="btn-filter" class="btn-filter" title="Filter"><i class="fa-solid fa-filter"></i> Filter</button>
-      </div>
-      <button id="btn-settings" class="btn-settings" title="Pengaturan"><i class="fa-solid fa-gear"></i> <span id="btn-settings-label">Pengaturan</span></button>
+<div class="header">
+<h1 id="header-title">Kumin Links</h1>
+<div class="controls">
+<div class="search-wrapper">
+<i aria-hidden="true" class="fa-solid fa-magnifying-glass"></i>
+<input class="search-input" id="search-box" placeholder="Cari link..."/>
+</div>
+<div class="dropdown">
+<button class="win7-btn btn-filter" id="btn-filter" title="Filter"><i class="fa-solid fa-filter"></i> Filter</button>
+</div>
+<button class="win7-btn btn-settings" id="btn-settings" title="Pengaturan"><i class="fa-solid fa-gear"></i> <span id="btn-settings-label">Pengaturan</span></button>
+</div>
+</div>
+<!-- filter backdrop + centered panel -->
+<div aria-hidden="true" class="filter-backdrop" id="filter-backdrop"></div>
+<div aria-hidden="true" aria-modal="true" class="filter-panel" id="filter-panel" role="dialog">
+<h4 id="filter-title">Filter</h4>
+<div class="filter-list" id="filter-list"></div>
+<div class="filter-actions">
+<button class="win7-btn btn-ghost" id="filter-all">All</button>
+<button class="win7-btn btn-ghost" id="filter-none">None</button>
+<button class="win7-btn btn-primary" id="filter-apply">Apply</button>
+</div>
+</div>
+<div aria-hidden="true" class="settings-overlay" id="settings-overlay">
+<div aria-labelledby="settings-title" aria-modal="true" class="settings-menu" id="settings-menu" role="dialog">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<strong id="settings-title">Kumin Links - Pengaturan</strong>
+<div style="display:flex;gap:8px;align-items:center">
+<button class="win7-btn btn-ghost" id="settings-toggle-collapse" title="Toggle collapse"><i class="fa-solid fa-compress"></i></button>
+<button class="win7-btn btn-ghost" id="settings-close" title="Tutup">✖</button>
+</div>
+</div>
+<!-- added two more tabs: Links & Data & Mods -->
+<div class="settings-tabs">
+<button class="win7-btn settings-tab active" data-tab="general"><i class="fa-solid fa-gear"></i><span>General</span></button>
+<button class="win7-btn settings-tab" data-tab="links"><i class="fa-solid fa-link"></i><span>Links</span></button>
+<button class="win7-btn settings-tab" data-tab="data"><i class="fa-solid fa-database"></i><span>Data</span></button>
+<button class="win7-btn settings-tab" data-tab="mods"><i class="fa-solid fa-puzzle-piece"></i><span>Mods</span></button>
+<button class="win7-btn settings-tab" data-tab="editor"><i class="fa-solid fa-code"></i><span>Editor JS</span></button>
+<button class="win7-btn settings-tab" data-tab="experimental"><i class="fa-solid fa-flask"></i><span>Experimental</span></button>
+</div>
+<!-- GENERAL -->
+<div class="settings-panel open" id="panel-general">
+<div class="settings-row"><label id="lbl-language"></label><select id="sel-language"><option value="id">Indonesia</option><option value="en">English</option></select></div>
+<div class="settings-row"><label id="lbl-view"></label><select id="sel-view"><option value="list">List</option><option value="card">Card</option></select></div>
+<div class="settings-row" style="align-items:center;gap:10px">
+<div style="display:flex;flex-direction:column">
+<label id="lbl-merge">Gabungkan Lokal &amp; Global</label>
+<small id="lbl-merge-desc" style="color:#9aa6bf">Jika dicentang, sumber tidak dipisah per grup</small>
+</div>
+<label class="switch">
+<input id="chk-merge" type="checkbox">
+<span class="track"><span class="thumb"></span></span>
+</input></label>
+</div>
+<div class="settings-row" style="align-items:center;gap:10px">
+<div style="display:flex;flex-direction:column">
+<label id="lbl-simple">Mode Sederhana</label>
+<small id="lbl-simple-desc" style="color:#9aa6bf">Jika aktif, tampilan hanya menampilkan item (tanpa grup). Untuk kembali, buka Pengaturan.</small>
+</div>
+<label class="switch">
+<input id="chk-simple" type="checkbox"/>
+<span class="track"><span class="thumb"></span></span>
+</label>
+</div>
+<div class="settings-row" id="simple-hide-group-row" style="align-items:center;gap:10px">
+<div style="display:flex;flex-direction:column">
+<label id="lbl-simple-hide-group">Sembunyikan grup di mode sederhana</label>
+<small style="color:#9aa6bf">Default nyala. Saat aktif, nama grup tidak ditampilkan di judul item mode sederhana.</small>
+</div>
+<label class="switch">
+<input id="chk-simple-hide-group" type="checkbox"/>
+<span class="track"><span class="thumb"></span></span>
+</label>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<label>Mode tombol (Pin atau Star)</label>
+<div style="display:flex;gap:12px;align-items:center">
+<label id="label-pinmode-star"><input id="pinmode-star" name="pinMode" type="radio" value="star"/> Star (favorit)</label>
+<label id="label-pinmode-pin"><input id="pinmode-pin" name="pinMode" type="radio" value="pin"/> Pin (taruh ke atas)</label>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+<label>Urutkan link</label>
+<div style="display:flex;gap:8px;align-items:center">
+<select id="sel-sort">
+<option value="title_asc">Judul A → Z</option>
+<option value="title_desc">Judul Z → A</option>
+<option value="date_new_old">Tanggal: Baru → Lama</option>
+<option value="date_old_new">Tanggal: Lama → Baru</option>
+</select>
+<small style="color:#9aa6bf">Pilihan ini akan disimpan di pengaturan.</small>
+</div>
+</div>
+</div>
+<!-- LINKS tab: space to show link-specific options -->
+<div class="settings-panel" id="panel-links">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<strong>Links</strong><small style="color:#9aa6bf">(Pengaturan terkait tampilan &amp; grup)</small>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<label><input id="chk-show-group-count" type="checkbox"/> Tampilkan jumlah item per grup</label>
+<label><input id="chk-compact-list" type="checkbox"/> Compact list (jarak antar item lebih kecil)</label>
+<label><input id="chk-merge-duplicates" type="checkbox"/> Gabungkan links yang sama? (merge duplicate links)</label>
+<small style="color:#9aa6bf">Jika aktif, link dengan URL yang sama akan digabung (hanya satu entri per URL dalam daftar utama).</small>
+</div>
+</div>
+<!-- DATA tab -->
+<div class="settings-panel" id="panel-data">
+<div class="data-shell">
+<div class="data-shell-head">
+<div>
+<strong id="data-title">Data</strong>
+<div class="data-note" id="data-desc">Semua reset, save, dan load dikumpulkan di satu tempat.</div>
+</div>
+<small id="data-tip">Pilih tab lalu pakai switch untuk opsi pilihan.</small>
+</div>
+<div aria-label="Data tabs" class="data-tabs" role="tablist">
+<button class="win7-btn data-tab active" data-data-tab="reset" type="button"><span id="data-tab-reset-label">Reset</span></button>
+<button class="win7-btn data-tab" data-data-tab="save" type="button"><span id="data-tab-save-label">Save</span></button>
+<button class="win7-btn data-tab" data-data-tab="load" type="button"><span id="data-tab-load-label">Load</span></button>
+<button class="win7-btn data-tab" data-data-tab="sources" type="button"><span>Sources</span></button>
+</div>
+<div class="data-panel-wrap">
+<section class="data-subpanel open" data-data-panel="reset" id="data-panel-reset">
+<div class="data-card">
+<div class="data-card-head">
+<strong id="data-reset-title">Reset pilihan</strong>
+<small id="data-reset-desc">Pilih data yang mau dihapus, ketik RESET, lalu klik tombol. Tanpa popup baru.</small>
+</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="win7-btn btn-ghost modal-check-all" data-target="data-reset-options" type="button">Pilih semua</button><button class="win7-btn btn-ghost modal-check-none" data-target="data-reset-options" type="button">Batal pilih semua</button></div>
+
+
+
+<div class="option-switches" id="data-reset-options">
+<div class="option-switch-row"><label class="switch-large"><input data-key="favoriteLinks" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text">Favorites</span></label></div>
+<div class="option-switch-row"><label class="switch-large"><input data-key="local_link_overrides" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text">Overrides</span></label></div>
+<div class="option-switch-row"><label class="switch-large"><input data-key="mods" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text">Mods</span></label></div>
+<div class="option-switch-row"><label class="switch-large"><input data-key="pinned_items" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text">Pinned</span></label></div>
+<div class="option-switch-row"><label class="switch-large"><input data-key="filters_selected" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text">Filters</span></label></div>
+<div class="option-switch-row"><label class="switch-large"><input data-key="settings" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text">Settings</span></label></div>
+<div class="option-switch-row"><label class="switch-large"><input data-key="extra_sources" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text">Extra Sources</span></label></div>
+</div>
+<div class="data-actions">
+<input id="data-reset-confirm" placeholder="Ketik RESET untuk konfirmasi" style="flex:1;min-width:220px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);background:#0b101a;color:#fff">
+<button class="win7-btn btn-primary" id="data-reset-btn">Reset (Hapus)</button>
+</input></div>
+</div>
+</section>
+<section class="data-subpanel" data-data-panel="save" id="data-panel-save">
+<div class="data-card">
+<div class="data-card-head">
+<strong id="data-save-title">Save pilihan</strong>
+<small id="data-save-desc">Pilih item yang ingin ikut tersimpan.</small>
+</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="win7-btn btn-ghost modal-check-all" data-target="data-save-options" type="button">Pilih semua</button><button class="win7-btn btn-ghost modal-check-none" data-target="data-save-options" type="button">Batal pilih semua</button></div>
+<div class="option-switches" id="data-save-options">
+<div class="option-switch-row"><label class="switch-large"><input checked="" data-key="favoriteLinks" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text">Favorites</span></label></div>
+<div class="option-switch-row"><label class="switch-large"><input checked="" data-key="local_link_overrides" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text">Overrides</span></label></div>
+<div class="option-switch-row"><label class="switch-large"><input checked="" data-key="mods" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text">Mods</span></label></div>
+<div class="option-switch-row"><label class="switch-large"><input checked="" data-key="pinned_items" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text">Pinned</span></label></div>
+<div class="option-switch-row"><label class="switch-large"><input data-key="filters_selected" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text">Filters</span></label></div>
+<div class="option-switch-row"><label class="switch-large"><input data-key="settings" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text">Settings</span></label></div>
+<div class="option-switch-row"><label class="switch-large"><input data-key="extra_sources" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text">Extra Sources</span></label></div>
+</div>
+<div class="data-actions">
+<button class="win7-btn btn-primary" id="data-save-btn">Save (Download)</button>
+</div>
+<div class="data-note" id="data-save-note">Save akan membuat backup dari item yang dipilih di atas.</div>
+</div>
+</section>
+<section class="data-subpanel" data-data-panel="load" id="data-panel-load">
+<div class="data-card">
+<div class="data-card-head">
+<strong id="data-load-title">Load pilihan</strong>
+<small id="data-load-desc">Pilih file lalu centang data yang mau dimuat.</small>
+</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="win7-btn btn-ghost modal-check-all" data-target="data-load-options" type="button">Pilih semua</button><button class="win7-btn btn-ghost modal-check-none" data-target="data-load-options" type="button">Batal pilih semua</button></div>
+<div class="data-actions">
+<input accept="application/json" id="data-load-file" type="file">
+</input></div>
+
+<div class="option-switches" id="data-load-options">
+<div class="option-switch-row"><label class="switch-large"><input data-key="favoriteLinks" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text">Favorites</span></label><small class="availability-note" data-note-for="favoriteLinks">Belum diperiksa</small></div>
+<div class="option-switch-row"><label class="switch-large"><input data-key="local_link_overrides" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text">Overrides</span></label><small class="availability-note" data-note-for="local_link_overrides">Belum diperiksa</small></div>
+<div class="option-switch-row"><label class="switch-large"><input data-key="mods" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text">Mods</span></label><small class="availability-note" data-note-for="mods">Belum diperiksa</small></div>
+<div class="option-switch-row"><label class="switch-large"><input data-key="pinned_items" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text">Pinned</span></label><small class="availability-note" data-note-for="pinned_items">Belum diperiksa</small></div>
+<div class="option-switch-row"><label class="switch-large"><input data-key="filters_selected" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text">Filters</span></label><small class="availability-note" data-note-for="filters_selected">Belum diperiksa</small></div>
+<div class="option-switch-row"><label class="switch-large"><input data-key="settings" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text">Settings</span></label><small class="availability-note" data-note-for="settings">Belum diperiksa</small></div>
+<div class="option-switch-row"><label class="switch-large"><input data-key="extra_sources" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text">Extra Sources</span></label><small class="availability-note" data-note-for="extra_sources">Belum diperiksa</small></div>
+</div>
+<div class="data-actions">
+<button class="win7-btn btn-primary" id="data-load-btn">Load File</button>
+</div>
+<div class="data-note" id="data-load-note">Load akan menimpa data yang dipilih di file JSON.</div>
+</div>
+
+</section>
+<section class="data-subpanel" data-data-panel="sources" id="data-panel-sources">
+<div class="data-card">
+  <div class="data-card-head">
+    <div>
+      <strong>Sources (Tambah / Kelola)</strong>
+      <small>Sumber tambahan bisa diaktifkan, dimatikan, diedit, atau dihapus. Built-in tetap terkunci.</small>
+    </div>
+    <small id="source-manager-count">0 sumber tambahan</small>
+  </div>
+
+  <div class="source-add-row">
+    <input id="new-source-input" placeholder="Masukkan URL atau ketik INLINE: lalu paste JSON">
+    <button class="win7-btn btn-primary" id="add-source-btn" type="button">Tambah</button>
+  </div>
+
+  <div class="source-hint">URL akan disimpan sebagai sumber biasa. Untuk data mentah, pakai <span class="stabilo">INLINE:</span> lalu tempel JSON.</div>
+  <div id="extra-sources-list" class="source-list"></div>
+</div>
+</section>
+
+<div style="display:none">
+<input accept="application/json" id="load-file-input" type="file">
+<button class="win7-btn btn-primary" id="load-file-btn">Load</button>
+<button class="win7-btn btn-ghost" id="save-local-btn">Save Local</button>
+<button class="win7-btn btn-ghost" id="open-load-modal-btn">Load File (Pilihan)</button>
+<button class="win7-btn btn-primary" id="data-open-save-choices">Pilih Item Save</button>
+</input></div>
+</div>
+</div>
+</div>
+<!-- MODS tab -->
+<div class="settings-panel" id="panel-mods">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<strong>Mods</strong><small style="color:#9aa6bf">(Mod manager: install / enable / remove)</small>
+</div>
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+<input accept=".js,.ero4mod,.json" id="mod-file-input" type="file">
+<button class="win7-btn btn-primary" id="add-mod-btn">Add Mod</button>
+<button class="win7-btn btn-ghost" id="download-current-mod-btn" type="button"><i class="fa-solid fa-download"></i> Download Current</button>
+</input></div>
+<div style="margin-top:8px;display:flex;flex-direction:column;gap:8px;background:rgba(255,255,255,0.02);padding:10px;border-radius:10px">
+<small style="color:#9aa6bf">Warning mod akan selalu muncul saat ada mod aktif. Panel pengaturan tetap bisa dipakai.</small>
+</div>
+<div style="margin-top:8px">
+<div id="mods-list" style="max-height:220px;overflow:auto;margin-top:8px"></div>
+</div>
+<hr style="border:none;border-top:1px solid rgba(255,255,255,0.03);margin:8px 0"/>
+<div style="display:flex;justify-content:space-between;align-items:center">
+<strong>Mod Store</strong><small style="color:#9aa6bf">Install dari katalog</small>
+</div>
+<div style="display:flex;gap:8px;align-items:center;margin-top:6px">
+<button class="win7-btn btn-primary" id="open-website-mod-btn" onclick="window.location.href='https://kuningminum.github.io/Kumin/mod/Store.html'">Open Mod Website</button>
+<button class="win7-btn btn-primary" id="open-mod-store-btn">Buka Toko Mods</button>
+</div>
+<div id="mod-store-list" style="max-height:220px;overflow:auto;margin-top:8px"></div>
+</div>
+
+<!-- EDITOR JS tab -->
+<div class="settings-panel" id="panel-editor">
+<div class="editor-shell">
+  <div class="editor-shell-head">
+    <div>
+      <strong id="editor-panel-title">Editor JS</strong>
+      <div id="editor-project-meta" class="data-note">Pilih mod dari daftar atau tekan pensil untuk membuka project.</div>
+    </div>
+    <div class="editor-status">
+      <span class="editor-pill" id="editor-dirty-pill">Belum ada project</span>
     </div>
   </div>
 
-  <!-- filter backdrop + centered panel -->
-  <div id="filter-backdrop" class="filter-backdrop" aria-hidden="true"></div>
-  <div id="filter-panel" class="filter-panel" aria-hidden="true" role="dialog" aria-modal="true">
-    <h4 id="filter-title">Filter</h4>
-    <div class="filter-list" id="filter-list"></div>
-    <div class="filter-actions">
-      <button id="filter-all" class="btn-ghost">All</button>
-      <button id="filter-none" class="btn-ghost">None</button>
-      <button id="filter-apply" class="btn-primary">Apply</button>
+  <div class="editor-info-grid">
+    <div class="editor-info-card"><small>Nama project</small><strong id="editor-info-name">-</strong></div>
+    <div class="editor-info-card"><small>Asal</small><strong id="editor-info-source">-</strong></div>
+    <div class="editor-info-card"><small>Karakter</small><strong id="editor-info-chars">0</strong></div>
+    <div class="editor-info-card"><small>Baris</small><strong id="editor-info-lines">0</strong></div>
+  </div>
+
+  <div class="editor-meta-grid">
+    <div class="editor-meta-card">
+      <small>ID file / mod</small>
+      <input id="editor-meta-id" placeholder="mod-baru">
+    </div>
+    <div class="editor-meta-card">
+      <small>Nama</small>
+      <input id="editor-meta-name" placeholder="Nama mod">
+    </div>
+    <div class="editor-meta-card">
+      <small>Sumber</small>
+      <input id="editor-meta-source" placeholder="editor-js">
+    </div>
+    <div class="editor-meta-card">
+      <small>Icon URL</small>
+      <input id="editor-meta-icon" placeholder="https://...">
     </div>
   </div>
 
-  <div class="settings-overlay" id="settings-overlay" aria-hidden="true">
-    <div class="settings-menu" id="settings-menu" role="dialog" aria-modal="true" aria-labelledby="settings-title">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <strong id="settings-title">Kumin Links - Pengaturan</strong>
-        <div style="display:flex;gap:8px;align-items:center">
-          <button id="settings-toggle-collapse" class="btn-ghost" title="Toggle collapse"><i class="fa-solid fa-compress"></i></button>
-          <button id="settings-close" class="btn-ghost" title="Tutup">✖</button>
-        </div>
-      </div>
+  <textarea class="editor-js-textarea" id="editor-js-textarea" placeholder="Tempel atau edit kode JS di sini..."></textarea>
 
-      <!-- added two more tabs: Links & Data & Mods -->
-      <div class="settings-tabs">
-        <button class="settings-tab active" data-tab="general">General</button>
-        <button class="settings-tab" data-tab="links">Links</button>
-        <button class="settings-tab" data-tab="data">Data</button>
-        <button class="settings-tab" data-tab="mods">Mods</button>
-        <button class="settings-tab" data-tab="experimental">Experimental</button>
-      </div>
-
-      <!-- GENERAL -->
-      <div id="panel-general" class="settings-panel open">
-        <div class="settings-row"><label id="lbl-language"></label><select id="sel-language"><option value="id">Indonesia</option><option value="en">English</option></select></div>
-        <div class="settings-row"><label id="lbl-view"></label><select id="sel-view"><option value="list">List</option><option value="card">Card</option></select></div>
-
-        <div class="settings-row" style="align-items:center;gap:10px">
-          <div style="display:flex;flex-direction:column">
-            <label id="lbl-merge">Gabungkan Lokal & Global</label>
-            <small style="color:#9aa6bf" id="lbl-merge-desc">Jika dicentang, sumber tidak dipisah per grup</small>
-          </div>
-          <label class="switch">
-            <input type="checkbox" id="chk-merge" />
-            <span class="track"><span class="thumb"></span></span>
-          </label>
-        </div>
-
-        <div class="settings-row" style="align-items:center;gap:10px">
-          <div style="display:flex;flex-direction:column">
-            <label id="lbl-simple">Mode Sederhana</label>
-            <small style="color:#9aa6bf" id="lbl-simple-desc">Jika aktif, tampilan hanya menampilkan item (tanpa grup). Untuk kembali, buka Pengaturan.</small>
-          </div>
-          <label class="switch">
-            <input type="checkbox" id="chk-simple" />
-            <span class="track"><span class="thumb"></span></span>
-          </label>
-        </div>
-
-        <div style="display:flex;flex-direction:column;gap:8px">
-          <label>Mode tombol (Pin atau Star)</label>
-          <div style="display:flex;gap:12px;align-items:center">
-            <label id="label-pinmode-star"><input type="radio" name="pinMode" value="star" id="pinmode-star"> Star (favorit)</label>
-            <label id="label-pinmode-pin"><input type="radio" name="pinMode" value="pin" id="pinmode-pin"> Pin (taruh ke atas)</label>
-          </div>
-        </div>
-
-        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
-          <label>Urutkan link</label>
-          <div style="display:flex;gap:8px;align-items:center">
-            <select id="sel-sort">
-              <option value="title_asc">Judul A → Z</option>
-              <option value="title_desc">Judul Z → A</option>
-              <option value="date_new_old">Tanggal: Baru → Lama</option>
-              <option value="date_old_new">Tanggal: Lama → Baru</option>
-            </select>
-            <small style="color:#9aa6bf">Pilihan ini akan disimpan di pengaturan.</small>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- LINKS tab: space to show link-specific options -->
-      <div id="panel-links" class="settings-panel">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <strong>Links</strong><small style="color:#9aa6bf">(Pengaturan terkait tampilan & grup)</small>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:8px">
-          <label><input type="checkbox" id="chk-show-group-count"> Tampilkan jumlah item per grup</label>
-          <label><input type="checkbox" id="chk-compact-list"> Compact list (jarak antar item lebih kecil)</label>
-          <label><input type="checkbox" id="chk-merge-duplicates"> Gabungkan links yang sama? (merge duplicate links)</label>
-          <small style="color:#9aa6bf">Jika aktif, link dengan URL yang sama akan digabung (hanya satu entri per URL dalam daftar utama).</small>
-        </div>
-      </div>
-
-      <!-- DATA tab -->
-      <div id="panel-data" class="settings-panel">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <strong>Data</strong>
-          <small style="color:#9aa6bf">Reset / Load / Save — granular</small>
-        </div>
-
-        <div style="display:flex;gap:8px;align-items:center">
-          <input type="file" id="data-load-file" accept="application/json" />
-          <button id="data-load-btn" class="btn-primary">Load</button>
-          <button id="data-save-btn" class="btn-ghost">Save</button>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
-          <button id="data-reset-btn" class="btn-ghost">Reset Pilihan</button>
-          <button id="data-open-save-choices" class="btn-primary">Pilih Item Save</button>
-        </div>
-
-        <div style="margin-top:10px;color:#9aa6bf">Catatan: Pengaturan (termasuk urutkan) akan disimpan jika memilih 'Settings' saat save.</div>
-      </div>
-
-      <!-- MODS tab -->
-      <div id="panel-mods" class="settings-panel">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <strong>Mods</strong><small style="color:#9aa6bf">(Mod manager: install / enable / remove)</small>
-        </div>
-
-        <div style="display:flex;gap:8px;align-items:center">
-          <input type="file" id="mod-file-input" accept=".js,.ero4mod,.json" />
-          <button id="add-mod-btn" class="btn-primary">Add Mod</button>
-        </div>
-
-        <div style="margin-top:8px">
-          <div id="mods-list" style="max-height:220px;overflow:auto;margin-top:8px"></div>
-        </div>
-
-        <hr style="border:none;border-top:1px solid rgba(255,255,255,0.03);margin:8px 0" />
-
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <strong>Mod Store</strong><small style="color:#9aa6bf">Install dari katalog</small>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
-          <button id="open-website-mod-btn" class="btn-primary" onclick="window.location.href='https://kuningminum.github.io/Kumin/mod/Store.html'">Open Mod Website</button>
-          <button id="open-mod-store-btn" class="btn-primary">Buka Toko Mods</button>
-        
-        </div>
-        <div id="mod-store-list" style="max-height:220px;overflow:auto;margin-top:8px"></div>
-      </div>
-
-      <!-- EXPERIMENTAL -->
-      <div id="panel-experimental" class="settings-panel">
-        <div style="display:flex;justify-content:space-between;align-items:center"><strong>Experimental</strong><small style="color:#9aa6bf">(Untuk eksperimen — gunakan hati-hati)</small></div>
-
-        <div class="exp-row"><button id="btn-debug" class="btn-ghost">Debug</button><button id="copy-debug-btn_exp" class="btn-ghost" style="display:none">Copy</button></div>
-
-        <div style="display:flex;flex-direction:column;gap:6px">
-          <!-- REPLACED: create mod from JS -->
-          <label>Create Mod from JS — tempel kode JavaScript di bawah lalu tekan "Create Mod from JS". Mod akan langsung terpasang dan diarahkan ke tab Mods.</label>
-          <div style="display:flex;gap:8px;align-items:center">
-            <textarea id="modjs-textarea" class="editcss-textarea" placeholder="// Tempel kode JavaScript di sini..."></textarea>
-          </div>
-          <div style="display:flex;gap:8px;justify-content:flex-end">
-            <button id="create-mod-js-btn" class="btn-primary">Create Mod from JS</button>
-            <button id="clear-modjs-btn" class="btn-ghost">Clear</button>
-          </div>
-        </div>
-
-        <div style="display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:8px">
-          <div>
-            <label id="lbl-reset"></label>
-            <div style="color:#9aa6bf;font-size:0.9rem">Reset CSS & data lokal tersedia di sini (mod-related actions ada di tab Mods)</div>
-          </div>
-          <div style="display:flex;gap:8px">
-            <button id="reset-css-btn" class="btn-ghost">Remove CSS Mods</button>
-            <button id="btn-reset" class="btn-ghost">Reset Data</button>
-          </div>
-        </div>
-
-        <div style="display:flex;flex-direction:column;gap:6px">
-          <label>Load / Save local data</label>
-          <div style="display:flex;gap:8px;align-items:center">
-            <input type="file" id="load-file-input" accept="application/json" />
-            <button id="load-file-btn" class="btn-primary">Load</button>
-            <button id="save-local-btn" class="btn-ghost">Save Local</button>
-          </div>
-          <small style="color:#9aa6bf">Load akan menimpa kunci yang ada (favorites, overrides, mods, pinned). File harus format backup yang dibuat "Save Local".</small>
-        </div>
-
-        <div style="margin-top:8px;border-top:1px solid rgba(255,255,255,0.03);padding-top:8px;display:flex;flex-direction:column;gap:12px">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <strong>Sources (Tambah / Kelola)</strong>
-            <small style="color:#9aa6bf">Sumber tambahan yang kamu tambahkan dapat dihapus; sumber bawaan tidak dapat dihapus.</small>
-          </div>
-
-          <div style="display:flex;gap:8px;align-items:center">
-            <input id="new-source-input" placeholder="Masukkan URL atau ketik INLINE: lalu paste JSON" style="flex:1;padding:8px;border-radius:8px;border:none;background:#0b0c0f;color:#fff" />
-            <button id="add-source-btn" class="btn-primary">Tambah</button>
-          </div>
-          <div id="extra-sources-list" style="max-height:180px;overflow:auto;border-radius:8px;padding:8px;background:rgba(255,255,255,0.02)"></div>
-
-          <div style="display:flex;gap:8px;justify-content:flex-end">
-            <button id="save-choose-btn" class="btn-primary">Save (Download)</button>
-            <button id="open-load-modal-btn" class="btn-ghost">Load File (Pilihan)</button>
-            <button id="open-reset-modal-btn" class="btn-ghost">Reset Pilihan</button>
-          </div>
-
-          <!-- Experimental - Offline -->
-          <div style="margin-top:8px;border-top:1px solid rgba(255,255,255,0.03);padding-top:8px;display:flex;flex-direction:column;gap:8px">
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <strong>Experimental: Offline</strong>
-              <label class="switch"><input type="checkbox" id="chk-offline-mode"><span class="track"><span class="thumb"></span></span></label>
-            </div>
-            <div style="display:flex;gap:8px;align-items:center">
-              <button id="btn-offline-download" class="btn-primary">Download Data untuk Offline</button>
-              <div id="offline-status" style="color:#9aa6bf">Tidak ada bundle offline.</div>
-            </div>
-            <small style="color:#9aa6bf">Jika aktif, situs akan memakai data offline (jika tersedia). Gunakan tombol download untuk menyimpan bundle saat online.</small>
-          </div>
-
-        </div>
-      </div>
-
-    </div>
+  <div class="editor-actions">
+    <button class="win7-btn btn-ghost" id="editor-new-btn" type="button"><i class="fa-solid fa-file-circle-plus"></i> File Baru</button>
+    <button class="win7-btn btn-ghost" id="editor-download-btn" type="button"><i class="fa-solid fa-download"></i> Download</button>
+    <button class="win7-btn btn-ghost" id="editor-undo-btn" type="button"><i class="fa-solid fa-rotate-left"></i> Undo</button>
+    <button class="win7-btn btn-ghost" id="editor-redo-btn" type="button"><i class="fa-solid fa-rotate-right"></i> Redo</button>
+    <button class="win7-btn btn-ghost" id="editor-clear-btn" type="button"><i class="fa-solid fa-broom"></i> Bersihkan</button>
+    <button class="win7-btn btn-primary" id="editor-save-btn" type="button"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
   </div>
 
-  <!-- MODS warning modal: appears on page load if any mods saved as enabled -->
-  <div class="modal" id="mod-warning-modal" aria-hidden="true">
-    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="mod-warning-title">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <strong id="mod-warning-title">Mod Detected</strong>
-        <button id="mod-warning-close" class="btn-ghost">✖</button>
-      </div>
-      <div id="mod-warning-content" style="margin-top:8px;color:#e6eef8">
-        <p><strong>Peringatan:</strong> Terdeteksi mod yang aktif pada akun ini. Mod dapat mengubah tampilan atau fungsi situs — dan mungkin merusak UI. Semua mod saat ini akan ditahan (tidak dijalankan) sampai Anda memberikan persetujuan.</p>
-        <p>Anda ingin menyalakan mod sekarang atau tetap menonaktifkan mod (dan menyimpan pilihan)?</p>
-      </div>
-      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
-        <button id="mod-warning-disable" class="btn-ghost">Keep Mods Disabled (Disable & Reload)</button>
-        <button id="mod-warning-enable" class="btn-primary">Enable Mods Now</button>
-      </div>
-    </div>
+  <div class="data-note editor-hint">Info project ada di atas, editor ada di bawah, jadi lebih enak di mobile. Undo/redo tetap aman.</div>
+</div>
+</div>
+
+<!-- EXPERIMENTAL --><!-- EXPERIMENTAL -->
+<div class="settings-panel" id="panel-experimental">
+<div style="display:flex;justify-content:space-between;align-items:center"><strong>Experimental</strong><small style="color:#9aa6bf">(Untuk eksperimen — gunakan hati-hati)</small></div>
+<div class="exp-row"><button class="win7-btn btn-ghost" id="btn-debug">Debug</button><button class="win7-btn btn-ghost" id="copy-debug-btn_exp" style="display:none">Copy</button></div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<!-- REPLACED: create mod from JS -->
+<label>Create Mod from JS — tempel kode JavaScript di bawah lalu tekan "Create Mod from JS". Mod akan langsung terpasang dan diarahkan ke tab Mods.</label>
+<div style="display:flex;gap:8px;align-items:center">
+<textarea class="editcss-textarea" id="modjs-textarea" placeholder="// Tempel kode JavaScript di sini..."></textarea>
+</div>
+<div style="display:flex;gap:8px;justify-content:flex-end">
+<button class="win7-btn btn-primary" id="create-mod-js-btn">Create Mod from JS</button>
+<button class="win7-btn btn-ghost" id="clear-modjs-btn">Clear</button>
+</div>
+</div>
+<div style="display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:8px">
+<div>
+<label id="lbl-reset"></label>
+<div style="color:#9aa6bf;font-size:0.9rem">Reset CSS &amp; data lokal tersedia di tab Data, jadi bagian ini tinggal untuk CSS mods.</div>
+</div>
+<div style="display:flex;gap:8px">
+<button class="win7-btn btn-ghost" id="reset-css-btn">Remove CSS Mods</button>
+</div>
+</div>
+<!-- Experimental - Offline -->
+<div style="margin-top:8px;border-top:1px solid rgba(255,255,255,0.03);padding-top:8px;display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<strong>Experimental: Offline</strong>
+<label class="switch"><input id="chk-offline-mode" type="checkbox"/><span class="track"><span class="thumb"></span></span></label>
+</div>
+<div style="display:flex;gap:8px;align-items:center">
+<button class="win7-btn btn-primary" id="btn-offline-download">Download Data untuk Offline</button>
+<div id="offline-status" style="color:#9aa6bf">Tidak ada bundle offline.</div>
+</div>
+<small style="color:#9aa6bf">Jika aktif, situs akan memakai data offline (jika tersedia). Gunakan tombol download untuk menyimpan bundle saat online.</small>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- MODS warning modal: appears on page load if any mods saved as enabled -->
+<div aria-hidden="true" class="modal" id="mod-warning-modal">
+<div aria-labelledby="mod-warning-title" aria-modal="true" class="modal-box mod-warning-box" role="dialog">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<strong id="mod-warning-title">Mod Detected</strong>
+<button class="win7-btn btn-ghost" id="mod-warning-close">✖</button>
+</div>
+<div id="mod-warning-content" style="margin-top:8px;color:#e6eef8">
+<p>Mod aktif terdeteksi. Situs akan menahan mod dulu sampai kamu setuju.</p>
+<p>Panel pengaturan tetap bisa dibuka walau mod aktif.</p>
+</div>
+<div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:12px">
+<button class="win7-btn btn-ghost" id="mod-warning-disable">Matikan Mod &amp; Muat Ulang</button>
+<button class="win7-btn btn-primary" id="mod-warning-enable">Aktifkan Mod</button>
+</div>
+</div>
+</div>
+<!-- detected mods modal (prompt on first visit if store has auto-enabled mods) -->
+<div aria-hidden="true" class="modal" id="store-mod-detect-modal">
+<div aria-labelledby="store-mod-detect-title" aria-modal="true" class="modal-box" role="dialog">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<strong id="store-mod-detect-title">Detected Active Mods</strong>
+<button class="win7-btn btn-ghost" id="store-mod-detect-close">✖</button>
+</div>
+<div id="store-mod-detect-list" style="margin-top:8px;max-height:260px;overflow:auto;color:#e6eef8"></div>
+<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+<button class="win7-btn btn-ghost" id="store-mod-detect-decline">Decline</button>
+<button class="win7-btn btn-primary" id="store-mod-detect-accept">Install &amp; Run</button>
+</div>
+</div>
+</div>
+<!-- Debug -->
+<div aria-hidden="true" class="debug-popup" id="debug-popup">
+<div aria-labelledby="debug-title" aria-modal="true" class="debug-box" role="dialog">
+<div class="debug-topbar">
+  <div class="debug-title-wrap">
+    <strong id="debug-title">Debug Terminal</strong>
+    <span class="debug-counter" id="debug-counter">0 pesan</span>
   </div>
-
-  <!-- detected mods modal (prompt on first visit if store has auto-enabled mods) -->
-  <div class="modal" id="store-mod-detect-modal" aria-hidden="true">
-    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="store-mod-detect-title">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <strong id="store-mod-detect-title">Detected Active Mods</strong>
-        <button id="store-mod-detect-close" class="btn-ghost">✖</button>
-      </div>
-      <div id="store-mod-detect-list" style="margin-top:8px;max-height:260px;overflow:auto;color:#e6eef8"></div>
-      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
-        <button id="store-mod-detect-decline" class="btn-ghost">Decline</button>
-        <button id="store-mod-detect-accept" class="btn-primary">Install & Run</button>
-      </div>
-    </div>
+  <button class="win7-btn btn-ghost" id="debug-close">✖</button>
+</div>
+<div class="debug-toolbar">
+  <div class="debug-toolbar-left">
+    <span class="debug-chip" id="debug-chip-limit">10 / halaman</span>
+    <span class="debug-chip" id="debug-chip-retention">Auto hapus 30 hari</span>
   </div>
-
-  <!-- Debug -->
-  <div class="debug-popup" id="debug-popup" aria-hidden="true">
-    <div class="debug-box" role="dialog" aria-modal="true" aria-labelledby="debug-title">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <strong id="debug-title">Debug - Pesan Kesalahan</strong>
-        <button id="debug-close" class="btn-ghost">✖</button>
-      </div>
-      <div id="debug-area" class="debug-textarea" style="white-space:pre-wrap;word-break:break-word">Tidak ada pesan kesalahan.</div>
-      <div style="display:flex;gap:8px;justify-content:flex-end">
-        <button id="copy-debug-btn" class="btn-primary">Copy</button>
-      </div>
-    </div>
+  <label class="debug-setting">
+    <span id="debug-retention-label">Auto hapus</span>
+    <select id="debug-retention-select">
+      <option value="3d">3 hari</option>
+      <option value="7d">7 hari</option>
+      <option value="30d" selected>30 hari</option>
+    </select>
+  </label>
+</div>
+<div class="debug-body" id="debug-body"></div>
+<div class="debug-footer">
+  <div class="debug-page-group">
+    <button class="win7-btn btn-ghost" id="debug-prev-page" type="button">◀</button>
+    <button class="win7-btn btn-ghost" id="debug-page-indicator" type="button">1 / 1</button>
+    <button class="win7-btn btn-ghost" id="debug-next-page" type="button">▶</button>
   </div>
-
-  <!-- Granular Save Modal -->
-  <div class="modal" id="save-modal" aria-hidden="true">
-    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="save-modal-title">
-      <div class="modal-title" id="save-modal-title">Save — Pilih yang ingin disimpan</div>
-      <div id="save-modal-list">
-        <div class="modal-row"><label><input type="checkbox" data-key="favoriteLinks" checked> Favorites</label></div>
-        <div class="modal-row"><label><input type="checkbox" data-key="local_link_overrides" checked> Overrides</label></div>
-        <div class="modal-row"><label><input type="checkbox" data-key="mods" checked> Mods</label></div>
-        <div class="modal-row"><label><input type="checkbox" data-key="pinned_items" checked> Pinned</label></div>
-        <div class="modal-row"><label><input type="checkbox" data-key="filters_selected"> Filters</label></div>
-        <div class="modal-row"><label><input type="checkbox" data-key="settings"> Settings (incl. urutkan)</label></div>
-        <div class="modal-row"><label><input type="checkbox" data-key="extra_sources"> Extra Sources</label></div>
-      </div>
-      <div class="modal-actions">
-        <button id="save-modal-cancel" class="btn-ghost">Batal</button>
-        <button id="save-modal-ok" class="btn-primary">Save (Download)</button>
-      </div>
-    </div>
+  <div class="debug-footer-actions">
+    <button class="win7-btn btn-ghost" id="download-debug-btn" type="button">Download</button>
+    <button class="win7-btn btn-primary" id="copy-debug-btn" type="button">Copy</button>
   </div>
-
-  <!-- Granular Load Modal -->
-  <div class="modal" id="load-modal" aria-hidden="true">
-    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="load-modal-title">
-      <div class="modal-title" id="load-modal-title">Load — Pilih file & apa yang ingin dimuat (akan menimpa)</div>
-      <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-        <input type="file" id="load-modal-file" accept="application/json" style="flex:1"/>
-      </div>
-      <div id="load-modal-list">
-        <div class="modal-row"><label><input type="checkbox" data-key="favoriteLinks"> Favorites</label></div>
-        <div class="modal-row"><label><input type="checkbox" data-key="local_link_overrides"> Overrides</label></div>
-        <div class="modal-row"><label><input type="checkbox" data-key="mods"> Mods</label></div>
-        <div class="modal-row"><label><input type="checkbox" data-key="pinned_items"> Pinned</label></div>
-        <div class="modal-row"><label><input type="checkbox" data-key="filters_selected"> Filters</label></div>
-        <div class="modal-row"><label><input type="checkbox" data-key="settings"> Settings (incl. urutkan)</label></div>
-        <div class="modal-row"><label><input type="checkbox" data-key="extra_sources"> Extra Sources</label></div>
-      </div>
-      <div class="modal-actions">
-        <button id="load-modal-cancel" class="btn-ghost">Batal</button>
-        <button id="load-modal-ok" class="btn-primary">Load (Terapkan)</button>
-      </div>
-    </div>
+</div>
+</div>
+</div>
+<!-- Source editor modal -->
+<div aria-hidden="true" class="modal" id="source-edit-modal">
+<div aria-labelledby="source-edit-title" aria-modal="true" class="modal-box" role="dialog">
+<div class="modal-title" id="source-edit-title">Edit Source</div>
+<div class="source-edit-grid">
+  <div class="source-edit-field">
+    <small>ID</small>
+    <input id="source-edit-id" placeholder="source-id">
   </div>
-
-  <!-- Granular Reset Modal -->
-  <div class="modal" id="reset-modal" aria-hidden="true">
-    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="reset-modal-title">
-      <div class="modal-title" id="reset-modal-title">Reset — Pilih yang ingin di-reset (ketik RESET untuk konfirmasi)</div>
-      <div id="reset-modal-list">
-        <div class="modal-row"><label><input type="checkbox" data-key="favoriteLinks"> Favorites</label></div>
-        <div class="modal-row"><label><input type="checkbox" data-key="local_link_overrides"> Overrides</label></div>
-        <div class="modal-row"><label><input type="checkbox" data-key="mods"> Mods</label></div>
-        <div class="modal-row"><label><input type="checkbox" data-key="pinned_items"> Pinned</label></div>
-        <div class="modal-row"><label><input type="checkbox" data-key="filters_selected"> Filters</label></div>
-        <div class="modal-row"><label><input type="checkbox" data-key="settings"> Settings</label></div>
-        <div class="modal-row"><label><input type="checkbox" data-key="extra_sources"> Extra Sources</label></div>
-      </div>
-      <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
-        <input id="reset-modal-confirm" placeholder="Ketik RESET untuk konfirmasi" style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:#0b0c0f;color:#fff" />
-      </div>
-      <div class="modal-actions">
-        <button id="reset-modal-cancel" class="btn-ghost">Batal</button>
-        <button id="reset-modal-ok" class="btn-primary" disabled>Reset (Hapus)</button>
-      </div>
-    </div>
+  <div class="source-edit-field">
+    <small>Nama</small>
+    <input id="source-edit-name" placeholder="Nama sumber">
   </div>
-
-  <main class="container" id="link-container"></main>
-
-  <div class="preview-popup" id="preview-popup">
-    <div class="preview-content fullscreen">
-      <div class="preview-header">
-        <button class="btn-icon" id="btn-go" title=""><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
-        <button class="btn-icon" id="btn-close" title=""><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <iframe id="preview-frame" class="preview-iframe" title="Pratinjau"></iframe>
-    </div>
+  <div class="source-edit-field">
+    <small>Tipe</small>
+    <select id="source-edit-type">
+      <option value="url">URL</option>
+      <option value="inline">INLINE JSON</option>
+    </select>
   </div>
-
-  <div class="reset-popup" id="reset-popup">
-    <div class="reset-box">
-      <button class="reset-close" id="reset-close">❌</button>
-      <p class="reset-instruction" id="reset-instruction">Ketik <span class="stabilo">RESET</span> untuk konfirmasi penghapusan data.</p>
-      <input id="reset-input" class="reset-input" placeholder="Ketik RESET untuk konfirmasi" />
-      <div style="height:8px"></div>
-      <div style="display:flex;gap:8px;justify-content:center">
-        <button id="reset-cancel" class="btn-ghost">Batal</button>
-        <button id="reset-proceed" class="btn-primary">Lanjut</button>
-      </div>
-    </div>
+  <div class="source-edit-field">
+    <small>Status</small>
+    <label class="switch-large">
+      <input id="source-edit-enabled" type="checkbox">
+      <span class="track"><span class="thumb"></span></span>
+      <span class="text">Aktif</span>
+    </label>
   </div>
+</div>
+<div class="source-edit-field" style="margin-top:8px">
+  <small>Value</small>
+  <textarea id="source-edit-value" class="editcss-textarea" style="min-height:160px" placeholder="URL atau JSON..."></textarea>
+</div>
+<div class="modal-actions">
+  <button class="win7-btn btn-ghost" id="source-edit-cancel">Batal</button>
+  <button class="win7-btn btn-primary" id="source-edit-save">Simpan</button>
+</div>
+</div>
+</div>
+<!-- Granular Save Modal -->
+<div aria-hidden="true" class="modal" id="save-modal">
+<div aria-labelledby="save-modal-title" aria-modal="true" class="modal-box" role="dialog">
+<div class="modal-title" id="save-modal-title">Save — Pilih yang ingin disimpan</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0">
+<button class="win7-btn btn-ghost modal-check-all" data-target="save-modal-list" type="button">Pilih semua</button>
+<button class="win7-btn btn-ghost modal-check-none" data-target="save-modal-list" type="button">Tidak jadi pilih semua</button>
+</div>
+<div id="save-modal-list">
+<div class="modal-row"><label><input checked="" data-key="favoriteLinks" type="checkbox"/> Favorites</label></div>
+<div class="modal-row"><label><input checked="" data-key="local_link_overrides" type="checkbox"/> Overrides</label></div>
+<div class="modal-row"><label><input checked="" data-key="mods" type="checkbox"/> Mods</label></div>
+<div class="modal-row"><label><input checked="" data-key="pinned_items" type="checkbox"/> Pinned</label></div>
+<div class="modal-row"><label class="switch-large"><input data-key="filters_selected" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text"> Filters</span></label></div>
+<div class="modal-row"><label class="switch-large"><input data-key="settings" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text"> Settings (incl. urutkan)</span></label></div>
+<div class="modal-row"><label class="switch-large"><input data-key="extra_sources" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text"> Extra Sources</span></label></div>
+</div>
+<div class="modal-actions">
+<button class="win7-btn btn-ghost" id="save-modal-cancel">Batal</button>
+<button class="win7-btn btn-primary" id="save-modal-ok">Save (Download)</button>
+</div>
+</div>
+</div>
+<!-- Granular Load Modal -->
+<div aria-hidden="true" class="modal" id="load-modal">
+<div aria-labelledby="load-modal-title" aria-modal="true" class="modal-box" role="dialog">
+<div class="modal-title" id="load-modal-title">Load — Pilih file &amp; apa yang ingin dimuat (akan menimpa)</div>
+<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+<input accept="application/json" id="load-modal-file" style="flex:1" type="file">
+</input></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0">
+<button class="win7-btn btn-ghost modal-check-all" data-target="load-modal-list" type="button">Pilih semua</button>
+<button class="win7-btn btn-ghost modal-check-none" data-target="load-modal-list" type="button">Tidak jadi pilih semua</button>
+</div>
 
-  <div class="toast" id="toast"></div>
-  <div class="original-link-small" id="original-link-small"><a id="original-link-anchor" href="https://kuningminum.github.io/Kumin/Global%20Links.html" target="_top" style="color:var(--accent);text-decoration:underline"></a></div>
-  <div class="loading-overlay" id="loading-overlay"><div class="spinner" aria-hidden="true"></div><div class="loading-text" id="loading-text">Memuat data...</div></div>
+<div id="load-modal-list">
+<div class="modal-row"><label class="switch-large"><input data-key="favoriteLinks" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text"> Favorites</span></label><small class="availability-note" data-note-for="favoriteLinks">Belum diperiksa</small></div>
+<div class="modal-row"><label class="switch-large"><input data-key="local_link_overrides" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text"> Overrides</span></label><small class="availability-note" data-note-for="local_link_overrides">Belum diperiksa</small></div>
+<div class="modal-row"><label class="switch-large"><input data-key="mods" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text"> Mods</span></label><small class="availability-note" data-note-for="mods">Belum diperiksa</small></div>
+<div class="modal-row"><label class="switch-large"><input data-key="pinned_items" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text"> Pinned</span></label><small class="availability-note" data-note-for="pinned_items">Belum diperiksa</small></div>
+<div class="modal-row"><label class="switch-large"><input data-key="filters_selected" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text"> Filters</span></label><small class="availability-note" data-note-for="filters_selected">Belum diperiksa</small></div>
+<div class="modal-row"><label class="switch-large"><input data-key="settings" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text"> Settings (incl. urutkan)</span></label><small class="availability-note" data-note-for="settings">Belum diperiksa</small></div>
+<div class="modal-row"><label class="switch-large"><input data-key="extra_sources" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text"> Extra Sources</span></label><small class="availability-note" data-note-for="extra_sources">Belum diperiksa</small></div>
+</div>
+<div class="modal-actions">
 
+<button class="win7-btn btn-ghost" id="load-modal-cancel">Batal</button>
+<button class="win7-btn btn-primary" id="load-modal-ok">Load (Terapkan)</button>
+</div>
+</div>
+</div>
+<!-- Granular Reset Modal -->
+<div aria-hidden="true" class="modal" id="reset-modal">
+<div aria-labelledby="reset-modal-title" aria-modal="true" class="modal-box" role="dialog">
+<div class="modal-title" id="reset-modal-title">Reset — Pilih yang ingin di-reset (ketik RESET untuk konfirmasi)</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0">
+<button class="win7-btn btn-ghost modal-check-all" data-target="reset-modal-list" type="button">Pilih semua</button>
+<button class="win7-btn btn-ghost modal-check-none" data-target="reset-modal-list" type="button">Tidak jadi pilih semua</button>
+</div>
+<div id="reset-modal-list">
+<div class="modal-row"><label class="switch-large"><input data-key="favoriteLinks" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text"> Favorites</span></label></div>
+<div class="modal-row"><label class="switch-large"><input data-key="local_link_overrides" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text"> Overrides</span></label></div>
+<div class="modal-row"><label class="switch-large"><input data-key="mods" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text"> Mods</span></label></div>
+<div class="modal-row"><label class="switch-large"><input data-key="pinned_items" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text"> Pinned</span></label></div>
+<div class="modal-row"><label class="switch-large"><input data-key="filters_selected" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text"> Filters</span></label></div>
+<div class="modal-row"><label class="switch-large"><input data-key="settings" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text"> Settings</span></label></div>
+<div class="modal-row"><label class="switch-large"><input data-key="extra_sources" type="checkbox"/><span class="track"><span class="thumb"></span></span><span class="text"> Extra Sources</span></label></div>
+</div>
+<div style="display:flex;gap:8px;margin-top:8px;align-items:center">
+<input id="reset-modal-confirm" placeholder="Ketik RESET untuk konfirmasi" style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:#0b0c0f;color:#fff">
+</input></div>
+<div class="modal-actions">
+<button class="win7-btn btn-ghost" id="reset-modal-cancel">Batal</button>
+<button class="win7-btn btn-primary" disabled="" id="reset-modal-ok">Reset (Hapus)</button>
+</div>
+</div>
+</div>
+<main class="container" id="link-container"></main>
+<div class="preview-popup" id="preview-popup">
+<div class="preview-content fullscreen">
+<div class="preview-header">
+<button class="win7-btn btn-icon" id="btn-go" title=""><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
+<button class="win7-btn btn-icon" id="btn-close" title=""><i class="fa-solid fa-xmark"></i></button>
+</div>
+<iframe class="preview-iframe" id="preview-frame" title="Pratinjau"></iframe>
+</div>
+</div>
+<div class="reset-popup" id="reset-popup">
+<div class="reset-box">
+<button class="win7-btn reset-close" id="reset-close">❌</button>
+<p class="reset-instruction" id="reset-instruction">Ketik <span class="stabilo">RESET</span> untuk konfirmasi penghapusan data.</p>
+<input class="reset-input" id="reset-input" placeholder="Ketik RESET untuk konfirmasi">
+<div style="height:8px"></div>
+<div style="display:flex;gap:8px;justify-content:center">
+<button class="win7-btn btn-ghost" id="reset-cancel">Batal</button>
+<button class="win7-btn btn-primary" id="reset-proceed">Lanjut</button>
+</div>
+</input></div>
+</div>
+<div class="toast" id="toast"></div>
+<div class="original-link-small" id="original-link-small"><a href="https://kuningminum.github.io/Kumin/Global%20Links.html" id="original-link-anchor" style="color:var(--accent);text-decoration:underline" target="_top"></a></div>
+<div class="loading-overlay" id="loading-overlay"><div aria-hidden="true" class="spinner"></div><div class="loading-text" id="loading-text">Memuat data...</div></div>
 <script>
 /* ================= KONFIGURASI & TEKS ================= */
 const SOURCE_URLS = [
@@ -651,6 +1080,26 @@ const T = {
     lbl_view:"Tampilan",
     lbl_reset:"Reset",
     reset_button:"Reset Data",
+    data_title:"Data",
+    data_desc:"Semua reset, save, dan load dikumpulkan di satu tempat.",
+    data_tip:"Pilih tab lalu pakai switch untuk opsi pilihan.",
+    data_tab_reset:"Reset",
+    data_tab_save:"Save",
+    data_tab_load:"Load",
+    data_reset_title:"Reset pilihan",
+    data_reset_desc:"Pilih data yang mau dihapus, lalu konfirmasi RESET.",
+    data_save_title:"Save pilihan",
+    data_save_desc:"Pilih item yang ingin ikut tersimpan.",
+    data_load_title:"Load pilihan",
+    data_load_desc:"Pilih file lalu centang data yang mau dimuat.",
+    data_check_all:"Pilih semua",
+    data_check_none:"Tidak jadi pilih semua",
+    data_save_btn:"Save (Download)",
+    data_load_btn:"Load File",
+    data_load_selected:"Load File (Pilihan)",
+    data_save_local:"Save Local",
+    data_pick_save:"Pilih Item Save",
+    data_reset_button:"Reset (Hapus)",
     reset_instruction:'Ketik <span class="stabilo">RESET</span> untuk menghapus semua data',
     preview_open:"Buka Link",
     preview_close:"Tutup",
@@ -674,7 +1123,18 @@ const T = {
     filter_title:"Filter",
     filter_all:"All",
     filter_none:"None",
-    filter_apply:"Apply"
+    filter_apply:"Apply",
+    debug_title:"Debug Terminal",
+    debug_counter_suffix:"pesan tersimpan",
+    debug_chip_limit:"10 / halaman",
+    debug_chip_retention:"Auto hapus 30 hari",
+    debug_retention_label:"Auto hapus",
+    debug_retention_3d:"3 hari",
+    debug_retention_7d:"7 hari",
+    debug_retention_30d:"30 hari",
+    debug_empty:"Belum ada debug. Saat source gagal, mod aktif, mod error, atau error app muncul, log akan tampil di sini.",
+    debug_download:"Download",
+    debug_copy:"Copy"
   },
   en:{
     title:"Kumin Links",
@@ -683,6 +1143,26 @@ const T = {
     lbl_view:"View",
     lbl_reset:"Reset",
     reset_button:"Reset Data",
+    data_title:"Data",
+    data_desc:"All reset, save, and load actions are grouped in one place.",
+    data_tip:"Pick a tab, then use switches for selection options.",
+    data_tab_reset:"Reset",
+    data_tab_save:"Save",
+    data_tab_load:"Load",
+    data_reset_title:"Reset selection",
+    data_reset_desc:"Choose the data you want to delete, then confirm with RESET.",
+    data_save_title:"Save selection",
+    data_save_desc:"Choose what should be included in the save.",
+    data_load_title:"Load selection",
+    data_load_desc:"Pick a file, then tick the data you want to load.",
+    data_check_all:"Select all",
+    data_check_none:"Undo select all",
+    data_save_btn:"Save (Download)",
+    data_load_btn:"Load File",
+    data_load_selected:"Load File (Selected)",
+    data_save_local:"Save Local",
+    data_pick_save:"Pick Save Items",
+    data_reset_button:"Reset (Delete)",
     reset_instruction:'Type <span class="stabilo">RESET</span> to clear all data',
     preview_open:"Open Link",
     preview_close:"Close",
@@ -706,7 +1186,18 @@ const T = {
     filter_title:"Filter",
     filter_all:"All",
     filter_none:"None",
-    filter_apply:"Apply"
+    filter_apply:"Apply",
+    debug_title:"Debug Terminal",
+    debug_counter_suffix:"saved logs",
+    debug_chip_limit:"10 / page",
+    debug_chip_retention:"Auto-delete 30 days",
+    debug_retention_label:"Auto-delete",
+    debug_retention_3d:"3 days",
+    debug_retention_7d:"7 days",
+    debug_retention_30d:"30 days",
+    debug_empty:"No debug yet. When a source fails, a mod turns on, a mod errors, or an app error appears, the log will show here.",
+    debug_download:"Download",
+    debug_copy:"Copy"
   }
 };
 
@@ -716,8 +1207,17 @@ let currentLang = localStorage.getItem("lang") || ((navigator.language && naviga
 let viewMode = localStorage.getItem("viewMode") || "list";
 let mergeSources = (localStorage.getItem("merge_sources") === "1");
 let simpleMode = (localStorage.getItem("simple_mode") === null) ? true : (localStorage.getItem("simple_mode") === "1");
+let hideGroupInSimpleMode = (localStorage.getItem("simple_hide_group") === null) ? true : (localStorage.getItem("simple_hide_group") === "1");
 let linksData = [];
 let lastErrorMessage = "";
+const DEBUG_LOG_KEY = 'debug_log_store';
+const DEBUG_RETENTION_KEY = 'debug_retention_mode';
+const DEBUG_LOG_MAX = 300;
+const DEBUG_PAGE_SIZE = 10;
+let debugRetentionMode = localStorage.getItem(DEBUG_RETENTION_KEY) || '30d';
+if(!['3d','7d','30d'].includes(debugRetentionMode)) debugRetentionMode = '30d';
+let debugPageIndex = 0;
+let debugLog = [];
 let originalBaseCss = document.getElementById('base-style').textContent || "";
 let localLinkOverrides = JSON.parse(localStorage.getItem("local_link_overrides")||"{}");
 let filtersSelected = new Set(JSON.parse(localStorage.getItem('filters_selected')||'[]'));
@@ -728,6 +1228,11 @@ let extraSources = JSON.parse(localStorage.getItem(EXTRA_SOURCES_KEY) || '[]'); 
 // new: sort preference
 let sortMode = localStorage.getItem('sort_mode') || 'title_asc';
 
+// editor JS state
+const editorProjectCache = {};
+let editorState = { currentId: null, currentIndex: -1, history: [], future: [], lastValue: '', savedValue: '', dirty: false, canSave: false };
+let editorTrackingLock = false;
+
 // links tab settings
 let mergeDuplicateLinks = (localStorage.getItem('merge_duplicate_links') === null) ? true : (localStorage.getItem('merge_duplicate_links') === '1');
 let showGroupCount = (localStorage.getItem('show_group_count') === '1');
@@ -735,6 +1240,10 @@ let compactList = (localStorage.getItem('compact_list') === '1');
 
 // experimental offline
 let experimentalOffline = (localStorage.getItem('experimental_offline_mode') === '1');
+
+// mod safety
+let protectHeaderUi = true;
+localStorage.setItem('protect_header_ui', '1');
 
 // mods
 let mods = JSON.parse(localStorage.getItem(MODS_KEY) || '[]'); // each mod: {id,name,icon,enabled,code,css,source}
@@ -761,17 +1270,24 @@ const settingsMenu = document.getElementById("settings-menu");
 const settingsToggleCollapse = document.getElementById("settings-toggle-collapse");
 const selLanguage = document.getElementById("sel-language");
 const selView = document.getElementById("sel-view");
-const btnReset = document.getElementById("btn-reset");
+const btnReset = document.getElementById("data-reset-btn");
 const chkMerge = document.getElementById("chk-merge");
 const chkSimple = document.getElementById("chk-simple");
+const chkSimpleHideGroup = document.getElementById("chk-simple-hide-group");
+const simpleHideGroupRow = document.getElementById("simple-hide-group-row");
 const modjsTextarea = document.getElementById("modjs-textarea");
 const createModJsBtn = document.getElementById("create-mod-js-btn");
 const clearModJsBtn = document.getElementById("clear-modjs-btn");
 const resetCssBtn = document.getElementById("reset-css-btn");
 const debugBtn = document.getElementById("btn-debug");
 const debugPopup = document.getElementById("debug-popup");
-const debugArea = document.getElementById("debug-area");
+const debugBody = document.getElementById("debug-body");
+const debugCounter = document.getElementById("debug-counter");
 const debugClose = document.getElementById("debug-close");
+const debugRetentionSelect = document.getElementById("debug-retention-select");
+const debugPrevPage = document.getElementById("debug-prev-page");
+const debugNextPage = document.getElementById("debug-next-page");
+const debugPageIndicator = document.getElementById("debug-page-indicator");
 const copyDebugBtn = document.getElementById("copy-debug-btn");
 const linkContainer = document.getElementById("link-container");
 const previewPopup = document.getElementById("preview-popup");
@@ -780,6 +1296,7 @@ const btnGo = document.getElementById("btn-go");
 const btnClose = document.getElementById("btn-close");
 const toast = document.getElementById("toast");
 const searchBox = document.getElementById("search-box");
+
 const loadingOverlay = document.getElementById("loading-overlay");
 const loadingText = document.getElementById("loading-text");
 const baseStyleEl = document.getElementById("base-style");
@@ -795,7 +1312,27 @@ const panelGeneral = document.getElementById('panel-general');
 const panelLinks = document.getElementById('panel-links');
 const panelData = document.getElementById('panel-data');
 const panelMods = document.getElementById('panel-mods');
+const panelEditor = document.getElementById('panel-editor');
 const panelExperimental = document.getElementById('panel-experimental');
+const editorJsTextarea = document.getElementById('editor-js-textarea');
+const editorUndoBtn = document.getElementById('editor-undo-btn');
+const editorRedoBtn = document.getElementById('editor-redo-btn');
+const editorClearBtn = document.getElementById('editor-clear-btn');
+const editorSaveBtn = document.getElementById('editor-save-btn');
+const editorProjectMeta = document.getElementById('editor-project-meta');
+const editorDirtyPill = document.getElementById('editor-dirty-pill');
+const editorInfoName = document.getElementById('editor-info-name');
+const editorInfoSource = document.getElementById('editor-info-source');
+const editorInfoChars = document.getElementById('editor-info-chars');
+const editorInfoLines = document.getElementById('editor-info-lines');
+const editorMetaId = document.getElementById('editor-meta-id');
+const editorMetaName = document.getElementById('editor-meta-name');
+const editorMetaSource = document.getElementById('editor-meta-source');
+const editorMetaIcon = document.getElementById('editor-meta-icon');
+const editorNewBtn = document.getElementById('editor-new-btn');
+const editorDownloadBtn = document.getElementById('editor-download-btn');
+const dataTabs = document.querySelectorAll('.data-tab');
+const dataPanels = document.querySelectorAll('[data-data-panel]');
 const pinmodeStar = document.getElementById('pinmode-star');
 const pinmodePin = document.getElementById('pinmode-pin');
 const loadFileInput = document.getElementById('load-file-input');
@@ -806,9 +1343,7 @@ const saveLocalBtn = document.getElementById('save-local-btn');
 const newSourceInput = document.getElementById('new-source-input');
 const addSourceBtn = document.getElementById('add-source-btn');
 const extraSourcesListEl = document.getElementById('extra-sources-list');
-const saveChooseBtn = document.getElementById('save-choose-btn');
 const openLoadModalBtn = document.getElementById('open-load-modal-btn');
-const openResetModalBtn = document.getElementById('open-reset-modal-btn');
 
 const saveModal = document.getElementById('save-modal');
 const saveModalOk = document.getElementById('save-modal-ok');
@@ -823,7 +1358,7 @@ const loadModalCancel = document.getElementById('load-modal-cancel');
 const resetModal = document.getElementById('reset-modal');
 const resetModalOk = document.getElementById('reset-modal-ok');
 const resetModalCancel = document.getElementById('reset-modal-cancel');
-const resetModalConfirm = document.getElementById('reset-modal-confirm');
+const resetModalConfirm = document.getElementById('data-reset-confirm');
 
 const originalLinkAnchor = document.getElementById('original-link-anchor');
 
@@ -853,6 +1388,7 @@ const addModBtn = document.getElementById('add-mod-btn');
 const modsListEl = document.getElementById('mods-list');
 const openModStoreBtn = document.getElementById('open-mod-store-btn');
 const modStoreListEl = document.getElementById('mod-store-list');
+const downloadCurrentModBtn = document.getElementById('download-current-mod-btn');
 
 // store-detect modal elements
 const storeDetectModal = document.getElementById('store-mod-detect-modal');
@@ -873,35 +1409,286 @@ function showToast(msg, ms=3000){ toast.textContent = msg; toast.classList.add("
 function isUrl(s){ if(!s) return false; return /^(https?:\/\/|data:|\/)/i.test(s); }
 function saveMods(){ localStorage.setItem(MODS_KEY, JSON.stringify(mods)); }
 
-const debugLog = [];
+function setModalCheckboxes(listId, checked){
+  const list = document.getElementById(listId);
+  if(!list) return;
+  list.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = checked);
+}
+
+
+const headerSafeState = {
+  title: 'Kumin Links',
+  searchPlaceholder: 'Cari link...',
+  filterHtml: '<i class="fa-solid fa-filter"></i> Filter',
+  settingsHtml: '<i class="fa-solid fa-gear"></i> <span id="btn-settings-label">Pengaturan</span>',
+  filterClass: 'win7-btn btn-filter',
+  settingsClass: 'win7-btn btn-settings',
+  searchClass: 'search-input'
+};
+
+let headerUiObserver = null;
+let restoringHeaderUi = false;
+function refreshHeaderSafeState(){
+  headerSafeState.title = t('title');
+  headerSafeState.searchPlaceholder = t('search_placeholder');
+  headerSafeState.filterHtml = '<i class="fa-solid fa-filter"></i> Filter';
+  headerSafeState.settingsHtml = `<i class="fa-solid fa-gear"></i> <span id="btn-settings-label">${t('btn_settings_label')}</span>`;
+}
+function restoreProtectedHeaderUI(){
+  if(!protectHeaderUi || restoringHeaderUi) return;
+  restoringHeaderUi = true;
+  try{
+    refreshHeaderSafeState();
+  if(headerTitle) headerTitle.textContent = headerSafeState.title;
+  if(searchBox){
+    searchBox.placeholder = headerSafeState.searchPlaceholder;
+    searchBox.className = headerSafeState.searchClass;
+    searchBox.removeAttribute('style');
+  }
+  if(btnFilter){
+    btnFilter.className = headerSafeState.filterClass;
+    btnFilter.innerHTML = headerSafeState.filterHtml;
+    btnFilter.removeAttribute('style');
+  }
+  if(btnSettings){
+    btnSettings.className = headerSafeState.settingsClass;
+    btnSettings.innerHTML = headerSafeState.settingsHtml;
+    btnSettings.removeAttribute('style');
+  }
+  const settingsLabel = document.getElementById('btn-settings-label');
+  if(settingsLabel) settingsLabel.textContent = t('btn_settings_label');
+  } finally {
+    restoringHeaderUi = false;
+  }
+}
+function watchProtectedHeaderUI(){
+  if(headerUiObserver) headerUiObserver.disconnect();
+  if(!protectHeaderUi) return;
+  const header = document.querySelector('.header');
+  if(!header) return;
+  headerUiObserver = new MutationObserver(()=> {
+    if(protectHeaderUi && !restoringHeaderUi) restoreProtectedHeaderUI();
+  });
+  headerUiObserver.observe(header, {subtree:true, childList:true, attributes:true, characterData:true});
+}
+function applySettingsLockState(){
+  return;
+}
+
+function applyModSafetyPrefs(){
+  protectHeaderUi = true;
+  localStorage.setItem('protect_header_ui', '1');
+  watchProtectedHeaderUI();
+}
+
+function getDebugRetentionDays(mode){
+  switch(mode || debugRetentionMode){
+    case '1d': return 1;
+    case '3d': return 3;
+    case '7d': return 7;
+    case '30d': return 30;
+    default: return 0;
+  }
+}
+
+function normalizeDebugEntry(entry){
+  if(!entry || typeof entry !== 'object') return null;
+  const time = entry.time || entry.timestamp || new Date().toISOString();
+  const stamp = Number(entry.timestamp || new Date(time).getTime() || Date.now());
+  return {
+    time: String(time),
+    timestamp: Number.isFinite(stamp) ? stamp : Date.now(),
+    type: String(entry.type || 'normal'),
+    message: String(entry.message || ''),
+    detail: String(entry.detail || '')
+  };
+}
+
+function persistDebugLog(){
+  try{
+    if(debugRetentionMode === 'session'){
+      localStorage.removeItem(DEBUG_LOG_KEY);
+      return;
+    }
+    localStorage.setItem(DEBUG_LOG_KEY, JSON.stringify(debugLog));
+  } catch(e){
+    console.warn('debug log save failed', e);
+  }
+}
+
+function pruneDebugLog(){
+  try{
+    const days = getDebugRetentionDays();
+    const now = Date.now();
+    if(days > 0){
+      const maxAge = days * 24 * 60 * 60 * 1000;
+      debugLog = debugLog.filter((entry)=>{
+        const stamp = Number(entry.timestamp || new Date(entry.time || 0).getTime() || 0);
+        return stamp && (now - stamp) <= maxAge;
+      });
+    }
+    if(debugLog.length > DEBUG_LOG_MAX){
+      debugLog = debugLog.slice(-DEBUG_LOG_MAX);
+    }
+  } catch(e){
+    console.warn('debug prune failed', e);
+  }
+}
+
+function loadDebugStorage(){
+  try{
+    if(debugRetentionMode === 'session'){
+      debugLog = [];
+      localStorage.removeItem(DEBUG_LOG_KEY);
+      return;
+    }
+    const raw = localStorage.getItem(DEBUG_LOG_KEY);
+    debugLog = raw ? JSON.parse(raw) : [];
+    if(!Array.isArray(debugLog)) debugLog = [];
+    debugLog = debugLog.map(normalizeDebugEntry).filter(Boolean);
+    pruneDebugLog();
+  } catch(e){
+    console.warn('debug load failed', e);
+    debugLog = [];
+  }
+}
+
+function debugTypeClass(type){
+  const t = String(type || 'normal').toLowerCase();
+  if(t === 'error' || t === 'fatal' || t === 'critical') return 'error';
+  if(t === 'warn' || t === 'warning') return 'warn';
+  return 'normal';
+}
+
+function debugTypeLabel(type){
+  const t = String(type || 'normal').toLowerCase();
+  if(t === 'error' || t === 'fatal' || t === 'critical') return 'PARAH';
+  if(t === 'warn' || t === 'warning') return 'WARNING';
+  return 'NORMAL';
+}
+
+function debugTimeText(value){
+  try{
+    return new Date(value).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false});
+  } catch(e){
+    return String(value || '--:--:--');
+  }
+}
+
 function addDebug(type, message, detail){
+  const severity = debugTypeClass(type);
   const entry = {
     time: new Date().toISOString(),
-    type,
+    timestamp: Date.now(),
+    type: severity,
     message: String(message || ''),
     detail: detail ? (typeof detail === 'string' ? detail : JSON.stringify(detail, null, 2)) : ''
   };
   debugLog.push(entry);
-  if(debugLog.length > 80) debugLog.shift();
-  if(type === 'error'){
+  pruneDebugLog();
+  persistDebugLog();
+  if(severity === 'error'){
+    lastErrorMessage = `${entry.time} [${entry.type}] ${entry.message}${entry.detail ? `\n${entry.detail}` : ''}`;
+  } else if(!lastErrorMessage && severity === 'warn'){
     lastErrorMessage = `${entry.time} [${entry.type}] ${entry.message}${entry.detail ? `\n${entry.detail}` : ''}`;
   }
 }
+
+function formatDebugReport(){
+  const now = new Date().toISOString();
+  const activeMod = (editorState.currentIndex >= 0 && mods[editorState.currentIndex]) ? mods[editorState.currentIndex] : null;
+  const header = [
+    'Kumin Links - Debug Terminal Report',
+    `Generated: ${now}`,
+    `Retention: ${debugRetentionMode}`,
+    `Entries: ${debugLog.length}`,
+    `Last error: ${lastErrorMessage && lastErrorMessage.trim() ? 'yes' : 'no'}`,
+    `Current project: ${editorState.currentId || '-'}`,
+    `Current mod: ${activeMod ? (activeMod.name || activeMod.id || '-') : '-'}`,
+    `Current source: ${activeMod ? (activeMod.source || '-') : '-'}`,
+    `Can save: ${editorState.canSave ? 'yes' : 'no'}`,
+    `Projects tracked: ${Object.keys(editorProjectCache).length}`
+  ].join('\n');
+
+  const body = debugLog.length
+    ? debugLog.map((entry, index)=>{
+        const line = `${index + 1}. ${debugTimeText(entry.time)} [${debugTypeLabel(entry.type)}] ${entry.message}`;
+        return entry.detail ? `${line}\n${entry.detail}` : line;
+      }).join('\n\n')
+    : 'Tidak ada log yang tersimpan.';
+
+  return `${header}\n\n=== Log lengkap ===\n${body}\n`;
+}
+
+function downloadTextFile(text, filename){
+  const blob = new Blob([String(text ?? '')], {type:'text/plain;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function downloadDebugReport(){
+  const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+  downloadTextFile(formatDebugReport(), `kumin-debug-${stamp}.txt`);
+}
+
+loadDebugStorage();
+
 window.addEventListener('error', (ev)=>{
-  addDebug('error', ev.message || 'Window error', ev.error && ev.error.stack ? ev.error.stack : '');
+  const stack = ev.error && ev.error.stack ? ev.error.stack : '';
+  addDebug('error', ev.message || 'Window error', stack || 'Tidak ada stack trace.');
 });
 window.addEventListener('unhandledrejection', (ev)=>{
   const reason = ev.reason;
-  addDebug('error', 'Unhandled promise rejection', reason && reason.stack ? reason.stack : reason);
-});
+  const detail = reason && reason.stack ? reason.stack : (typeof reason === 'string' ? reason : JSON.stringify(reason, null, 2));
+  addDebug('error', 'Unhandled promise rejection', detail || 'Promise ditolak tanpa detail.');
+});/* ================= UI LANGUAGE ================= */
+function updateSimpleModeControlsVisibility(){
+  if(!simpleHideGroupRow) return;
+  simpleHideGroupRow.style.display = simpleMode ? 'flex' : 'none';
+}
 
-/* ================= UI LANGUAGE ================= */
 function applyLanguageUI(){
   headerTitle.textContent = t("title");
   document.getElementById("lbl-language").textContent = t("lbl_language");
   document.getElementById("lbl-view").textContent = t("lbl_view");
   document.getElementById("lbl-reset").textContent = t("lbl_reset");
-  document.getElementById("btn-reset").textContent = t("reset_button");
+  document.getElementById("data-reset-btn").textContent = t("reset_button");
+  const dataTitle = document.getElementById("data-title");
+  const dataDesc = document.getElementById("data-desc");
+  const dataTip = document.getElementById("data-tip");
+  const dataTabResetLabel = document.getElementById("data-tab-reset-label");
+  const dataTabSaveLabel = document.getElementById("data-tab-save-label");
+  const dataTabLoadLabel = document.getElementById("data-tab-load-label");
+  const dataResetTitle = document.getElementById("data-reset-title");
+  const dataResetDesc = document.getElementById("data-reset-desc");
+  const dataSaveTitle = document.getElementById("data-save-title");
+  const dataSaveDesc = document.getElementById("data-save-desc");
+  const dataLoadTitle = document.getElementById("data-load-title");
+  const dataLoadDesc = document.getElementById("data-load-desc");
+  if(dataTitle) dataTitle.textContent = t("data_title");
+  if(dataDesc) dataDesc.textContent = t("data_desc");
+  if(dataTip) dataTip.textContent = t("data_tip");
+  if(dataTabResetLabel) dataTabResetLabel.textContent = t("data_tab_reset");
+  if(dataTabSaveLabel) dataTabSaveLabel.textContent = t("data_tab_save");
+  if(dataTabLoadLabel) dataTabLoadLabel.textContent = t("data_tab_load");
+  if(dataResetTitle) dataResetTitle.textContent = t("data_reset_title");
+  if(dataResetDesc) dataResetDesc.textContent = t("data_reset_desc");
+  if(dataSaveTitle) dataSaveTitle.textContent = t("data_save_title");
+  if(dataSaveDesc) dataSaveDesc.textContent = t("data_save_desc");
+  if(dataLoadTitle) dataLoadTitle.textContent = t("data_load_title");
+  if(dataLoadDesc) dataLoadDesc.textContent = t("data_load_desc");
+  const dataSaveBtn = document.getElementById("data-save-btn");
+  const dataLoadBtn = document.getElementById("data-load-btn");
+  const dataResetButton = document.getElementById("data-reset-btn");
+  if(dataSaveBtn) dataSaveBtn.textContent = t("data_save_btn");
+  if(dataLoadBtn) dataLoadBtn.textContent = t("data_load_btn");
+  if(dataResetButton) dataResetButton.textContent = t("data_reset_button");
   document.getElementById("lbl-merge").textContent = t("lbl_merge");
   document.getElementById("lbl-merge-desc").textContent = t("lbl_merge_desc");
   document.getElementById("lbl-simple").textContent = t("simple_label");
@@ -910,6 +1697,37 @@ function applyLanguageUI(){
   searchBox.placeholder = t("search_placeholder");
   document.getElementById("btn-settings-label").textContent = t("btn_settings_label");
   loadingText.textContent = t("loading_text");
+  const debugTitle = document.getElementById("debug-title");
+  const debugCounter = document.getElementById("debug-counter");
+  const debugChipLimit = document.getElementById("debug-chip-limit");
+  const debugChipRetention = document.getElementById("debug-chip-retention");
+  const debugRetentionLabel = document.getElementById("debug-retention-label");
+  const debugRetentionSelect = document.getElementById("debug-retention-select");
+  const debugPrevPage = document.getElementById("debug-prev-page");
+  const debugNextPage = document.getElementById("debug-next-page");
+  const debugPageIndicator = document.getElementById("debug-page-indicator");
+  const downloadDebugBtn = document.getElementById("download-debug-btn");
+  const copyDebugBtn = document.getElementById("copy-debug-btn");
+  if(debugTitle) debugTitle.textContent = t("debug_title");
+  if(debugCounter) debugCounter.textContent = `${debugLog.length} ${t("debug_counter_suffix")}`;
+  if(debugChipLimit) debugChipLimit.textContent = t("debug_chip_limit");
+  if(debugChipRetention) debugChipRetention.textContent = t("debug_chip_retention");
+  if(debugRetentionLabel) debugRetentionLabel.textContent = t("debug_retention_label");
+  if(debugRetentionSelect){
+    const opt3 = debugRetentionSelect.querySelector('option[value="3d"]');
+    const opt7 = debugRetentionSelect.querySelector('option[value="7d"]');
+    const opt30 = debugRetentionSelect.querySelector('option[value="30d"]');
+    if(opt3) opt3.textContent = t("debug_retention_3d");
+    if(opt7) opt7.textContent = t("debug_retention_7d");
+    if(opt30) opt30.textContent = t("debug_retention_30d");
+  }
+  if(debugPrevPage) debugPrevPage.textContent = '◀';
+  if(debugNextPage) debugNextPage.textContent = '▶';
+  if(debugPageIndicator) debugPageIndicator.textContent = `${debugPageIndex + 1} / ${getDebugPageCount()}`;
+  if(downloadDebugBtn) downloadDebugBtn.textContent = t("debug_download");
+  if(copyDebugBtn) copyDebugBtn.textContent = t("debug_copy");
+  refreshHeaderSafeState();
+  if(protectHeaderUi) restoreProtectedHeaderUI();
   document.getElementById('filter-title').textContent = t('filter_title');
   filterAllBtn.textContent = t('filter_all');
   filterNoneBtn.textContent = t('filter_none');
@@ -1024,6 +1842,7 @@ document.addEventListener('keydown', (e)=>{
   if(e.key === 'Escape'){
     if(filterPanel.classList.contains('open')) closeFilterPanel();
     if(settingsOverlay.classList.contains('open')) settingsOverlay.classList.remove("open");
+    if(sourceEditModal && sourceEditModal.classList.contains('open')) closeSourceEditor();
   }
 });
 
@@ -1032,47 +1851,322 @@ filterNoneBtn.addEventListener('click', ()=>{ filtersSelected.clear(); filterLis
 filterApplyBtn.addEventListener('click', ()=>{ closeFilterPanel(); renderLinks(linksData, searchBox.value); });
 
 /* ================= EXTRA SOURCES (user-added) ================= */
-function saveExtraSources(){ localStorage.setItem(EXTRA_SOURCES_KEY, JSON.stringify(extraSources)); }
+const sourceEditModal = document.getElementById('source-edit-modal');
+const sourceEditId = document.getElementById('source-edit-id');
+const sourceEditName = document.getElementById('source-edit-name');
+const sourceEditType = document.getElementById('source-edit-type');
+const sourceEditValue = document.getElementById('source-edit-value');
+const sourceEditEnabled = document.getElementById('source-edit-enabled');
+const sourceEditTitle = document.getElementById('source-edit-title');
+const sourceEditCancel = document.getElementById('source-edit-cancel');
+const sourceEditSave = document.getElementById('source-edit-save');
+const sourceManagerCount = document.getElementById('source-manager-count');
+
+let sourceEditTargetId = null;
+
+function normalizeSourceId(value, fallback){
+  const raw = String(value || fallback || '').trim();
+  const cleaned = raw
+    .toLowerCase()
+    .replace(/[^a-z0-9._-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  return cleaned || String(fallback || `source-${Date.now()}`).toLowerCase();
+}
+
+function deriveSourceName(src, index, isBuiltin=false){
+  if(isBuiltin){
+    try{
+      const u = new URL(src, location.href);
+      return u.hostname || src;
+    }catch(e){
+      return src;
+    }
+  }
+  if(!src) return `Source ${index + 1}`;
+  if(src.type === 'inline') return src.name || `INLINE JSON ${index + 1}`;
+  if(src.name) return src.name;
+  try{
+    const u = new URL(src.value, location.href);
+    return u.hostname + (u.pathname && u.pathname !== '/' ? u.pathname : '');
+  }catch(e){
+    return src.value || `Source ${index + 1}`;
+  }
+}
+
+function normalizeExtraSourceEntry(es, index){
+  const isObject = es && typeof es === 'object' && !Array.isArray(es);
+  let type = isObject && (es.type === 'inline' || es.type === 'url') ? es.type : 'url';
+  let value = '';
+  if(isObject){
+    value = String(es.value || es.url || es.href || es.source || '');
+  } else if(typeof es === 'string'){
+    value = es;
+  }
+  const id = isObject && es.id ? normalizeSourceId(es.id, `source-${index+1}`) : `source-${index+1}`;
+  const enabled = isObject && typeof es.enabled === 'boolean' ? es.enabled : true;
+  const removable = isObject && typeof es.removable === 'boolean' ? es.removable : true;
+  const name = isObject && es.name ? String(es.name) : deriveSourceName({type, value, name: isObject ? es.name : ''}, index, false);
+  const normalized = { id, type, value, enabled, removable, name };
+  if(isObject && es.description) normalized.description = String(es.description);
+  return normalized;
+}
+
+extraSources = Array.isArray(extraSources) ? extraSources.map(normalizeExtraSourceEntry) : [];
+
+function saveExtraSources(){
+  localStorage.setItem(EXTRA_SOURCES_KEY, JSON.stringify(extraSources));
+}
+
+function getAllSourcesArray(){
+  const arr = [...SOURCE_URLS];
+  extraSources.forEach(es=>{
+    if(es && es.enabled === false) return;
+    if(es.type === 'inline') arr.push('inline:' + (es.value || ''));
+    else arr.push(es.value || '');
+  });
+  return arr.filter(Boolean);
+}
+
+function openSourceEditor(id){
+  const entry = extraSources.find(s => s && s.id === id);
+  if(!entry) return;
+  sourceEditTargetId = id;
+  sourceEditTitle.textContent = 'Edit Source';
+  sourceEditId.value = entry.id || '';
+  sourceEditName.value = entry.name || '';
+  sourceEditType.value = entry.type === 'inline' ? 'inline' : 'url';
+  sourceEditValue.value = entry.type === 'inline' ? (entry.value || '') : (entry.value || '');
+  sourceEditEnabled.checked = entry.enabled !== false;
+  sourceEditModal.classList.add('open');
+  sourceEditModal.setAttribute('aria-hidden','false');
+}
+
+function closeSourceEditor(){
+  if(!sourceEditModal) return;
+  sourceEditModal.classList.remove('open');
+  sourceEditModal.setAttribute('aria-hidden','true');
+  sourceEditTargetId = null;
+}
+
 function renderExtraSourcesList(){
   const box = extraSourcesListEl;
   if(!box) return;
   box.innerHTML = '';
-  // built-in sources (read-only)
-  SOURCE_URLS.forEach((s)=>{
-    const row = document.createElement('div'); row.style.display='flex'; row.style.justifyContent='space-between'; row.style.alignItems='center'; row.style.padding='6px';
-    const left = document.createElement('div'); left.style.color='#9aa6bf'; left.textContent = s;
-    const right = document.createElement('div'); right.style.opacity = '0.6'; right.textContent = 'built-in';
-    row.appendChild(left); row.appendChild(right);
-    box.appendChild(row);
-  });
-  // user-added
-  extraSources.forEach((es, i)=>{
-    const row = document.createElement('div'); row.style.display='flex'; row.style.justifyContent='space-between'; row.style.alignItems='center'; row.style.padding='6px';
-    const left = document.createElement('div'); left.style.color='#e6eef8'; left.textContent = (es.type==='inline' ? '[INLINE JSON]' : es.value);
-    const right = document.createElement('div');
-    const del = document.createElement('button'); del.className='btn-ghost'; del.textContent='Hapus'; del.addEventListener('click', ()=> {
-      extraSources.splice(i,1); saveExtraSources(); renderExtraSourcesList(); showToast('Sumber dihapus'); loadAndRenderSources();
+
+  const builtins = SOURCE_URLS.map((s, index) => ({
+    id: `builtin-${index + 1}`,
+    type: 'url',
+    value: s,
+    enabled: true,
+    removable: false,
+    name: deriveSourceName(s, index, true),
+    builtin: true
+  }));
+
+  const allCustom = Array.isArray(extraSources) ? extraSources : [];
+  if(sourceManagerCount){
+    sourceManagerCount.textContent = `${allCustom.length} sumber tambahan`;
+  }
+
+  const renderCard = (src, index, isBuiltin=false) => {
+    const card = document.createElement('div');
+    card.className = 'source-card' + ((isBuiltin || src.enabled !== false) ? '' : ' is-disabled');
+
+    const main = document.createElement('div');
+    main.className = 'source-card-main';
+
+    const title = document.createElement('div');
+    title.className = 'source-card-title';
+
+    const strong = document.createElement('strong');
+    strong.textContent = src.name || deriveSourceName(src, index, isBuiltin);
+
+    const chipType = document.createElement('span');
+    chipType.className = 'source-chip';
+    chipType.textContent = (src.type === 'inline') ? 'INLINE' : 'URL';
+
+    title.appendChild(strong);
+    title.appendChild(chipType);
+
+    const chipState = document.createElement('span');
+    chipState.className = 'source-chip' + (isBuiltin ? ' locked' : (src.enabled === false ? ' locked' : ''));
+    chipState.textContent = isBuiltin ? 'built-in' : (src.enabled === false ? 'nonaktif' : 'aktif');
+    title.appendChild(chipState);
+
+    const meta = document.createElement('div');
+    meta.className = 'source-card-meta';
+    meta.textContent = isBuiltin ? src.value : (src.type === 'inline' ? (src.value || '').slice(0, 300) : (src.value || ''));
+
+    main.appendChild(title);
+    main.appendChild(meta);
+
+    const actions = document.createElement('div');
+    actions.className = 'source-card-actions';
+
+    if(isBuiltin){
+      const builtinTag = document.createElement('button');
+      builtinTag.className = 'win7-btn btn-ghost';
+      builtinTag.type = 'button';
+      builtinTag.disabled = true;
+      builtinTag.textContent = 'Terkunci';
+      actions.appendChild(builtinTag);
+    } else {
+      const toggleWrap = document.createElement('label');
+      toggleWrap.className = 'switch-large';
+      toggleWrap.style.gap = '8px';
+      const toggle = document.createElement('input');
+      toggle.type = 'checkbox';
+      toggle.checked = src.enabled !== false;
+      const track = document.createElement('span');
+      track.className = 'track';
+      track.innerHTML = '<span class="thumb"></span>';
+      const text = document.createElement('span');
+      text.className = 'text';
+      text.textContent = 'Aktif';
+      toggle.addEventListener('change', ()=>{
+        const item = extraSources.find(s => s && s.id === src.id);
+        if(!item) return;
+        item.enabled = toggle.checked;
+        saveExtraSources();
+        renderExtraSourcesList();
+        loadAndRenderSources();
+      });
+      toggleWrap.appendChild(toggle);
+      toggleWrap.appendChild(track);
+      toggleWrap.appendChild(text);
+      actions.appendChild(toggleWrap);
+
+      const edit = document.createElement('button');
+      edit.className = 'win7-btn btn-ghost';
+      edit.type = 'button';
+      edit.innerHTML = '<i class="fa-solid fa-pen"></i> Edit';
+      edit.addEventListener('click', ()=> openSourceEditor(src.id));
+
+      const del = document.createElement('button');
+      del.className = 'win7-btn btn-ghost';
+      del.type = 'button';
+      del.innerHTML = '<i class="fa-solid fa-trash"></i> Hapus';
+      del.addEventListener('click', ()=>{
+        if(!confirm('Hapus source ini?')) return;
+        extraSources = extraSources.filter(s => s && s.id !== src.id);
+        saveExtraSources();
+        renderExtraSourcesList();
+        showToast('Sumber dihapus');
+        loadAndRenderSources();
+      });
+
+      actions.appendChild(edit);
+      actions.appendChild(del);
+    }
+
+    card.appendChild(main);
+    card.appendChild(actions);
+    box.appendChild(card);
+  };
+
+  builtins.forEach(renderCard);
+  if(allCustom.length === 0){
+    const empty = document.createElement('div');
+    empty.className = 'source-empty';
+    empty.textContent = 'Belum ada sumber tambahan. Tambahkan URL atau INLINE JSON di atas.';
+    box.appendChild(empty);
+  } else {
+    allCustom.forEach((src, index)=> renderCard(src, index, false));
+  }
+}
+
+if(addSourceBtn){
+  addSourceBtn.addEventListener('click', ()=>{
+    const val = (newSourceInput.value || '').trim();
+    if(!val){ showToast('Isi URL atau INLINE JSON dulu'); return; }
+
+    const makeNewId = () => normalizeSourceId(`source-${Date.now()}-${Math.random().toString(16).slice(2,6)}`);
+    if(val.toUpperCase().startsWith('INLINE:')){
+      const jsonText = val.slice(7).trim();
+      try{
+        const parsed = JSON.parse(jsonText);
+        extraSources.push({
+          id: makeNewId(),
+          name: `INLINE JSON ${extraSources.length + 1}`,
+          type: 'inline',
+          value: JSON.stringify(parsed, null, 2),
+          enabled: true,
+          removable: true
+        });
+        saveExtraSources();
+        renderExtraSourcesList();
+        newSourceInput.value = '';
+        showToast('INLINE JSON ditambahkan');
+        loadAndRenderSources();
+        return;
+      } catch(e){
+        showToast('INLINE JSON tidak valid');
+        return;
+      }
+    }
+
+    extraSources.push({
+      id: makeNewId(),
+      name: deriveSourceName({type:'url', value: val}, extraSources.length, false),
+      type: 'url',
+      value: val,
+      enabled: true,
+      removable: true
     });
-    right.appendChild(del);
-    row.appendChild(left); row.appendChild(right);
-    box.appendChild(row);
+    saveExtraSources();
+    renderExtraSourcesList();
+    newSourceInput.value = '';
+    showToast('Sumber URL ditambahkan');
+    loadAndRenderSources();
   });
 }
-addSourceBtn.addEventListener('click', ()=>{
-  const val = (newSourceInput.value||'').trim();
-  if(!val){ showToast('Isi URL atau INLINE JSON dulu'); return; }
-  if(val.toUpperCase().startsWith('INLINE:')){
-    const jsonText = val.slice(7);
-    try{
-      const parsed = JSON.parse(jsonText);
-      extraSources.push({id: 'es-'+Date.now(), type:'inline', value: JSON.stringify(parsed), removable:true});
-      saveExtraSources(); renderExtraSourcesList(); newSourceInput.value=''; showToast('INLINE JSON ditambahkan'); loadAndRenderSources(); return;
-    } catch(e){ showToast('INLINE JSON tidak valid'); return; }
-  }
-  // URL
-  extraSources.push({id: 'es-'+Date.now(), type:'url', value: val, removable:true});
-  saveExtraSources(); renderExtraSourcesList(); newSourceInput.value=''; showToast('Sumber URL ditambahkan'); loadAndRenderSources();
-});
+
+if(sourceEditSave){
+  sourceEditSave.addEventListener('click', ()=>{
+    const original = extraSources.find(s => s && s.id === sourceEditTargetId);
+    if(!original){ closeSourceEditor(); return; }
+    const newId = normalizeSourceId(sourceEditId.value, original.id);
+    if(!newId){ showToast('ID tidak boleh kosong'); return; }
+    if(extraSources.some(s => s && s.id === newId && s.id !== original.id)){
+      showToast('ID sudah dipakai sumber lain');
+      return;
+    }
+
+    const newName = String(sourceEditName.value || '').trim() || deriveSourceName(original, 0, false);
+    const newType = sourceEditType.value === 'inline' ? 'inline' : 'url';
+    const rawValue = String(sourceEditValue.value || '').trim();
+    if(!rawValue){ showToast('Value tidak boleh kosong'); return; }
+
+    if(newType === 'inline'){
+      try{
+        const parsed = JSON.parse(rawValue);
+        original.type = 'inline';
+        original.value = JSON.stringify(parsed, null, 2);
+      } catch(e){
+        showToast('JSON INLINE tidak valid');
+        return;
+      }
+    } else {
+      original.type = 'url';
+      original.value = rawValue;
+    }
+
+    original.id = newId;
+    original.name = newName;
+    original.enabled = !!sourceEditEnabled.checked;
+    saveExtraSources();
+    renderExtraSourcesList();
+    closeSourceEditor();
+    loadAndRenderSources();
+    showToast('Source disimpan');
+  });
+}
+if(sourceEditCancel){
+  sourceEditCancel.addEventListener('click', closeSourceEditor);
+}
+if(sourceEditModal){
+  sourceEditModal.addEventListener('click', (e)=>{ if(e.target === sourceEditModal) closeSourceEditor(); });
+}
 
 /* ================= MOD SYSTEM ================= */
 /*
@@ -1086,7 +2180,7 @@ function renderModsList(){
     return;
   }
   mods.forEach((m, idx)=>{
-    const row = document.createElement('div'); row.className = 'mod-row';
+    const row = document.createElement('div'); row.className = 'mod-row' + ((editorState.currentId && m.id === editorState.currentId) ? ' highlight' : '');
     const left = document.createElement('div'); left.className = 'mod-info';
     const icon = document.createElement('div'); icon.className = 'mod-icon';
     icon.innerHTML = m.icon ? `<img src="${m.icon}" style="width:100%;height:100%;object-fit:cover;border-radius:6px" />` : '<i class="fa-solid fa-puzzle-piece"></i>';
@@ -1097,14 +2191,21 @@ function renderModsList(){
     const toggle = document.createElement('button'); toggle.className = 'btn-ghost'; toggle.innerHTML = m.enabled ? '<i class="fa-solid fa-toggle-on"></i>' : '<i class="fa-solid fa-toggle-off"></i>';
     toggle.title = m.enabled ? 'Disable mod' : 'Enable mod';
     toggle.addEventListener('click', (e)=>{ e.stopPropagation(); mods[idx].enabled = !mods[idx].enabled; saveMods(); 
+      if(mods[idx].enabled){
+        addDebug('normal', `Mod aktif: ${mods[idx].name || mods[idx].id}`, `Source: ${mods[idx].source || '-'}`);
+      } else {
+        addDebug('warn', `Mod dimatikan: ${mods[idx].name || mods[idx].id}`, `Source: ${mods[idx].source || '-'}`);
+      }
       // if toggled on while suppressModsOnLoad is true, we should not automatically run without consent; show warning
       if(mods[idx].enabled && suppressModsOnLoad){ showModWarning(); renderModsList(); showToast('Mod enabled but will not run until you accept the warning.'); return; }
       applyMods(); renderModsList(); showToast(mods[idx].enabled ? 'Mod enabled' : 'Mod disabled'); });
-    const editBtn = document.createElement('button'); editBtn.className = 'btn-ghost'; editBtn.innerHTML = '<i class="fa-solid fa-pen"></i>'; editBtn.title='View/Edit';
+    const editBtn = document.createElement('button'); editBtn.className = 'btn-ghost'; editBtn.innerHTML = '<i class="fa-solid fa-pen"></i>'; editBtn.title='Buka Editor JS';
     editBtn.addEventListener('click', (e)=>{ e.stopPropagation(); openModEditor(idx); });
+    const downloadBtn = document.createElement('button'); downloadBtn.className = 'btn-ghost'; downloadBtn.innerHTML = '<i class="fa-solid fa-download"></i>'; downloadBtn.title='Download mod';
+    downloadBtn.addEventListener('click', (e)=>{ e.stopPropagation(); downloadModObject(m); showToast('Mod didownload'); });
     const del = document.createElement('button'); del.className = 'btn-ghost'; del.innerHTML = '<i class="fa-solid fa-trash"></i>'; del.title='Remove mod';
     del.addEventListener('click', (e)=>{ e.stopPropagation(); if(confirm('Remove mod "'+m.name+'"?')){ uninstallMod(m.id); } });
-    right.appendChild(toggle); right.appendChild(editBtn); right.appendChild(del);
+    right.appendChild(toggle); right.appendChild(editBtn); right.appendChild(downloadBtn); right.appendChild(del);
 
     row.appendChild(left); row.appendChild(right);
     modsListEl.appendChild(row);
@@ -1124,36 +2225,377 @@ function installMod(modObj){
   renderModsList();
   // do not auto-run if suppressModsOnLoad true
   if(!suppressModsOnLoad) applyMods();
+  addDebug(modObj.enabled ? 'normal' : 'warn', `Mod terpasang: ${modObj.name}`, `Source: ${modObj.source || '-'}`);
   showToast('Mod terpasang: ' + modObj.name);
 }
 function uninstallMod(modId){
   // remove injected script/style if active
   removeModInjection(modId);
   mods = mods.filter(m=>m.id !== modId);
+  if(editorState.currentId === modId){
+    editorState.currentId = null;
+    editorState.currentIndex = -1;
+    editorState.history = [];
+    editorState.future = [];
+    editorState.lastValue = '';
+    editorState.savedValue = '';
+    editorState.dirty = false;
+    if(editorJsTextarea) editorJsTextarea.value = '';
+    updateEditorInfo(null);
+    updateEditorButtons();
+  }
   saveMods();
   renderModsList();
   showToast('Mod dihapus');
 }
-function openModEditor(idx){
-  const m = mods[idx];
-  const editorTitle = 'Edit Mod: ' + m.name;
-  const content = prompt(editorTitle + '\n\n(Anda dapat mengedit code JS; mengosongkan akan menonaktifkan code. Untuk CSS, tambahkan di awal dengan: /*CSS_START*/.../*CSS_END*/ )', (m.code || '') + (m.css ? ('\n/*CSS_START*/\n' + m.css + '\n/*CSS_END*/\n') : ''));
-  if(content !== null){
-    // naive parse: extract CSS between markers if present
-    const cssMatch = content.match(/\/\*CSS_START\*\/([\s\S]*?)\/\*CSS_END\*\//);
-    let js = content;
-    let css = '';
-    if(cssMatch){
-      css = cssMatch[1].trim();
-      js = content.replace(cssMatch[0], '').trim();
-    }
-    mods[idx].code = js;
-    mods[idx].css = css;
-    saveMods();
-    applyMods();
-    renderModsList();
-    showToast('Mod diperbarui');
+
+function getEditorContentFromMod(mod){
+  if(!mod) return '';
+  return (mod.code || '') + (mod.css ? ('\n/*CSS_START*/\n' + mod.css + '\n/*CSS_END*/\n') : '');
+}
+
+function splitEditorContent(content){
+  const match = String(content || '').match(/\/\*CSS_START\*\/([\s\S]*?)\/\*CSS_END\*\//);
+  let js = String(content || '');
+  let css = '';
+  if(match){
+    css = (match[1] || '').trim();
+    js = String(content).replace(match[0], '').trim();
+  } else {
+    js = String(content || '').trim();
   }
+  return { js, css };
+}
+
+function getModIndexById(modId){
+  return mods.findIndex(m => m && m.id === modId);
+}
+
+function saveCurrentEditorProject(){
+  if(editorState.currentId == null) return;
+  editorProjectCache[editorState.currentId] = {
+    value: editorJsTextarea ? editorJsTextarea.value : '',
+    history: Array.isArray(editorState.history) ? editorState.history.slice() : [],
+    future: Array.isArray(editorState.future) ? editorState.future.slice() : [],
+    lastValue: editorState.lastValue || '',
+    savedValue: editorState.savedValue || '',
+    dirty: !!editorState.dirty,
+    currentIndex: editorState.currentIndex
+  };
+}
+
+
+function sanitizeModId(raw){
+  let value = String(raw || '').trim();
+  if(!value) value = `mod-${Date.now()}`;
+  value = value.toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9\-_:.]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/(^[-_.:]+|[-_.:]+$)/g, '');
+  return value || `mod-${Date.now()}`;
+}
+
+function ensureUniqueModId(baseId, ignoreIndex = -1){
+  const base = sanitizeModId(baseId);
+  let candidate = base;
+  let n = 1;
+  while(mods.some((m, idx)=> idx !== ignoreIndex && m && m.id === candidate)){
+    candidate = `${base}-${n++}`;
+  }
+  return candidate;
+}
+
+function getEditorMetaFromInputs(){
+  return {
+    id: ensureUniqueModId(editorMetaId ? editorMetaId.value : '', editorState.currentIndex),
+    name: (editorMetaName ? editorMetaName.value : '').trim() || 'Untitled Mod',
+    source: (editorMetaSource ? editorMetaSource.value : '').trim() || 'editor-js',
+    icon: (editorMetaIcon ? editorMetaIcon.value : '').trim()
+  };
+}
+
+function setEditorMetaInputs(mod){
+  if(editorMetaId) editorMetaId.value = mod ? (mod.id || '') : '';
+  if(editorMetaName) editorMetaName.value = mod ? (mod.name || '') : '';
+  if(editorMetaSource) editorMetaSource.value = mod ? (mod.source || '') : '';
+  if(editorMetaIcon) editorMetaIcon.value = mod ? (mod.icon || '') : '';
+}
+
+function createNewEditorProject(){
+  const modObj = {
+    id: ensureUniqueModId(`mod-${Date.now()}`),
+    name: 'New Mod',
+    icon: '',
+    enabled: true,
+    code: '',
+    css: '',
+    source: 'editor-js'
+  };
+  installMod(modObj);
+  const idx = getModIndexById(modObj.id);
+  if(idx >= 0){
+    loadEditorProjectByIndex(idx, {focus:true, force:true});
+  }
+  showToast('File baru dibuat');
+}
+
+function downloadModObject(mod){
+  if(!mod) return;
+  const payload = {
+    id: mod.id || '',
+    name: mod.name || '',
+    icon: mod.icon || '',
+    enabled: !!mod.enabled,
+    code: mod.code || '',
+    css: mod.css || '',
+    source: mod.source || ''
+  };
+  const safeName = sanitizeModId(mod.name || mod.id || 'mod') || 'mod';
+  downloadJsonFile(payload, `${safeName}.json`);
+}
+
+function downloadCurrentEditorProject(){
+  if(editorState.currentIndex < 0) return;
+  downloadModObject(mods[editorState.currentIndex]);
+}
+
+function updateEditorInfo(mod){
+  const value = editorJsTextarea ? editorJsTextarea.value : '';
+  const lineCount = value ? value.split('\n').length : 0;
+  const charCount = value.length;
+  if(editorInfoName) editorInfoName.textContent = mod ? (mod.name || '-') : '-';
+  if(editorInfoSource) editorInfoSource.textContent = mod ? (mod.source || '-') : '-';
+  if(editorInfoChars) editorInfoChars.textContent = String(charCount);
+  if(editorInfoLines) editorInfoLines.textContent = String(lineCount);
+  if(editorProjectMeta) editorProjectMeta.textContent = mod ? 'Project siap diedit dan disimpan. File baru maupun mod lama tetap bisa disimpan.' : 'Pilih mod dari daftar atau tekan pensil untuk membuka project.';
+  if(editorDirtyPill){
+    editorDirtyPill.textContent = editorState.currentId ? (editorState.dirty ? 'Belum disimpan' : 'Tersimpan') : 'Belum ada project';
+    editorDirtyPill.classList.toggle('dirty', !!editorState.dirty);
+  }
+  if(mod) setEditorMetaInputs(mod);
+}
+
+function updateEditorButtons(){
+  const hasProject = editorState.currentId !== null;
+  if(editorUndoBtn) editorUndoBtn.disabled = !hasProject || editorState.history.length === 0;
+  if(editorRedoBtn) editorRedoBtn.disabled = !hasProject || editorState.future.length === 0;
+  if(editorClearBtn) editorClearBtn.disabled = !hasProject;
+  if(editorSaveBtn) editorSaveBtn.disabled = !hasProject;
+  if(editorDownloadBtn) editorDownloadBtn.disabled = !hasProject;
+  if(editorMetaId) editorMetaId.disabled = !hasProject;
+  if(editorMetaName) editorMetaName.disabled = !hasProject;
+  if(editorMetaSource) editorMetaSource.disabled = !hasProject;
+  if(editorMetaIcon) editorMetaIcon.disabled = !hasProject;
+}
+
+function openEditorTab(){
+  settingsOverlay.classList.add('open');
+  settingsTabs.forEach(x=>x.classList.remove('active'));
+  const tabBtn = Array.from(settingsTabs).find(x=>x.dataset.tab === 'editor');
+  if(tabBtn) tabBtn.classList.add('active');
+  panelGeneral.classList.remove('open');
+  panelLinks.classList.remove('open');
+  panelData.classList.remove('open');
+  panelMods.classList.remove('open');
+  panelExperimental.classList.remove('open');
+  panelEditor.classList.add('open');
+}
+
+function loadEditorProjectByIndex(idx, options = {}){
+  const mod = mods[idx];
+  if(!mod) return false;
+  const modId = mod.id || ('mod-' + idx);
+  const currentKey = editorState.currentId;
+  if(currentKey && currentKey !== modId && !options.force){
+    if(!confirm('Kamu sedang mengerjakan project lain. Yakin ini ganti? Masih bisa di-undo lewat project yang tersimpan.')) return false;
+  }
+  if(currentKey){ saveCurrentEditorProject(); }
+
+  const cached = editorProjectCache[modId];
+  const value = (cached && typeof cached.value === 'string') ? cached.value : getEditorContentFromMod(mod);
+
+  editorState.currentId = modId;
+  editorState.currentIndex = idx;
+  editorState.history = cached && Array.isArray(cached.history) ? cached.history.slice() : [];
+  editorState.future = cached && Array.isArray(cached.future) ? cached.future.slice() : [];
+  editorState.lastValue = value;
+  editorState.savedValue = cached && typeof cached.savedValue === 'string' ? cached.savedValue : getEditorContentFromMod(mod);
+  editorState.dirty = value !== editorState.savedValue;
+  editorState.canSave = true;
+
+  editorTrackingLock = true;
+  editorJsTextarea.value = value;
+  editorTrackingLock = false;
+
+  setEditorMetaInputs(mod);
+  updateEditorInfo(mod);
+  updateEditorButtons();
+  openEditorTab();
+  if(options.focus){ setTimeout(()=> editorJsTextarea && editorJsTextarea.focus(), 0); }
+  return true;
+}
+
+function openEditorProjectById(modId, options = {}){
+  const idx = getModIndexById(modId);
+  if(idx < 0) return false;
+  return loadEditorProjectByIndex(idx, options);
+}
+
+function applyEditorText(value, pushHistory = true){
+  if(!editorJsTextarea) return;
+  const next = String(value ?? '');
+  if(pushHistory && !editorTrackingLock){
+    if(editorState.lastValue !== next){
+      editorState.history.push(editorState.lastValue);
+      if(editorState.history.length > 120) editorState.history.shift();
+      editorState.future = [];
+      editorState.lastValue = next;
+    }
+  }
+  editorTrackingLock = true;
+  editorJsTextarea.value = next;
+  editorTrackingLock = false;
+  editorState.dirty = next !== editorState.savedValue;
+  saveCurrentEditorProject();
+  updateEditorInfo(mods[editorState.currentIndex]);
+  updateEditorButtons();
+}
+
+function undoEditor(){
+  if(!editorState.currentId || editorState.history.length === 0) return;
+  const current = editorJsTextarea.value;
+  editorState.future.push(current);
+  const prev = editorState.history.pop();
+  editorTrackingLock = true;
+  editorJsTextarea.value = prev;
+  editorTrackingLock = false;
+  editorState.lastValue = prev;
+  editorState.dirty = prev !== editorState.savedValue;
+  saveCurrentEditorProject();
+  updateEditorInfo(mods[editorState.currentIndex]);
+  updateEditorButtons();
+}
+
+function redoEditor(){
+  if(!editorState.currentId || editorState.future.length === 0) return;
+  const current = editorJsTextarea.value;
+  editorState.history.push(current);
+  const next = editorState.future.pop();
+  editorTrackingLock = true;
+  editorJsTextarea.value = next;
+  editorTrackingLock = false;
+  editorState.lastValue = next;
+  editorState.dirty = next !== editorState.savedValue;
+  saveCurrentEditorProject();
+  updateEditorInfo(mods[editorState.currentIndex]);
+  updateEditorButtons();
+}
+
+function clearEditorContent(){
+  if(!editorState.currentId) return;
+  if(!confirm('Bersihkan isi editor project ini? Riwayat undo masih disimpan.')) return;
+  const current = editorJsTextarea.value;
+  editorState.history.push(current);
+  if(editorState.history.length > 120) editorState.history.shift();
+  editorState.future = [];
+  applyEditorText('', false);
+}
+
+function saveEditorProject(){
+  const parsed = splitEditorContent(editorJsTextarea ? editorJsTextarea.value : '');
+  const meta = getEditorMetaFromInputs();
+
+  // Kalau belum ada project aktif, simpan sebagai project baru
+  if(editorState.currentIndex < 0){
+    const newMod = {
+      id: ensureUniqueModId(meta.id || `mod-${Date.now()}`),
+      name: meta.name || 'New Mod',
+      icon: meta.icon || '',
+      enabled: true,
+      code: parsed.js,
+      css: parsed.css,
+      source: meta.source || 'editor-js'
+    };
+
+    installMod(newMod);
+    const idxBaru = getModIndexById(newMod.id);
+    if(idxBaru >= 0){
+      editorState.currentId = newMod.id;
+      editorState.currentIndex = idxBaru;
+      editorState.savedValue = editorJsTextarea ? editorJsTextarea.value : '';
+      editorState.dirty = false;
+      editorState.lastValue = editorJsTextarea ? editorJsTextarea.value : '';
+      editorProjectCache[editorState.currentId] = {
+        value: editorJsTextarea ? editorJsTextarea.value : '',
+        history: editorState.history.slice(),
+        future: editorState.future.slice(),
+        lastValue: editorState.lastValue,
+        savedValue: editorState.savedValue,
+        dirty: false,
+        currentIndex: editorState.currentIndex
+      };
+      setEditorMetaInputs(mods[idxBaru]);
+      updateEditorInfo(mods[idxBaru]);
+      updateEditorButtons();
+      showToast('Project baru disimpan');
+    }
+    saveMods();
+    renderModsList();
+    applyMods();
+    return;
+  }
+
+  const mod = mods[editorState.currentIndex];
+  if(!mod) return;
+
+  const oldId = mod.id;
+  const nextId = ensureUniqueModId(meta.id || mod.id || `mod-${Date.now()}`);
+
+  mod.id = nextId;
+  mod.name = meta.name || mod.name || 'New Mod';
+  mod.source = meta.source || mod.source || 'editor-js';
+  mod.icon = meta.icon || mod.icon || '';
+  mod.code = parsed.js;
+  mod.css = parsed.css;
+  mod.enabled = mod.enabled !== false;
+
+  if(oldId && oldId !== mod.id){
+    const oldCache = editorProjectCache[oldId];
+    if(oldCache) delete editorProjectCache[oldId];
+    editorState.currentId = mod.id;
+    editorState.currentIndex = getModIndexById(mod.id);
+    if(oldCache) editorProjectCache[mod.id] = oldCache;
+  }
+
+  editorState.savedValue = editorJsTextarea ? editorJsTextarea.value : '';
+  editorState.dirty = false;
+  editorState.lastValue = editorJsTextarea ? editorJsTextarea.value : '';
+  editorState.canSave = true;
+
+  editorProjectCache[editorState.currentId] = {
+    value: editorJsTextarea ? editorJsTextarea.value : '',
+    history: editorState.history.slice(),
+    future: editorState.future.slice(),
+    lastValue: editorState.lastValue,
+    savedValue: editorState.savedValue,
+    dirty: false,
+    currentIndex: editorState.currentIndex
+  };
+
+  saveMods();
+  renderModsList();
+  applyMods();
+
+  const currentMod = mods[editorState.currentIndex];
+  setEditorMetaInputs(currentMod);
+  updateEditorInfo(currentMod);
+  updateEditorButtons();
+  showToast('Project disimpan');
+}
+
+function openModEditor(idx){
+  return loadEditorProjectByIndex(idx, {focus:true});
 }
 
 function applyMods(){
@@ -1171,7 +2613,7 @@ function applyMods(){
           style.textContent = m.css;
           document.head.appendChild(style);
           modStyleEls[m.id] = style;
-        } catch(e){ console.warn('mod css error', e); }
+        } catch(e){ console.warn('mod css error', e); addDebug('error', `CSS mod error: ${m.name || m.id}`, e && e.stack ? e.stack : String(e)); }
       }
       // execute JS
       if(m.code){
@@ -1180,10 +2622,11 @@ function applyMods(){
           const s = document.createElement('script');
           s.id = 'mod-script-' + m.id;
           s.type = 'text/javascript';
-          s.textContent = `(function(){try{ ${m.code} }catch(e){ console.error('Mod ${m.name} error', e); }})();`;
+          const modCodePreview = String(m.code || '').split('\n').slice(0, 12).join('\n');
+          s.textContent = `(function(){try{ ${m.code} }catch(e){ if(typeof addDebug === "function"){ addDebug("error", "JS mod error: ${String(m.name || m.id).replace(/"/g, '\\"')}", (e && e.stack ? e.stack : String(e)) + "\n\n--- Kode mod (cuplikan) ---\n${modCodePreview.replace(/`/g, '\\`')}"); } console.error('Mod ${m.name} error', e); }})();`;
           document.head.appendChild(s);
           modScriptEls[m.id] = s;
-        } catch(e){ console.warn('mod exec error', e); }
+        } catch(e){ console.warn('mod exec error', e); addDebug('error', `JS mod error: ${m.name || m.id}`, e && e.stack ? e.stack : String(e)); }
       }
     }
   });
@@ -1200,7 +2643,7 @@ function removeModInjection(modId){
       modStyleEls[modId].remove();
       delete modStyleEls[modId];
     }
-  } catch(e){ console.warn('remove injection', e); }
+  } catch(e){ console.warn('remove injection', e); addDebug('error', `Remove injection error: ${modId}`, e && e.stack ? e.stack : String(e)); }
 }
 
 /* Add mod from uploaded file */
@@ -1229,6 +2672,7 @@ function handleModFileUpload(file){
           return;
         }
       } catch(e){
+        addDebug('error', 'JSON mod tidak valid', e && e.stack ? e.stack : String(e));
         showToast('JSON mod tidak valid');
         return;
       }
@@ -1628,7 +3072,7 @@ function renderLinks(list, search=""){
       if(pinnedList.some(p=>p.url===link.url)) return; // avoid duplicate for pinned only
       const titleRaw = (currentLang==="id")? (link.title_id||link.title_en||"") : (link.title_en||link.title_id||"");
       const groupName = (currentLang==="id")? (link.grup_id || link.grup || "Tanpa Grup") : (link.grup_en || link.grup || "No Group");
-      const titleText = `(${groupName}) ${titleRaw}`;
+      const titleText = (hideGroupInSimpleMode || !groupName) ? titleRaw : `(${groupName}) ${titleRaw}`;
 
       const row = document.createElement("div"); row.className = "item-row";
       if(compactList) row.style.padding = '6px';
@@ -1787,25 +3231,72 @@ btnClose.addEventListener("click", ()=>{
 });
 
 /* ================= SETTINGS INTERACTIONS ================= */
-btnSettings.addEventListener("click", ()=>{ settingsOverlay.classList.add("open"); });
+btnSettings.addEventListener("click", ()=>{ settingsOverlay.classList.add("open"); settingsMenu.classList.remove('collapsed'); applySettingsLockState(); });
 document.getElementById("settings-close").addEventListener("click", ()=> settingsOverlay.classList.remove("open"));
 settingsOverlay.addEventListener("click",(e)=>{ if(e.target === settingsOverlay) settingsOverlay.classList.remove('open'); });
 
 settingsToggleCollapse.addEventListener('click', ()=>{ settingsMenu.classList.toggle('collapsed'); });
 
+applySettingsLockState();
+
 /* settings tab switching (now includes general, links, data, mods, experimental) */
-settingsTabs.forEach(bt=> bt.addEventListener('click', ()=>{ settingsTabs.forEach(x=>x.classList.remove('active')); bt.classList.add('active'); const tab = bt.dataset.tab; panelGeneral.classList.toggle('open', tab==='general'); panelLinks.classList.toggle('open', tab==='links'); panelData.classList.toggle('open', tab==='data'); panelMods.classList.toggle('open', tab==='mods'); panelExperimental.classList.toggle('open', tab==='experimental'); }));
+settingsTabs.forEach(bt=> bt.addEventListener('click', ()=>{ settingsTabs.forEach(x=>x.classList.remove('active')); bt.classList.add('active'); const tab = bt.dataset.tab; panelGeneral.classList.toggle('open', tab==='general'); panelLinks.classList.toggle('open', tab==='links'); panelData.classList.toggle('open', tab==='data'); panelMods.classList.toggle('open', tab==='mods'); panelEditor.classList.toggle('open', tab==='editor'); panelExperimental.classList.toggle('open', tab==='experimental'); if(tab==='editor'){ setTimeout(()=> editorJsTextarea && editorJsTextarea.focus(), 0); } }));
+
+dataTabs.forEach(bt => bt.addEventListener('click', () => {
+  dataTabs.forEach(x => x.classList.remove('active'));
+  bt.classList.add('active');
+  const tab = bt.dataset.dataTab;
+  dataPanels.forEach(panel => panel.classList.toggle('open', panel.dataset.dataPanel === tab));
+}));
 
 selLanguage.addEventListener("change", ()=>{ currentLang = selLanguage.value; localStorage.setItem("lang", currentLang); applyLanguageUI(); renderLinks(linksData, searchBox.value); populateFilterPanel(); });
 selView.addEventListener("change", ()=>{ viewMode = selView.value; localStorage.setItem("viewMode", viewMode); renderLinks(linksData, searchBox.value); });
 
 chkMerge.addEventListener("change", ()=>{ mergeSources = chkMerge.checked; localStorage.setItem("merge_sources", mergeSources ? "1" : "0"); renderLinks(linksData, searchBox.value); });
-chkSimple.addEventListener("change", ()=>{ simpleMode = chkSimple.checked; localStorage.setItem("simple_mode", simpleMode ? "1" : "0"); renderLinks(linksData, searchBox.value); });
+chkSimple.addEventListener("change", ()=>{
+  simpleMode = chkSimple.checked;
+  localStorage.setItem("simple_mode", simpleMode ? "1" : "0");
+  updateSimpleModeControlsVisibility();
+  renderLinks(linksData, searchBox.value);
+});
+chkSimpleHideGroup.addEventListener("change", ()=>{ hideGroupInSimpleMode = chkSimpleHideGroup.checked; localStorage.setItem("simple_hide_group", hideGroupInSimpleMode ? "1" : "0"); renderLinks(linksData, searchBox.value); });
 
 pinmodeStar.addEventListener('change', ()=>{ if(pinmodeStar.checked){ pinMode='star'; localStorage.setItem('pin_mode','star'); renderLinks(linksData, searchBox.value); }});
 pinmodePin.addEventListener('change', ()=>{ if(pinmodePin.checked){ pinMode='pin'; localStorage.setItem('pin_mode','pin'); renderLinks(linksData, searchBox.value); }});
 
-btnReset.addEventListener("click", ()=>{ settingsOverlay.classList.remove("open"); openResetPopup(); });
+if(btnReset) btnReset.addEventListener("click", ()=>{
+  const confirmValue = (resetModalConfirm && resetModalConfirm.value ? resetModalConfirm.value : '').trim().toUpperCase();
+  if(confirmValue !== 'RESET'){
+    showToast((currentLang === 'id') ? 'Ketik RESET untuk konfirmasi' : 'Type RESET to confirm');
+    if(resetModalConfirm) resetModalConfirm.focus();
+    return;
+  }
+  const toReset = getCheckedKeys('data-reset-options');
+  if(toReset.length === 0){ showToast('Pilih minimal 1 item untuk di-reset'); return; }
+  toReset.forEach(k=>{
+    if(k === 'favoriteLinks') localStorage.removeItem('favoriteLinks');
+    if(k === 'local_link_overrides') localStorage.removeItem('local_link_overrides');
+    if(k === 'mods') { mods = []; ensureDefaultBuiltinMod(); saveMods(); }
+    if(k === 'pinned_items') localStorage.removeItem('pinned_items');
+    if(k === 'filters_selected') localStorage.removeItem('filters_selected');
+    if(k === 'settings'){
+      localStorage.removeItem('lang');
+      localStorage.removeItem('viewMode');
+      localStorage.removeItem('merge_sources');
+      localStorage.removeItem('simple_mode');
+      localStorage.removeItem('simple_hide_group');
+      localStorage.removeItem('pin_mode');
+      localStorage.removeItem('sort_mode');
+      localStorage.removeItem('show_group_count');
+      localStorage.removeItem('compact_list');
+      localStorage.removeItem('merge_duplicate_links');
+      localStorage.removeItem('experimental_offline_mode');
+    }
+    if(k === 'extra_sources'){ extraSources = []; saveExtraSources(); }
+  });
+  showToast('Reset selesai. Memuat ulang...');
+  setTimeout(()=> location.reload(),700);
+});
 
 /* sorting select */
 selSort.addEventListener('change', ()=> {
@@ -1846,11 +3337,8 @@ createModJsBtn.addEventListener('click', ()=>{
   };
   installMod(modObj);
   modjsTextarea.value = '';
-  // switch to Mods tab so user sees the installed mod
-  settingsTabs.forEach(x=>x.classList.remove('active'));
-  Array.from(settingsTabs).find(x=>x.dataset.tab==='mods').classList.add('active');
-  panelGeneral.classList.remove('open'); panelLinks.classList.remove('open'); panelData.classList.remove('open'); panelMods.classList.add('open'); panelExperimental.classList.remove('open');
-  showToast('Mod dibuat dan dipasang. Lihat di tab Mods.');
+  openEditorProjectById(modObj.id, {focus:true, force:true});
+  showToast('Mod dibuat. Editor JS dibuka.');
 });
 
 /* clear editor */
@@ -1864,16 +3352,176 @@ resetCssBtn.addEventListener('click', ()=> {
   showToast(t('css_reset_success'));
 });
 
-/* DEBUG */
-debugBtn.addEventListener("click", ()=>{
-  const msg = lastErrorMessage && lastErrorMessage.trim() ? lastErrorMessage : t("no_errors");
-  const recent = debugLog.slice(-12).map(x => `${x.time} [${x.type}] ${x.message}${x.detail ? `\n${x.detail}` : ''}`).join('\n\n');
-  debugArea.textContent = recent ? `${msg}\n\n--- Log terakhir ---\n${recent}` : msg;
-  debugPopup.style.display = "flex";
+if(editorJsTextarea){
+  editorJsTextarea.addEventListener('input', ()=>{
+    if(editorTrackingLock) return;
+    applyEditorText(editorJsTextarea.value, true);
+  });
+}
+[editorMetaId, editorMetaName, editorMetaSource, editorMetaIcon].forEach(el=>{
+  if(!el) return;
+  el.addEventListener('input', ()=>{
+    if(!editorState.currentId) return;
+    editorState.dirty = true;
+    if(editorDirtyPill){
+      editorDirtyPill.textContent = 'Belum disimpan';
+      editorDirtyPill.classList.add('dirty');
+    }
+  });
 });
-debugClose.addEventListener("click", ()=> debugPopup.style.display = "none");
-copyDebugBtn.addEventListener("click", ()=> { const text = debugArea.textContent; navigator.clipboard && navigator.clipboard.writeText(text).then(()=> showToast("Copied debug ✅")); });
+if(editorNewBtn) editorNewBtn.addEventListener('click', createNewEditorProject);
+if(editorDownloadBtn) editorDownloadBtn.addEventListener('click', downloadCurrentEditorProject);
+if(editorUndoBtn) editorUndoBtn.addEventListener('click', undoEditor);
+if(editorRedoBtn) editorRedoBtn.addEventListener('click', redoEditor);
+if(editorClearBtn) editorClearBtn.addEventListener('click', clearEditorContent);
+if(editorSaveBtn) editorSaveBtn.addEventListener('click', saveEditorProject);
 
+/* DEBUG */
+function getDebugPageCount(){
+  return Math.max(1, Math.ceil(debugLog.length / DEBUG_PAGE_SIZE));
+}
+
+function getDebugPagedEntries(){
+  const reversed = [...debugLog].reverse();
+  const start = debugPageIndex * DEBUG_PAGE_SIZE;
+  return reversed.slice(start, start + DEBUG_PAGE_SIZE);
+}
+
+function syncDebugControls(){
+  const totalPages = getDebugPageCount();
+  const allowedRetentionModes = new Set(['3d','7d','30d']);
+  if(!allowedRetentionModes.has(debugRetentionMode)) debugRetentionMode = '30d';
+  debugPageIndex = Math.max(0, Math.min(debugPageIndex, totalPages - 1));
+
+  if(debugCounter){
+    debugCounter.textContent = `${debugLog.length} ${t("debug_counter_suffix")}`;
+  }
+  if(debugPageIndicator){
+    debugPageIndicator.textContent = `${debugPageIndex + 1} / ${totalPages}`;
+  }
+  if(debugPrevPage){
+    debugPrevPage.disabled = debugPageIndex <= 0;
+  }
+  if(debugNextPage){
+    debugNextPage.disabled = debugPageIndex >= totalPages - 1;
+  }
+  if(debugRetentionSelect && debugRetentionSelect.value !== debugRetentionMode){
+    debugRetentionSelect.value = debugRetentionMode;
+  }
+}
+
+function renderDebugPanel(){
+  if(!debugBody) return '';
+  syncDebugControls();
+
+  const entries = getDebugPagedEntries();
+  debugBody.innerHTML = '';
+
+  if(!entries.length){
+    const empty = document.createElement('div');
+    empty.className = 'debug-empty';
+    empty.textContent = t('debug_empty');
+    debugBody.appendChild(empty);
+  } else {
+    const list = document.createElement('div');
+    list.className = 'debug-list';
+
+    entries.forEach((entry)=>{
+      const row = document.createElement('div');
+      row.className = `debug-line ${debugTypeClass(entry.type)}`;
+
+      const time = document.createElement('div');
+      time.className = 'debug-time';
+      time.textContent = debugTimeText(entry.time);
+
+      const type = document.createElement('div');
+      type.className = 'debug-type';
+      type.textContent = debugTypeLabel(entry.type);
+
+      const body = document.createElement('div');
+      body.className = 'debug-msg';
+      body.textContent = entry.message || '-';
+
+      row.appendChild(time);
+      row.appendChild(type);
+      row.appendChild(body);
+
+      if(entry.detail){
+        const detail = document.createElement('div');
+        detail.className = 'debug-detail';
+        detail.textContent = entry.detail;
+        row.appendChild(detail);
+      }
+
+      list.appendChild(row);
+    });
+
+    debugBody.appendChild(list);
+  }
+
+  return formatDebugReport();
+}
+
+function refreshDebugPanel(){
+  return renderDebugPanel();
+}
+
+function openDebugPanel(){
+  debugPageIndex = 0;
+  renderDebugPanel();
+  debugPopup.classList.add('open');
+  debugPopup.setAttribute('aria-hidden', 'false');
+}
+
+function closeDebugPanel(){
+  debugPopup.classList.remove('open');
+  debugPopup.setAttribute('aria-hidden', 'true');
+}
+
+function setDebugRetention(mode){
+  const allowed = new Set(['3d','7d','30d']);
+  debugRetentionMode = allowed.has(mode) ? mode : '30d';
+  localStorage.setItem(DEBUG_RETENTION_KEY, debugRetentionMode);
+  loadDebugStorage();
+  debugPageIndex = 0;
+  renderDebugPanel();
+}
+
+debugBtn.addEventListener("click", openDebugPanel);
+debugClose.addEventListener("click", closeDebugPanel);
+debugPopup.addEventListener("click", (ev)=>{
+  if(ev.target === debugPopup) closeDebugPanel();
+});
+debugRetentionSelect && debugRetentionSelect.addEventListener("change", ()=>{
+  setDebugRetention(debugRetentionSelect.value);
+});
+debugPrevPage && debugPrevPage.addEventListener("click", ()=>{
+  if(debugPageIndex > 0){
+    debugPageIndex -= 1;
+    renderDebugPanel();
+  }
+});
+debugNextPage && debugNextPage.addEventListener("click", ()=>{
+  if(debugPageIndex < getDebugPageCount() - 1){
+    debugPageIndex += 1;
+    renderDebugPanel();
+  }
+});
+debugPageIndicator && debugPageIndicator.addEventListener("click", ()=>{
+  debugPageIndex = 0;
+  renderDebugPanel();
+});
+if(copyDebugBtn) copyDebugBtn.addEventListener("click", ()=>{
+  const text = refreshDebugPanel();
+  navigator.clipboard && navigator.clipboard.writeText(text).then(()=> showToast("Copied debug ✅"));
+});
+const downloadDebugBtn = document.getElementById("download-debug-btn");
+if(downloadDebugBtn) downloadDebugBtn.addEventListener("click", ()=>{
+  downloadDebugReport();
+  showToast("Debug diunduh");
+});
+
+renderDebugPanel();
 /* RESET (legacy) */
 const resetPopup = document.getElementById("reset-popup");
 const resetClose = document.getElementById("reset-close");
@@ -1920,16 +3568,21 @@ async function downloadOfflineBundle(){
           const inferredType = (new URL(src, location.href).origin === location.origin) ? "local" : "global";
           all.push(...j.links.map(x=>({...x, type: x.type || inferredType})));
           anySuccess = true;
+          successSources.push(src);
+          addDebug('normal', 'Source berhasil dimuat', src);
         } else if(Array.isArray(j)){
           const inferredType = (new URL(src, location.href).origin === location.origin) ? "local" : "global";
           all.push(...j.map(x=>({...x, type: x.type || inferredType})));
           anySuccess = true;
+          successSources.push(src);
+          addDebug('normal', 'Source berhasil dimuat', src);
         } else {
           throw new Error("Invalid JSON structure");
         }
       }
     } catch(e){
       console.warn("fail loading", src, e);
+      addDebug('warn', `Source gagal diunduh: ${src}`, e && e.stack ? e.stack : String(e));
       errs += src + " (" + (e && e.message ? e.message : "") + ") ";
     }
   }
@@ -1956,6 +3609,7 @@ async function loadAndRenderSources(){
   loadingOverlay.classList.add("open");
   loadingText.textContent = t("loading_text");
   const all = [];
+  const successSources = [];
   lastErrorMessage = "";
   let anySuccess = false;
 
@@ -1976,6 +3630,7 @@ async function loadAndRenderSources(){
         }
       } catch(e){
         console.warn("invalid offline bundle", e);
+        addDebug('warn', 'Bundle offline tidak valid', e && e.stack ? e.stack : String(e));
         lastErrorMessage += "Invalid offline bundle. ";
       }
     } else {
@@ -1991,8 +3646,8 @@ async function loadAndRenderSources(){
       if(src.startsWith('inline:')){
         const jsonText = src.slice(7);
         const j = JSON.parse(jsonText);
-        if(j.links && Array.isArray(j.links)){ all.push(...j.links.map(x=>({...x, type:x.type||'inline'}))); anySuccess = true; }
-        else if(Array.isArray(j)){ all.push(...j.map(x=>({...x, type: 'inline'}))); anySuccess = true; }
+        if(j.links && Array.isArray(j.links)){ all.push(...j.links.map(x=>({...x, type:x.type||'inline'}))); anySuccess = true; successSources.push('inline'); addDebug('normal', 'Source berhasil dimuat', 'inline'); }
+        else if(Array.isArray(j)){ all.push(...j.map(x=>({...x, type: 'inline'}))); anySuccess = true; successSources.push('inline'); addDebug('normal', 'Source berhasil dimuat', 'inline'); }
         else throw new Error("Inline JSON tidak berisi array atau object.links");
       } else {
         const url = src + "?_=" + Date.now();
@@ -2013,6 +3668,7 @@ async function loadAndRenderSources(){
       }
     } catch(e){
       console.warn("fail loading", src, e);
+      addDebug('warn', `Source gagal dimuat: ${src}`, e && e.stack ? e.stack : String(e));
       lastErrorMessage += (currentLang==="id" ? `Gagal memuat: ${src}. ` : `Failed to load: ${src}. `) + (e && e.message ? `(${e.message}) ` : "");
     }
   }
@@ -2023,12 +3679,37 @@ async function loadAndRenderSources(){
   showToast( (anySuccess) ? (currentLang==="id" ? "Sumber dimuat" : "Sources loaded") : (currentLang==="id" ? "Gagal memuat sumber" : "Failed to load sources"), 3500);
 
   linksData = all;
+  if(anySuccess){
+    const suksesText = successSources.length ? `Berhasil: ${successSources.join(', ')}` : 'Tidak ada daftar source sukses';
+    addDebug('normal', 'Sources berhasil dimuat', `${suksesText}
+Total item: ${all.length}`);
+  } else {
+    addDebug('error', 'Semua source gagal dimuat', lastErrorMessage || 'Tidak ada source yang berhasil dibaca.');
+  }
   populateFilterPanel();
   renderLinks(linksData);
 }
 
+function getCheckedKeys(containerId){
+  const el = document.getElementById(containerId);
+  if(!el) return [];
+  return Array.from(el.querySelectorAll('input[type=checkbox]:checked')).map(i => i.dataset.key);
+}
+
+function downloadJsonFile(payload, filename){
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
 /* ================= LOAD / SAVE LOCAL DATA (legacy full backup) ================= */
-saveLocalBtn.addEventListener('click', ()=>{
+if(saveLocalBtn) if(saveLocalBtn) saveLocalBtn.addEventListener('click', ()=>{
   // Save Local includes mods now
   const backup = {
     favoriteLinks: JSON.parse(localStorage.getItem('favoriteLinks')||'[]'),
@@ -2040,6 +3721,7 @@ saveLocalBtn.addEventListener('click', ()=>{
     viewMode: localStorage.getItem('viewMode')||'',
     merge_sources: localStorage.getItem('merge_sources')||'',
     simple_mode: localStorage.getItem('simple_mode')||'',
+    simple_hide_group: localStorage.getItem('simple_hide_group')||'',
     pin_mode: localStorage.getItem('pin_mode')||'',
     sort_mode: localStorage.getItem('sort_mode')||'',
     show_group_count: localStorage.getItem('show_group_count')||'',
@@ -2053,36 +3735,130 @@ saveLocalBtn.addEventListener('click', ()=>{
   const a = document.createElement('a'); a.href = url; a.download = `kumin-links-backup-${new Date().toISOString().slice(0,10)}.json`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
 });
 
+
 /* data tab load/save buttons */
-dataSaveBtn && dataSaveBtn.addEventListener('click', ()=> {
-  saveLocalBtn.click();
-});
-dataLoadBtn && dataLoadBtn.addEventListener('click', ()=> {
-  const f = dataLoadFile.files[0];
-  if(!f){ showToast('Pilih file JSON terlebih dahulu'); return; }
-  const reader = new FileReader();
-  reader.onload = (ev)=>{
-    try{
-      const obj = JSON.parse(ev.target.result);
-      const allowed = ['favoriteLinks','local_link_overrides','mods','pinned_items','filters_selected','lang','viewMode','merge_sources','simple_mode','pin_mode','sort_mode','show_group_count','compact_list','merge_duplicate_links','experimental_offline_mode','extra_sources'];
-      allowed.forEach(k=>{ if(obj[k]!==undefined) {
-        if(k==='mods') { mods = obj[k]; saveMods(); }
-        else if(k==='extra_sources') { extraSources = obj[k]; saveExtraSources(); }
-        else localStorage.setItem(k, (typeof obj[k] === 'string') ? obj[k] : JSON.stringify(obj[k]).replace(/^"|"$/g,'')); 
-      } });
-      showToast('Data dimuat. Memuat ulang...');
-      setTimeout(()=> location.reload(),800);
-    } catch(e){ showToast('File tidak valid'); }
+const DATA_LOAD_KEYS = ['favoriteLinks','local_link_overrides','mods','pinned_items','filters_selected','settings','extra_sources'];
+const DATA_SETTINGS_KEYS = ['lang','viewMode','merge_sources','simple_mode','simple_hide_group','pin_mode','sort_mode','show_group_count','compact_list','merge_duplicate_links','experimental_offline_mode'];
+
+function fileToJsonObject(file){
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onload = (ev)=>{
+      try{
+        resolve(JSON.parse(ev.target.result));
+      } catch(err){
+        reject(err);
+      }
+    };
+    reader.onerror = ()=>reject(new Error('Gagal membaca file'));
+    reader.readAsText(file);
+  });
+}
+
+function getLoadAvailability(obj){
+  const data = obj && typeof obj === 'object' ? obj : {};
+  const availability = {
+    favoriteLinks: data.favoriteLinks !== undefined,
+    local_link_overrides: data.local_link_overrides !== undefined,
+    mods: data.mods !== undefined,
+    pinned_items: data.pinned_items !== undefined,
+    filters_selected: data.filters_selected !== undefined,
+    settings: DATA_SETTINGS_KEYS.some(k => data[k] !== undefined),
+    extra_sources: data.extra_sources !== undefined
   };
-  reader.readAsText(f);
+  return availability;
+}
+
+function updateLoadUiState(containerSelector, availability, sourceLabel='file'){
+  const root = document.querySelector(containerSelector);
+  if(!root) return;
+  root.querySelectorAll('[data-key]').forEach(input=>{
+    const key = input.dataset.key;
+    const row = input.closest('.option-switch-row, .modal-row');
+    const note = row ? row.querySelector('.availability-note') : null;
+    const isAvailable = !!availability[key];
+    input.disabled = !isAvailable;
+    if(!isAvailable) input.checked = false;
+    if(row) row.classList.toggle('is-disabled', !isAvailable);
+    if(note) note.textContent = isAvailable ? `Ada di ${sourceLabel}` : 'Ga bisa, ga ada di dalam file';
+  });
+}
+
+function previewLoadedJson(file, containerSelector, sourceLabel='file'){
+  return fileToJsonObject(file).then(obj=>{
+    updateLoadUiState(containerSelector, getLoadAvailability(obj), sourceLabel);
+    return obj;
+  }).catch(err=>{
+    updateLoadUiState(containerSelector, {}, sourceLabel);
+    showToast('File tidak valid');
+    throw err;
+  });
+}
+
+function applyLoadedObject(obj, selectedKeys){
+  const target = obj && typeof obj === 'object' ? obj : {};
+  let applied = false;
+
+  if(selectedKeys.includes('favoriteLinks') && target.favoriteLinks !== undefined){ localStorage.setItem('favoriteLinks', JSON.stringify(target.favoriteLinks)); applied = true; }
+  if(selectedKeys.includes('local_link_overrides') && target.local_link_overrides !== undefined){ localStorage.setItem('local_link_overrides', JSON.stringify(target.local_link_overrides)); applied = true; }
+  if(selectedKeys.includes('mods') && target.mods !== undefined){ mods = target.mods; saveMods(); applied = true; }
+  if(selectedKeys.includes('pinned_items') && target.pinned_items !== undefined){ localStorage.setItem('pinned_items', JSON.stringify(target.pinned_items)); applied = true; }
+  if(selectedKeys.includes('filters_selected') && target.filters_selected !== undefined){ localStorage.setItem('filters_selected', JSON.stringify(target.filters_selected)); applied = true; }
+
+  if(selectedKeys.includes('settings')){
+    const settingsMap = {
+      lang: 'lang',
+      viewMode: 'viewMode',
+      merge_sources: 'merge_sources',
+      simple_mode: 'simple_mode',
+      simple_hide_group: 'simple_hide_group',
+      pin_mode: 'pin_mode',
+      sort_mode: 'sort_mode',
+      show_group_count: 'show_group_count',
+      compact_list: 'compact_list',
+      merge_duplicate_links: 'merge_duplicate_links',
+      experimental_offline_mode: 'experimental_offline_mode'
+    };
+    Object.entries(settingsMap).forEach(([sourceKey, storageKey])=>{
+      if(target[sourceKey] !== undefined){
+        localStorage.setItem(storageKey, target[sourceKey]);
+        applied = true;
+      }
+    });
+  }
+
+  if(selectedKeys.includes('extra_sources') && target.extra_sources !== undefined){ extraSources = target.extra_sources; saveExtraSources(); applied = true; }
+
+  return applied;
+}
+
+if(saveLocalBtn) saveLocalBtn.addEventListener('click', ()=>{
+  const backup = {
+    favoriteLinks: JSON.parse(localStorage.getItem('favoriteLinks')||'[]'),
+    local_link_overrides: JSON.parse(localStorage.getItem('local_link_overrides')||'{}'),
+    mods: mods,
+    pinned_items: JSON.parse(localStorage.getItem('pinned_items')||'[]'),
+    filters_selected: JSON.parse(localStorage.getItem('filters_selected')||'[]'),
+    lang: localStorage.getItem('lang')||'',
+    viewMode: localStorage.getItem('viewMode')||'',
+    merge_sources: localStorage.getItem('merge_sources')||'',
+    simple_mode: localStorage.getItem('simple_mode')||'',
+    simple_hide_group: localStorage.getItem('simple_hide_group')||'',
+    pin_mode: localStorage.getItem('pin_mode')||'',
+    sort_mode: localStorage.getItem('sort_mode')||'',
+    show_group_count: localStorage.getItem('show_group_count')||'',
+    compact_list: localStorage.getItem('compact_list')||'',
+    merge_duplicate_links: localStorage.getItem('merge_duplicate_links')||'',
+    experimental_offline_mode: localStorage.getItem('experimental_offline_mode')||'',
+    extra_sources: extraSources
+  };
+  const blob = new Blob([JSON.stringify(backup, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = `kumin-links-backup-${new Date().toISOString().slice(0,10)}.json`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
 });
 
-/* ================= GRANULAR SAVE / LOAD / RESET (modal-driven) ================= */
-/* Save modal */
-document.getElementById('save-choose-btn') && document.getElementById('save-choose-btn').addEventListener('click', ()=> { saveModal.classList.add('open'); });
-saveModalCancel.addEventListener('click', ()=> { saveModal.classList.remove('open'); });
-saveModalOk.addEventListener('click', ()=>{
-  const checks = Array.from(saveModalList.querySelectorAll('input[type=checkbox]:checked')).map(i=>i.dataset.key);
+dataSaveBtn && dataSaveBtn.addEventListener('click', ()=>{
+  const checks = getCheckedKeys('data-save-options');
   if(checks.length === 0){ showToast('Pilih minimal 1 item untuk disimpan'); return; }
   const backup = {};
   if(checks.includes('favoriteLinks')) backup.favoriteLinks = JSON.parse(localStorage.getItem('favoriteLinks')||'[]');
@@ -2095,6 +3871,7 @@ saveModalOk.addEventListener('click', ()=>{
     backup.viewMode = localStorage.getItem('viewMode')||'';
     backup.merge_sources = localStorage.getItem('merge_sources')||'';
     backup.simple_mode = localStorage.getItem('simple_mode')||'';
+    backup.simple_hide_group = localStorage.getItem('simple_hide_group')||'';
     backup.pin_mode = localStorage.getItem('pin_mode')||'';
     backup.sort_mode = localStorage.getItem('sort_mode')||'';
     backup.show_group_count = localStorage.getItem('show_group_count')||'';
@@ -2103,58 +3880,80 @@ saveModalOk.addEventListener('click', ()=>{
     backup.experimental_offline_mode = localStorage.getItem('experimental_offline_mode')||'';
   }
   if(checks.includes('extra_sources')) backup.extra_sources = extraSources;
-
-  const blob = new Blob([JSON.stringify(backup, null, 2)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a'); a.href = url; a.download = `kumin-links-choices-${new Date().toISOString().slice(0,10)}.json`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-  saveModal.classList.remove('open');
+  downloadJsonFile(backup, `kumin-links-choices-${new Date().toISOString().slice(0,10)}.json`);
 });
 
-/* Open custom load modal */
-openLoadModalBtn.addEventListener('click', ()=> { loadModal.classList.add('open'); });
-loadModalCancel.addEventListener('click', ()=> { loadModal.classList.remove('open'); });
-loadModalOk.addEventListener('click', ()=>{
-  const f = loadModalFile.files[0];
-  if(!f){ showToast('Pilih file JSON terlebih dahulu'); return; }
-  const toLoad = Array.from(document.querySelectorAll('#load-modal-list input[type=checkbox]:checked')).map(i=>i.dataset.key);
-  if(toLoad.length === 0){ showToast('Pilih minimal 1 item untuk dimuat'); return; }
-  const reader = new FileReader();
-  reader.onload = (ev)=>{
-    try{
-      const obj = JSON.parse(ev.target.result);
-      // apply only selected keys
-      if(toLoad.includes('favoriteLinks') && obj.favoriteLinks !== undefined) localStorage.setItem('favoriteLinks', JSON.stringify(obj.favoriteLinks));
-      if(toLoad.includes('local_link_overrides') && obj.local_link_overrides !== undefined) localStorage.setItem('local_link_overrides', JSON.stringify(obj.local_link_overrides));
-      if(toLoad.includes('mods') && obj.mods !== undefined){ mods = obj.mods; saveMods(); }
-      if(toLoad.includes('pinned_items') && obj.pinned_items !== undefined) localStorage.setItem('pinned_items', JSON.stringify(obj.pinned_items));
-      if(toLoad.includes('filters_selected') && obj.filters_selected !== undefined) localStorage.setItem('filters_selected', JSON.stringify(obj.filters_selected));
-      if(toLoad.includes('settings')){
-        if(obj.lang !== undefined) localStorage.setItem('lang', obj.lang);
-        if(obj.viewMode !== undefined) localStorage.setItem('viewMode', obj.viewMode);
-        if(obj.merge_sources !== undefined) localStorage.setItem('merge_sources', obj.merge_sources);
-        if(obj.simple_mode !== undefined) localStorage.setItem('simple_mode', obj.simple_mode);
-        if(obj.pin_mode !== undefined) localStorage.setItem('pin_mode', obj.pin_mode);
-        if(obj.sort_mode !== undefined) localStorage.setItem('sort_mode', obj.sort_mode);
-        if(obj.show_group_count !== undefined) localStorage.setItem('show_group_count', obj.show_group_count);
-        if(obj.compact_list !== undefined) localStorage.setItem('compact_list', obj.compact_list);
-        if(obj.merge_duplicate_links !== undefined) localStorage.setItem('merge_duplicate_links', obj.merge_duplicate_links);
-        if(obj.experimental_offline_mode !== undefined) localStorage.setItem('experimental_offline_mode', obj.experimental_offline_mode);
-      }
-      if(toLoad.includes('extra_sources') && obj.extra_sources !== undefined){ extraSources = obj.extra_sources; saveExtraSources(); }
-      showToast('File dimuat. Memuat ulang...');
-      setTimeout(()=> location.reload(),800);
-    } catch(e){ showToast('File tidak valid'); }
-  };
-  reader.readAsText(f);
+async function runLoadFlow(file, containerSelector, sourceLabel, selectedKeysGetter){
+  if(!file){ showToast('Pilih file JSON terlebih dahulu'); return; }
+  let obj;
+  try{
+    obj = await fileToJsonObject(file);
+  } catch(err){
+    showToast('File tidak valid');
+    updateLoadUiState(containerSelector, {}, sourceLabel);
+    return;
+  }
+  const availability = getLoadAvailability(obj);
+  updateLoadUiState(containerSelector, availability, sourceLabel);
+
+  const selectedKeys = selectedKeysGetter();
+  if(selectedKeys.length === 0){ showToast('Pilih minimal 1 item untuk dimuat'); return; }
+
+  const filteredSelection = selectedKeys.filter(k => availability[k]);
+  if(filteredSelection.length === 0){
+    showToast('Tidak ada bagian yang bisa dimuat dari file itu');
+    return;
+  }
+
+  const applied = applyLoadedObject(obj, filteredSelection);
+  if(!applied){
+    showToast('Tidak ada data yang cocok di file');
+    return;
+  }
+  showToast('Data dimuat. Memuat ulang...');
+  setTimeout(()=> location.reload(), 800);
+}
+
+if(dataLoadFile) dataLoadFile.addEventListener('change', async ()=>{
+  const file = dataLoadFile.files && dataLoadFile.files[0];
+  if(!file) return;
+  try{
+    await previewLoadedJson(file, '#data-load-options', 'file');
+  } catch(e){}
 });
 
-/* Open reset modal */
-openResetModalBtn.addEventListener('click', ()=> { resetModal.classList.add('open'); resetModalConfirm.value=''; resetModalOk.disabled = true; });
-resetModalCancel.addEventListener('click', ()=> { resetModal.classList.remove('open'); });
-resetModalConfirm.addEventListener('input', ()=> {
+if(loadModalFile) loadModalFile.addEventListener('change', async ()=>{
+  const file = loadModalFile.files && loadModalFile.files[0];
+  if(!file) return;
+  try{
+    await previewLoadedJson(file, '#load-modal-list', 'file');
+  } catch(e){}
+});
+
+dataLoadBtn && dataLoadBtn.addEventListener('click', ()=>{
+  const file = dataLoadFile.files && dataLoadFile.files[0];
+  runLoadFlow(file, '#data-load-options', 'file', ()=> getCheckedKeys('data-load-options'));
+});
+
+if(openLoadModalBtn) openLoadModalBtn.addEventListener('click', ()=> {
+  loadModal.classList.add('open');
+  const file = loadModalFile.files && loadModalFile.files[0];
+  if(file) previewLoadedJson(file, '#load-modal-list', 'file').catch(()=>{});
+});
+
+if(dataOpenSaveChoices) dataOpenSaveChoices.addEventListener('click', ()=> { saveModal.classList.add('open'); });
+
+if(loadModalCancel) loadModalCancel.addEventListener('click', ()=> { loadModal.classList.remove('open'); });
+if(loadModalOk) loadModalOk.addEventListener('click', ()=>{
+  const file = loadModalFile.files && loadModalFile.files[0];
+  runLoadFlow(file, '#load-modal-list', 'file', ()=> Array.from(document.querySelectorAll('#load-modal-list input[type=checkbox]:checked')).map(i=>i.dataset.key));
+});
+
+if(resetModalCancel) resetModalCancel.addEventListener('click', ()=> { resetModal.classList.remove('open'); });
+if(resetModalConfirm) resetModalConfirm.addEventListener('input', ()=> {
   resetModalOk.disabled = (resetModalConfirm.value.trim().toUpperCase() !== 'RESET');
 });
-resetModalOk.addEventListener('click', ()=>{
+if(resetModalOk) resetModalOk.addEventListener('click', ()=>{
   if(resetModalConfirm.value.trim().toUpperCase() !== 'RESET') return;
   const toReset = Array.from(document.querySelectorAll('#reset-modal-list input[type=checkbox]:checked')).map(i=>i.dataset.key);
   if(toReset.length === 0){ showToast('Pilih minimal 1 item untuk di-reset'); return; }
@@ -2164,12 +3963,49 @@ resetModalOk.addEventListener('click', ()=>{
     if(k === 'mods') { mods = []; ensureDefaultBuiltinMod(); saveMods(); }
     if(k === 'pinned_items') localStorage.removeItem('pinned_items');
     if(k === 'filters_selected') localStorage.removeItem('filters_selected');
-    if(k === 'settings'){ localStorage.removeItem('lang'); localStorage.removeItem('viewMode'); localStorage.removeItem('merge_sources'); localStorage.removeItem('simple_mode'); localStorage.removeItem('pin_mode'); localStorage.removeItem('sort_mode'); localStorage.removeItem('show_group_count'); localStorage.removeItem('compact_list'); localStorage.removeItem('merge_duplicate_links'); localStorage.removeItem('experimental_offline_mode'); }
+    if(k === 'settings'){ localStorage.removeItem('lang'); localStorage.removeItem('viewMode'); localStorage.removeItem('merge_sources'); localStorage.removeItem('simple_mode'); localStorage.removeItem('simple_hide_group'); localStorage.removeItem('pin_mode'); localStorage.removeItem('sort_mode'); localStorage.removeItem('show_group_count'); localStorage.removeItem('compact_list'); localStorage.removeItem('merge_duplicate_links'); localStorage.removeItem('experimental_offline_mode'); }
     if(k === 'extra_sources'){ extraSources = []; saveExtraSources(); }
   });
   resetModal.classList.remove('open');
   showToast('Reset selesai. Memuat ulang...');
   setTimeout(()=> location.reload(),700);
+});
+
+document.querySelectorAll('.modal-check-all').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const target = btn.dataset.target;
+    if(target) setModalCheckboxes(target, true);
+  });
+});
+document.querySelectorAll('.modal-check-none').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const target = btn.dataset.target;
+    if(target) setModalCheckboxes(target, false);
+  });
+});
+
+// Direct reset from tab 3: no popup
+if(dataResetBtn) dataResetBtn.addEventListener('click', ()=>{
+  const confirmText = (resetModalConfirm && resetModalConfirm.value || '').trim().toUpperCase();
+  if(confirmText !== 'RESET'){
+    showToast('Ketik RESET dulu');
+    return;
+  }
+  const toReset = Array.from(document.querySelectorAll('#data-panel-reset input[type=checkbox]:checked')).map(i=>i.dataset.key);
+  if(toReset.length === 0){ showToast('Pilih minimal 1 item untuk di-reset'); return; }
+
+  toReset.forEach(k=>{
+    if(k === 'favoriteLinks') localStorage.removeItem('favoriteLinks');
+    if(k === 'local_link_overrides') localStorage.removeItem('local_link_overrides');
+    if(k === 'mods') { mods = []; ensureDefaultBuiltinMod(); saveMods(); }
+    if(k === 'pinned_items') localStorage.removeItem('pinned_items');
+    if(k === 'filters_selected') localStorage.removeItem('filters_selected');
+    if(k === 'settings'){ localStorage.removeItem('lang'); localStorage.removeItem('viewMode'); localStorage.removeItem('merge_sources'); localStorage.removeItem('simple_mode'); localStorage.removeItem('simple_hide_group'); localStorage.removeItem('pin_mode'); localStorage.removeItem('sort_mode'); localStorage.removeItem('show_group_count'); localStorage.removeItem('compact_list'); localStorage.removeItem('merge_duplicate_links'); localStorage.removeItem('experimental_offline_mode'); }
+    if(k === 'extra_sources'){ extraSources = []; saveExtraSources(); }
+  });
+
+  showToast('Reset selesai. Memuat ulang...');
+  setTimeout(()=> location.reload(), 700);
 });
 
 /* ================= OFFLINE WARNING (when offline mode active but browser is online) ================= */
@@ -2196,6 +4032,11 @@ addModBtn.addEventListener('click', ()=>{
   modFileInput.value = '';
 });
 openModStoreBtn.addEventListener('click', ()=> openModStore());
+if(downloadCurrentModBtn) downloadCurrentModBtn.addEventListener('click', ()=>{
+  if(editorState.currentIndex >= 0) downloadCurrentEditorProject();
+  else if(mods.length) downloadModObject(mods[0]);
+  else showToast('Tidak ada mod untuk didownload');
+});
 
 /* ================= STORE-ACTIVE DETECTION ================= */
 /*
@@ -2327,12 +4168,16 @@ function init(){
   }
 
   selLanguage.value = currentLang; selView.value = viewMode; chkMerge.checked = mergeSources; chkSimple.checked = simpleMode;
+  if(chkSimpleHideGroup) chkSimpleHideGroup.checked = hideGroupInSimpleMode;
   selSort.value = sortMode || 'title_asc';
   chkShowGroupCount.checked = showGroupCount;
   chkCompactList.checked = compactList;
   chkMergeDuplicates.checked = mergeDuplicateLinks;
   chkOfflineMode.checked = experimentalOffline;
+  updateSimpleModeControlsVisibility();
   applyLanguageUI();
+  applyModSafetyPrefs();
+  applySettingsLockState();
   enforceSmallScreenBehavior();
   if(pinMode === 'pin') pinmodePin.checked = true; else pinmodeStar.checked = true;
   if(!localStorage.getItem('pin_mode')) localStorage.setItem('pin_mode', 'pin');
@@ -2341,16 +4186,12 @@ function init(){
   populateFilterPanel();
   renderModsList();
 
-  // --- NEW: do NOT auto-run mods if there are mods saved as enabled.
+  // --- Mods start-up behavior
   const modsEnabledExist = mods.some(m=>m.enabled);
   if(modsEnabledExist){
-    // suppress automatic injection until user responds to warning
     suppressModsOnLoad = true;
-    // show modal to the user notifying mods are held and asking consent
-    // note: we DO NOT change stored settings yet; mods remain enabled in storage but WILL NOT RUN until accepted
     showModWarning();
   } else {
-    // no enabled mods in storage -> safe to apply mods (none anyway)
     suppressModsOnLoad = false;
     applyMods();
   }
